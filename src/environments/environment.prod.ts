@@ -14,6 +14,6 @@
 // };
 export const environment = {
   production: true,
-  apiUrl: 'https://postposted-eyed-first-pizza.trycloudflare.com/api/',
+  apiUrl: 'https://listening-sufficiently-delayed-why.trycloudflare.com/api/',
   wsUrl: 'wss://random-name.trycloudflare.com/ws/ZoneCount'
 };
