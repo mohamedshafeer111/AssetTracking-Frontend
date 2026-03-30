@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { Historical } from '../../../service/historical/historical';
 interface Employee {
   objectId: string;
   employeeCode: string;
@@ -23,6 +24,11 @@ interface Employee {
   styleUrl: './historicals.css'
 })
 export class Historicals implements OnInit {
+
+
+
+
+  constructor(private historical:Historical,private cdr:ChangeDetectorRef,private router:Router){}
 
   employees: Employee[] = [
     {
@@ -67,6 +73,7 @@ export class Historicals implements OnInit {
   searchTerm: string = '';
 
  ngOnInit() {
+  this.loadHistorical();
     // Initialize with dropdown flag
     this.filteredEmployees = this.employees.map(emp => ({
       ...emp,
@@ -92,14 +99,24 @@ export class Historicals implements OnInit {
 }
 
 
-  selectOption(emp: Employee, option: string) {
-    emp.showDropdown = false;
-    if (option === 'overview') {
-      alert(`Overview selected for ${emp.employeeName}`);
-    } else if (option === 'detailed') {
-      alert(`Detailed selected for ${emp.employeeName}`);
-    }
+  // selectOption(emp: Employee, option: string) {
+  //   emp.showDropdown = false;
+  //   if (option === 'overview') {
+  //     alert(`Overview selected for ${emp.employeeName}`);
+  //   } else if (option === 'detailed') {
+  //     alert(`Detailed selected for ${emp.employeeName}`);
+  //   }
+  // }
+
+  selectOption(historical: any, option: string) {
+  historical.showDropdown = false;
+
+  if (option === 'overview') {
+    this.router.navigate(['/overview'], {
+      queryParams: { id: historical.assetId }
+    });
   }
+}
 
   viewHistory(emp: Employee) {
     alert(`Viewing history for ${emp.employeeName}`);
@@ -110,5 +127,64 @@ export class Historicals implements OnInit {
   closeAllDropdowns() {
     this.filteredEmployees.forEach(e => (e.showDropdown = false));
   }
+
+
+historicallist: any[] = [];
+
+pageNumber: number = 1;
+pageSize: number = 10;
+totalCount: number = 0;
+totalPages: number = 0;
+
+pageSizeOptions = [5, 10, 20, 50];
+
+
+
+loadHistorical() {
+
+  this.historical.getHistorical(this.pageNumber, this.pageSize).subscribe({
+    next: (res: any) => {
+
+      this.historicallist = res.data;
+      this.totalCount = res.totalCount;
+
+      // Calculate total pages
+      this.totalPages = Math.ceil(this.totalCount / this.pageSize);
+      this.cdr.detectChanges();
+
+    },
+    error: () => {
+      console.log("Error getting historical data");
+    }
+  });
+
+}
+
+onPageSizeChange(size: number) {
+
+  this.pageSize = size;
+  this.pageNumber = 1;   // Reset to first page
+
+  this.loadHistorical();
+
+}
+
+nextPage() {
+
+  if (this.pageNumber < this.totalPages) {
+    this.pageNumber++;
+    this.loadHistorical();
+  }
+
+}
+
+previousPage() {
+
+  if (this.pageNumber > 1) {
+    this.pageNumber--;
+    this.loadHistorical();
+  }
+
+}
 
 }

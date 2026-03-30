@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Roleservice } from '../../../service/role/roleservice';
 import { response } from 'express';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-role',
@@ -17,7 +17,7 @@ export class Role implements OnInit {
     this.loadRole();
   }
 
-  constructor(private roleService: Roleservice, private cdr: ChangeDetectorRef) { }
+  constructor(private roleService: Roleservice, private cdr: ChangeDetectorRef, private router: Router ) { }  
 
    roles: any[] = [];
   filteredRoles: any[] = []; // NEW
@@ -68,14 +68,11 @@ export class Role implements OnInit {
   selectedRoleId: string = '';
   openEditRole = false;
 
-  openeditRolePopup(role: any) {
-    this.selectedRoleId = role.id;
-    this.editRoles = {
-      roleName: role.roleName,
-      description: role.description
-    }
-    this.openEditRole = true;
-  }
+openeditRolePopup(role: any) {
+  this.router.navigate(['/editrole', role.id], { 
+    state: { role: role }   // ← pass full role object
+  });
+}
 
   closeEditRolePopup() {
     this.openEditRole = false;

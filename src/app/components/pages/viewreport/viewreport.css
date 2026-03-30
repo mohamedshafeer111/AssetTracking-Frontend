@@ -7,7 +7,7 @@
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   padding: 10px 20px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  height:35px;
 }
 
 /* Left side: picture icons */
@@ -21,6 +21,7 @@
   display: flex;
   align-items: center;
   gap: 15px;
+  font-size: 14px;
 }
 
 /* Icons on right (refresh/columns) */
@@ -57,6 +58,8 @@
   cursor: pointer;
   font-size: 14px;
   transition: background-color 0.3s ease, transform 0.2s ease;
+    font-family: 'RedHatDisplay';
+    margin-left: 0%;
 }
 
 .back-btn:hover {
@@ -66,13 +69,15 @@
 
 /* View report heading styling */
 .view-report-container h2 {
-  margin-bottom: 10px;
   color: #333;
   font-weight: 600;
+  margin-top: 0%;
 }
 
 
-
+.report-summary p {
+  font-size: 13px;
+}
 
 
 
@@ -81,6 +86,8 @@
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  margin-top: 1%;
+
 }
 
 .report-info p {
@@ -91,6 +98,7 @@
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+
 }
 
 .visits-table th,
@@ -137,4 +145,161 @@
 
 .pagination-right button {
   margin: 0 5px;
+}
+
+
+
+
+
+.visits-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.visits-table th,
+.visits-table td {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  font-size: 13px;
+  
+}
+
+/* Asset row - clickable */
+.asset-row {
+  background-color:white;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+
+/* Sub-header for events */
+.event-subheader th {
+  background-color: #7030a0;
+  font-size: 12px;
+  color: white;
+  font-weight: 600;
+}
+
+/* Event detail rows */
+.event-row {
+  background-color: #fafafa;
+}
+
+.event-row td {
+  padding-left: 24px;
+  font-size: 12px;
+  color: #444;
+}
+
+.toggle-icon {
+  color: #1a73e8;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-online {
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.status-offline {
+  color: #c62828;
+  font-weight: 600;
+}
+
+.no-data-text {
+  text-align: center;
+  color: #999;
+  margin-top: 20px;
+}
+
+
+
+
+
+.pagination-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  font-size: 14px;
+  gap: 10px;
+  color: #333;
+  flex-wrap: wrap;
+}
+
+
+.pagination-container label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.pagination-container select {
+  padding: 4px 6px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 12px;
+  cursor: pointer;
+  height: 25px;
+}
+
+.range-info {
+  min-width: 100px;
+  text-align: center;
+  white-space: nowrap;
+  font-size: 12.5px;
+}
+
+.arrow-btn {
+  background-color: transparent;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #7030a0;
+}
+
+.arrow-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.upload-icon {
+  border: 2px solid #7030a0;
+  border-radius: 50%;
+}
+
+
+.breadcrumb-wrapper {
+  font-size: 13px;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-link {
+  color: black;
+  text-decoration: none;
+  margin-right: 5px;
+}
+
+.breadcrumb-link:hover {
+  color: #7030a0;
+  font-weight: bold;
+
+}
+
+.breadcrumb-separator {
+  margin: 0 5px;
+  color: #666;
+}
+
+.breadcrumb-current {
+  color: #7030a0;
+  font-weight: bold;
+
 }

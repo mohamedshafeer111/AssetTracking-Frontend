@@ -1,25 +1,23 @@
 <nav class="navbar">
   <h3>Reports</h3>
   <div class="nav-icons">
-     <img src="assets/search.png"    alt="Search"     />
-    <img src="assets/add.png" alt="Add" routerLink="/reports">
-    <img src="assets/download.png" alt="download">
-   <img src="assets/columns.png"
-     style="width:22px;cursor:pointer"
-     (click)="toggleColumnPicker()">
+    <!-- <img src="assets/search.png" alt="Search" /> -->
+    <img src="assets/add.png" alt="Add" routerLink="/reports" class="nav-icon upload-icon">
+    <!-- <img src="assets/download.png" alt="download"> -->
+    <img src="assets/columns.png" (click)="toggleColumnPicker()" class="nav-icon upload-icon">
 
-<div class="column-popup" *ngIf="showColumnPicker">
-  <b>Select Columns</b>
+    <div class="column-popup" *ngIf="showColumnPicker">
+      <b>Select Columns</b>
 
-  <div *ngFor="let col of columns">
-    <input type="checkbox" [(ngModel)]="col.visible"> {{ col.label }}
-  </div>
+      <div *ngFor="let col of columns">
+        <input type="checkbox" [(ngModel)]="col.visible"> {{ col.label }}
+      </div>
 
-  <button (click)="toggleColumnPicker()">Close</button>
-</div>
+      <button (click)="toggleColumnPicker()">Close</button>
+    </div>
 
-    <img src="assets/refresh.png" alt="Refresh">
-    <img src="assets/filter.png" alt="filter">
+    <img src="assets/refresh.png" alt="Refresh" class="nav-icon upload-icon">
+    <img src="assets/filter.png" alt="filter" class="nav-icon upload-icon">
   </div>
 
 </nav>
@@ -49,89 +47,50 @@
 
 
 <div class="table-container">
-  <table class="report-table">
+  <table>
     <thead>
       <tr>
-  <th *ngIf="columns[0].visible">Sl No</th>
-  <th *ngIf="columns[1].visible">Reports</th>
-  <th *ngIf="columns[2].visible">Time Range</th>
-  <th *ngIf="columns[3].visible">Recurrence</th>
-  <th *ngIf="columns[4].visible">Created On</th>
-  <th *ngIf="columns[5].visible">Type</th>
-  <th *ngIf="columns[6].visible">Share With</th>
-  <th>Action</th>
-</tr>
+        <th *ngIf="columns[0].visible">Sl No</th>
+        <th *ngIf="columns[1].visible">Reports</th>
+        <th *ngIf="columns[2].visible">Time Range</th>
+        <th *ngIf="columns[3].visible">Recurrence</th>
+        <th *ngIf="columns[4].visible">Created On</th>
+        <th *ngIf="columns[5].visible">Type</th>
+        <th *ngIf="columns[6].visible">Share With</th>
+        <th>Action</th>
+      </tr>
 
     </thead>
-
-    <!-- 🔹 Table Body -->
     <tbody>
-      <!-- <tr *ngFor="let report of reports; let i = index">
-        <td>{{ i + 1 }}</td>
 
-        <-- Clickable Report Name --
-        <td>
-          <a [routerLink]="['/viewreport', report.id]" style="color:#7030a0;cursor:pointer;text-decoration:none;">
+      <tr *ngFor="let report of reports; let i = index">
+
+        <td *ngIf="columns[0].visible">{{ i + 1 }}</td>
+
+        <td *ngIf="columns[1].visible">
+          <a [routerLink]="['/viewreport',report.bsonId]" style="color:#7030a0;cursor:pointer;text-decoration:none;">
             {{ report.reportName }}
           </a>
         </td>
 
+        <td *ngIf="columns[2].visible">{{ report.timeRange || '—' }}</td>
 
+        <td *ngIf="columns[3].visible">{{ report.recurrence || '—' }}</td>
 
+        <td *ngIf="columns[4].visible">{{ report.createdOn | date: 'dd MMM yyyy, hh:mm:ss a' : '+0400' }}</td>
 
-        <td>{{ report.timeRange || '—' }}</td>
-        <td>{{ report.expireOn || '—' }}</td>
-        <td>{{ report.recurrence || '—' }}</td>
-        <td>{{ report.createdOn || '—' }}</td>
-        <td>{{ report.template || '—' }}</td>
-        <td>{{ report.shareWith || '—' }}</td>
-        <td>{{ report.generatedOn || '—' }}</td>
-        <td>{{ report.status || 'Completed' }}</td>
+        <td *ngIf="columns[5].visible">{{ report.template || '—' }}</td>
+
+        <td *ngIf="columns[6].visible">{{ report.shareWith || '—' }}</td>
 
         <td class="action-buttons">
-          <img src="assets/pencil.png" alt="Edit" class="action-icon delete-btn">
-          <img src="assets/trash.png" alt="Delete" class="action-icon delete-btn" (click)="deleteReport(i)" />
 
-          <img src="assets/send.png" alt="Send" class="action-icon delete-btn" />
+            <img src="assets/pencil.png" class="action-icon">
+            <img src="assets/trash.png" class="action-icon" (click)="deleteReport(i)">
+            <img src="assets/send.png" class="action-icon">
         </td>
-      </tr> -->
 
-
-
-
-
-
-
-
-
-      <tr *ngFor="let report of reports; let i = index">
-
-  <td *ngIf="columns[0].visible">{{ i + 1 }}</td>
-
-  <td *ngIf="columns[1].visible">
-    <a [routerLink]="['/viewreport', report.id]"
-       style="color:#7030a0;cursor:pointer;text-decoration:none;">
-      {{ report.reportName }}
-    </a>
-  </td>
-
-  <td *ngIf="columns[2].visible">{{ report.timeRange || '—' }}</td>
-
-  <td *ngIf="columns[3].visible">{{ report.recurrence || '—' }}</td>
-
-  <td *ngIf="columns[4].visible">{{ report.createdOn || '—' }}</td>
-
-  <td *ngIf="columns[5].visible">{{ report.template || '—' }}</td>
-
-  <td *ngIf="columns[6].visible">{{ report.shareWith || '—' }}</td>
-
-  <td class="action-buttons">
-    <img src="assets/pencil.png" class="action-icon">
-    <img src="assets/trash.png" class="action-icon" (click)="deleteReport(i)">
-    <img src="assets/send.png" class="action-icon">
-  </td>
-
-</tr>
+      </tr>
 
     </tbody>
 
@@ -142,4 +101,3 @@
 <div *ngIf="!reports.length" class="no-reports">
   <p>No reports have been generated yet.</p>
 </div>
-

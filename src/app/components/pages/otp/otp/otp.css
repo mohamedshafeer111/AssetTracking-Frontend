@@ -1,4 +1,4 @@
-.otp-container {
+/* .otp-container {
   max-width: 400px;
   margin: 80px auto;
   padding: 40px 30px;
@@ -70,4 +70,166 @@
 .submit-btn:disabled {
   background-color: #ccc;
   cursor: not-allowed;
+} */
+
+
+
+.auth-box {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+ 
+    background: #7030a0;
+    padding: 0;
+    margin: 0;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, 
+                rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, 
+                rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+  }
+  
+  .auth-left,
+  .auth-right {
+    width: 50%;
+    height: 100%;
+  }
+  
+  .auth-left {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center; /* centers horizontally */
+    align-items: center;     /* centers vertically */
+   
+  }
+  
+  .auth-left img {
+    width: 50%;     /* reduce size */
+    height: auto;   /* maintain aspect ratio */
+    max-height: 80%; /* prevent overflow vertically */
+    object-fit: contain;
+  }
+  
+  
+  .auth-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: white; /* or keep transparent if needed */
+  }
+  
+h2 {
+    font-size: 26px;
+    font-weight: bold;
+    color: #7030a0;
+    /* font-family: 'RedHatDisplay-Regular'; */
+}
+
+p {
+    font-size: 16px;
+    /* font-family: 'RedHatDisplay-Regular'; */
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    margin-bottom: 15px;
+    margin-left: 20%;
+}
+
+.otp-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.submit-btn {
+    width: 80%; /* Decreased width */
+    padding: 12px;
+    background: #7030a0;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    display: block;
+    margin: 30px auto 15px auto; 
+    /* font-family: 'RedHatDisplay-Regular'; */
+}
+
+
+.resend-container {
+    margin-top: 15px;
+}
+
+.resend-btn {
+    background: none;
+    border: none;
+    color: #7030a0;
+    font-size: 14px;
+    cursor: pointer;
+    /* font-family: 'RedHatDisplay-Regular'; */
+}
+
+.resend-btn:hover {
+    text-decoration: underline;
+}
+
+.otp-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(to right, #d4a1ff, #c084f5);
+    padding: 20px;
+}
+
+.otp-form {
+    background: white;
+    padding: 30px;
+    align-items: center;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width:50%;
+}
+
+.otp-input-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.otp-box {
+    width: 50px;
+    height: 50px;
+    font-size: 16px;
+    text-align: center;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s ease-in-out;
+    background-color: white;
+    color:#7030a0;
+    font-weight: bolder;
+    /* font-family: 'RedHatDisplay-Regular'; */
+}
+
+.otp-box:focus {
+    border-color: #7030a0;
+    box-shadow: 0 0 5px rgba(112, 48, 160, 0.5);
+}
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width:50%;
+    margin-top: 10px;
+    
 }

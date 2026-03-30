@@ -21,8 +21,8 @@
 }
 
 .navbar-left {
-  font-size: 16px;
-  font-family: 'RedHatDisplay-Regular';
+  font-size: 14px;
+
 }
 
 
@@ -58,6 +58,7 @@
 .widget-text {
   font-size: 14px;
   text-decoration: underline; /* underline only this text */
+    font-family: 'RedHatDisplay';
 }
 
 
@@ -162,15 +163,16 @@
 
 /* Table base */
 table {
-  width: 60%;
+  width: 100%;
   border-collapse: collapse;
   background-color: #ffffff;
-  font-family: Arial, sans-serif;
+   font-family: 'RedHatDisplay';
+     font-size: 14px;
+  
 }
 
 /* Header */
 thead th {
-  font-size: 14px;
   font-weight: 600;
   color: #fff;
   text-align: left;
@@ -270,21 +272,7 @@ td {
   background-color: #f0e6f6;
 }
 
-.status-active {
-  color: #4caf50;
-  font-weight: 600;
-  padding: 4px 8px;
-  border-radius: 4px;
-  background-color: #e8f5e9;
-}
 
-.status-inactive {
-  color: #f44336;
-  font-weight: 600;
-  padding: 4px 8px;
-  border-radius: 4px;
-  background-color: #ffebee;
-}
 
 /* Make table rows clickable */
 .table-container tbody tr {
@@ -299,4 +287,61 @@ td {
   padding: 20px;
   text-align: center;
   color: #666;
+}
+
+
+
+
+.status-online {
+  color: #2e7d32;
+  background: #e8f5e9;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-offline {
+  color: #c62828;
+  background: #ffebee;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+
+
+
+
+.breadcrumb-wrapper {
+  font-size: 13px;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-link {
+  color: black;
+  text-decoration: none;
+  margin-right: 5px;
+}
+
+.breadcrumb-link:hover {
+  color: #7030a0;
+  font-weight: bold;
+
+}
+
+.breadcrumb-separator {
+  margin: 0 5px;
+  color: #666;
+}
+
+.breadcrumb-current {
+  color: #7030a0;
+  font-weight: bold;
+
 }

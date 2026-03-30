@@ -1,0 +1,686 @@
+<div class="breadcrumb-wrapper">
+  <nav class="breadcrumb">
+    <a routerLink="/processautomation" class="breadcrumb-link">Process & Automation</a>
+    <span class="breadcrumb-separator">››</span>
+    <a class="breadcrumb-current">Update Process & Automation</a>
+  </nav>
+</div>
+
+
+
+<nav class="headnavbar">
+  <h3>Update Process & Automation</h3>
+</nav>
+
+
+<div class="reports-wrapper">
+    <!-- 🔹 Left Side: Project Table -->
+    <div *ngIf="activeTab === 'project'" class="table-container">
+
+
+
+        <div class="AWProject">
+            <div class="table-container1">
+                <table>
+                    <tbody>
+                        <ng-container *ngFor="let project of projects">
+                            <!-- Project row -->
+
+                            <tr [class.rotate]="expandedProjects.has(project.id)" (click)="loadCountries(project.id)">
+
+                                <td class="tabledata" [class.selected]="selectedItemId === project.id"
+                                    (click)="selectItem(project.id)"><span class="indent level1"></span>{{
+                                    project.projectName }}
+                                    <span class="icons">
+
+                                        <img src="assets/down.png" alt="DropDown" class="tab"
+                                            [class.rotate]="expandedProjects.has(project.id)" />
+
+                                    </span>
+                                </td>
+                            </tr>
+
+
+                            <!-- Countries row -->
+                            <tr *ngIf="expandedProjects.has(project.id)">
+                                <td colspan="2">
+                                    <table>
+                                        <tbody>
+                                            <ng-container *ngFor="let country of countriesByProject[project.id]">
+
+                                                <!-- Country row -->
+                                                <tr [class.rotate]="expandedCountry.has(country.id)"
+                                                    (click)="loadArea(country.id); selectCountry(country, project, $event)">
+                                                    <td class="tabledata"
+                                                        [class.selected]="selectedItemId === country.id"
+                                                        (click)="selectItem(country.id)"><span
+                                                            class="indent level2"></span>{{ country.countryName }}
+                                                        <span class="icons">
+
+                                                            <img src="assets/down.png" alt="DropDown" class="tab"
+                                                                [class.rotate]="expandedCountry.has(country.id)" />
+                                                        </span>
+                                                    </td>
+                                                </tr>
+
+                                                <!-- Areas -->
+                                                <ng-container *ngFor="let area of areaByCountry[country.id]">
+                                                    <tr *ngIf="expandedCountry.has(country.id)">
+                                                        <td colspan="2">
+                                                            <table>
+                                                                <tbody>
+                                                                    <!-- Area row -->
+                                                                    <tr [class.rotate]="expandedArea.has(area.id)"
+                                                                        (click)="loadBuilding(area.id); selectArea(area, country, project, $event)">
+                                                                        <td class="tabledata"
+                                                                            [class.selected]="selectedItemId === area.id"
+                                                                            (click)="selectItem(area.id)"><span
+                                                                                class="indent level3"></span>{{
+                                                                            area.areaName }}
+                                                                            <span class="icons">
+
+                                                                                <img src="assets/down.png"
+                                                                                    alt="DropDown" class="tab"
+                                                                                    [class.rotate]="expandedArea.has(area.id)" />
+                                                                            </span>
+                                                                        </td>
+                                                                    </tr>
+
+                                                                    <!-- Buildings -->
+                                                                    <tr *ngIf="expandedArea.has(area.id)">
+                                                                        <td colspan="2">
+                                                                            <table>
+                                                                                <tbody>
+                                                                                    <ng-container
+                                                                                        *ngFor="let building of buildingByArea[area.id]">
+
+                                                                                        <!-- Building row -->
+                                                                                        <tr [class.rotate]="expandedBuilding.has(building.id)"
+                                                                                            (click)="loadFloor(building.id); selectBuilding(building, area, country, project, $event)">
+                                                                                            <td class="tabledata"
+                                                                                                [class.selected]="selectedItemId === building.id"
+                                                                                                (click)="selectItem(building.id)">
+                                                                                                <span
+                                                                                                    class="indent level4"></span>
+                                                                                                {{
+                                                                                                building.buildingName
+                                                                                                }}
+                                                                                                <span class="icons">
+
+                                                                                                    <img src="assets/down.png"
+                                                                                                        alt="DropDown"
+                                                                                                        class="tab"
+                                                                                                        [class.rotate]="expandedBuilding.has(building.id)" />
+                                                                                                </span>
+                                                                                            </td>
+                                                                                        </tr>
+
+                                                                                        <!-- Floors -->
+                                                                                        <!-- Floors -->
+                                                                                        <tr
+                                                                                            *ngIf="expandedBuilding.has(building.id)">
+                                                                                            <td colspan="2">
+                                                                                                <table>
+                                                                                                    <tbody>
+                                                                                                        <ng-container
+                                                                                                            *ngFor="let floor of floorByBuilding[building.id]">
+                                                                                                            <!-- Floor row -->
+                                                                                                            <tr [class.rotate]="expandedFloor.has(floor.id)"
+                                                                                                                (click)="loadZones(floor.id); selectFloor(floor, building, area, country, project, $event)">
+                                                                                                                <td class="tabledata"
+                                                                                                                    [class.selected]="selectedItemId === floor.id"
+                                                                                                                    (click)="selectItem(floor.id)">
+                                                                                                                    <span
+                                                                                                                        class="indent level5"></span>
+                                                                                                                    {{
+                                                                                                                    floor.floorName
+                                                                                                                    }}
+                                                                                                                    <span
+                                                                                                                        class="icons">
+
+                                                                                                                        <img src="assets/down.png"
+                                                                                                                            alt="DropDown"
+                                                                                                                            class="tab"
+                                                                                                                            [class.rotate]="expandedFloor.has(floor.id)" />
+                                                                                                                    </span>
+                                                                                                                </td>
+                                                                                                            </tr>
+
+                                                                                                            <!-- ✅ Zones are nested INSIDE this floor -->
+                                                                                                            <tr
+                                                                                                                *ngIf="expandedFloor.has(floor.id)">
+                                                                                                                <td
+                                                                                                                    colspan="2">
+                                                                                                                    <table>
+                                                                                                                        <tbody>
+                                                                                                                            <ng-container
+                                                                                                                                *ngFor="let zone of zoneByFloor[floor.id]">
+                                                                                                                                <!-- Zone row -->
+                                                                                                                                <tr [class.rotate]="expandedZone.has(zone.id)"
+                                                                                                                                    (click)="selectZone(zone, floor, building, area, country, project, $event)">
+                                                                                                                                    <td class="tabledata"
+                                                                                                                                        [class.selected]="selectedItemId === zone.id"
+                                                                                                                                        (click)="selectItem(zone.id)">
+                                                                                                                                        <span
+                                                                                                                                            class="indent level6"></span>
+                                                                                                                                        {{
+                                                                                                                                        zone.zoneName
+                                                                                                                                        }}
+                                                                                                                                        <span
+                                                                                                                                            class="icons">
+
+                                                                                                                                            <img src="assets/down.png"
+                                                                                                                                                alt="DropDown"
+                                                                                                                                                class="tab"
+                                                                                                                                                [class.rotate]="expandedZone.has(zone.id)" />
+                                                                                                                                        </span>
+                                                                                                                                    </td>
+                                                                                                                                </tr>
+
+                                                                                                                                <!-- SubZones under this zone -->
+                                                                                                                                <tr
+                                                                                                                                    *ngIf="expandedZone.has(zone.id)">
+                                                                                                                                    <td
+                                                                                                                                        colspan="2">
+                                                                                                                                        <table>
+                                                                                                                                            <tbody>
+                                                                                                                                                <ng-container
+                                                                                                                                                    *ngFor="let subZone of subZoneByZone[zone.id]">
+                                                                                                                                                    <tr>
+                                                                                                                                                        <td class="tabledata"
+                                                                                                                                                            [class.selected]="selectedItemId === subZone.id"
+                                                                                                                                                            (click)="selectItem(subZone.id)">
+                                                                                                                                                            <span
+                                                                                                                                                                class="indent level7"></span>
+                                                                                                                                                            {{
+                                                                                                                                                            subZone.subZoneName
+                                                                                                                                                            }}
+                                                                                                                                                            <span
+                                                                                                                                                                class="icons">
+
+
+                                                                                                                                                            </span>
+                                                                                                                                                        </td>
+                                                                                                                                                    </tr>
+                                                                                                                                                </ng-container>
+                                                                                                                                            </tbody>
+                                                                                                                                        </table>
+                                                                                                                                    </td>
+                                                                                                                                </tr>
+
+                                                                                                                            </ng-container>
+                                                                                                                        </tbody>
+                                                                                                                    </table>
+                                                                                                                </td>
+                                                                                                            </tr>
+
+                                                                                                        </ng-container>
+                                                                                                    </tbody>
+                                                                                                </table>
+                                                                                            </td>
+                                                                                        </tr>
+
+                                                                                    </ng-container>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </td>
+                                                                    </tr>
+
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </ng-container>
+
+                                            </ng-container>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+    <div class="container">
+        <div class="navbar-section">
+            <!-- <nav class="navbar">
+                <h3>Edit</h3>
+            </nav> -->
+        </div>
+
+        <div class="form-section">
+            <div class="form-group">
+                <label class="pcolor">Title</label>
+                <input type="text" placeholder="Enter title here" [(ngModel)]="title" />
+            </div>
+        </div>
+
+
+
+
+
+
+        <!-- ================= RULE CONTAINER ================= -->
+        <div class="rule-container">
+
+            <!-- ========== ROW 1 : CONDITIONS (TOP) ========== -->
+            <div class="rule-row">
+
+                <!-- ================= LEFT SIDE ================= -->
+                <div class="side-labels">
+
+                    <div class="side-label">Conditions</div>
+
+                    <!-- AND / OR STACK -->
+                    <div class="logic-stack">
+                        <div class="logic-box" *ngFor="let c of conditions; let i = index; trackBy: trackByCondition">
+                            <select *ngIf="i > 0" [(ngModel)]="c.operator">
+                                <option value="AND">AND</option>
+                                <option value="OR">OR</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ================= RIGHT SIDE ================= -->
+                <div class="content-wrapper">
+                    <div class="main-content">
+                        <div class="condition-section">
+
+                            <!-- <div class="relationship-title">
+                                Relationship: {{ relationshipText }}
+                            </div> -->
+
+                            <!-- CONDITIONS -->
+                            <!-- 🔥 ADDED #conditionBlock here -->
+                            <div #conditionBlock class="condition-block" *ngFor="let c of conditions; let i = index">
+
+                                <!-- MAIN ROW -->
+                                <div class="condition-row-wrapper">
+
+                                    <span class="condition-label">{{ c.label }}</span>
+
+                                    <!-- CONDITION DROPDOWN -->
+                                    <!-- <div class="dropdown-input" (click)="toggleConditionDropdown(i)">
+                                        <input type="text" [value]="c.selectedConditionLabel"
+                                            placeholder="Select condition" readonly />
+                                    </div> -->
+
+
+
+
+                                    <div class="condition-content">
+
+                                       <div class="input-row">
+  <label>Select Device</label>
+  <div style="flex: 1; min-width: 0;">
+    <div class="multi-select-wrapper">
+
+      <div class="multi-select-trigger"
+           (click)="$event.stopPropagation(); toggleDeviceDropdown()">
+        <span>{{ selectedDevicesLabel }}</span>
+      </div>
+
+      <div class="multi-select-list"
+        *ngIf="showDeviceDropdown && activeDevices.length > 0">
+        <label *ngFor="let d of activeDevices" class="multi-select-item"
+          (click)="$event.stopPropagation()">
+          <input type="checkbox" [checked]="isDeviceSelected(d.id)"
+            (change)="onDeviceSelectionChange(d)" />
+          <span>{{ d.deviceName }} ({{ d.deviceUniqueId }})</span>
+        </label>
+      </div>
+
+      <div class="multi-select-list"
+        *ngIf="showDeviceDropdown && activeDevices.length === 0">
+        <span class="no-devices">No devices available. Select a location first.</span>
+      </div>
+
+      <!-- chips -->
+      <!-- <div class="selected-chips" *ngIf="selectedDevices.length > 0">
+        <span class="chip" *ngFor="let d of selectedDevices">
+          {{ d.deviceName }}
+          <span class="chip-remove"
+            (click)="$event.stopPropagation(); toggleDeviceSelection({id: d.deviceId, deviceName: d.deviceName})">×</span>
+        </span>
+      </div> -->
+
+    </div>
+
+    <!-- inline device error -->
+    <small style="color:red; font-size:11px;" *ngIf="validationErrors.devices">
+      ⚠ {{ validationErrors.devices }}
+    </small>
+  </div>
+</div>
+
+
+                                        <div class="input-row">
+                                            <label>Status</label>
+                                            <select class="condition-input" [(ngModel)]="c.deviceStatus">
+                                                <option value="" disabled selected>Select status</option>
+                                                <option value="ONLINE">ONLINE</option>
+                                                <option value="OFFLINE">OFFLINE</option>
+                                            </select>
+                                        </div>
+
+                                       <div class="input-row">
+  <label>Enter Time (sec)</label>
+  <input type="number" placeholder="Enter time in seconds"
+    [(ngModel)]="c.deviceTime"
+    (ngModelChange)="onTimeChange($event)" />
+  <small style="color:red; font-size:11px;" *ngIf="validationErrors.time">
+    ⚠ {{ validationErrors.time }}
+  </small>
+</div>
+
+                                    </div>
+
+
+
+
+
+                                    <!-- PLUS / MINUS -->
+                                    <button class="add-btn" type="button">
+                                        <img src="assets/minus.png" class="btn-icon" *ngIf="i > 0"
+                                            (click)="removeCondition(i)" />
+                                        <!-- <img src="assets/plusicon.png" class="btn-icon"
+                                            *ngIf="i === conditions.length - 1 && conditions.length < 3"
+                                            (click)="addCondition()" /> -->
+                                    </button>
+
+                                    <!-- DROPDOWN LIST -->
+                                    <!-- <ul class="condition-dropdown" *ngIf="c.showDropdown">
+                                        <li (click)="selectCondition('device', i)">When the device</li>
+                                        <li (click)="selectCondition('time', i)">When the time is</li>
+                                        <li (click)="selectCondition('people', i)">When the people is</li>
+                                    </ul> -->
+
+                                </div>
+
+                                <!-- DEVICE -->
+                                <div class="condition-expand" *ngIf="c.selectedCondition === 'device'">
+                                    <select #deviceSelect class="condition-input" [(ngModel)]="selectedDeviceId"
+                                        (change)="onDeviceChange(deviceSelect.value)">
+                                        <option value="" disabled>Select Device</option>
+                                        <option *ngFor="let device of devices" [value]="device.id">
+                                            {{ device.deviceName }}
+                                        </option>
+                                    </select>
+
+                                    <select class="condition-input" [(ngModel)]="selectedParameterId"
+                                        [disabled]="parameters.length === 0">
+                                        <option value="" disabled>Select Parameter</option>
+                                        <option *ngFor="let param of parameters" [value]="param.id">
+                                            {{ param.name }}
+                                        </option>
+                                    </select>
+
+                                    <input class="condition-input" placeholder="Value" />
+                                </div>
+
+                                <!-- PEOPLE -->
+                                <div class="people-inputs" *ngIf="c.showPeopleInputs">
+                                    <input class="condition-input" />
+                                    <input class="condition-input" />
+                                    <input class="condition-input" />
+                                </div>
+
+                            </div>
+
+                            <!-- TIME PERIOD CHECKBOX -->
+                            <!-- <div class="form-row">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" [checked]="showTimePeriod"
+                                        (change)="toggleTimePeriod($event)" />
+                                    <span class="checkmark"></span>
+                                    Set time Period
+                                </label>
+                            </div> -->
+
+                            <!-- TIME PERIOD -->
+                            <div class="time-period-box" *ngIf="showTimePeriod">
+
+                                <div class="time-inputs">
+
+                                    <!-- FROM -->
+                                    <div class="time-group">
+                                        <label>From</label>
+                                        <div class="time-box">
+                                            <input type="text" maxlength="2" placeholder="HH" [(ngModel)]="fromHour"
+                                                (input)="formatHour($event)" class="time-inner" />
+                                            <span class="colon">:</span>
+                                            <input type="text" maxlength="2" placeholder="MM" [(ngModel)]="fromMinute"
+                                                (input)="formatMinute($event)" class="time-inner" />
+                                        </div>
+                                    </div>
+
+                                    <!-- TO -->
+                                    <div class="time-group">
+                                        <label>To</label>
+                                        <div class="time-box">
+                                            <input type="text" maxlength="2" placeholder="HH" [(ngModel)]="toHour"
+                                                (input)="formatHour($event)" class="time-inner" />
+                                            <span class="colon">:</span>
+                                            <input type="text" maxlength="2" placeholder="MM" [(ngModel)]="toMinute"
+                                                (input)="formatMinute($event)" class="time-inner" />
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!-- DAYS -->
+                                <div class="days-selection">
+                                    <span *ngFor="let day of days" (click)="toggleDay(day)"
+                                        [class.selected]="selectedDays.includes(day)">
+                                        {{ day }}
+                                    </span>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- ========== ROW 2 : ACTIONS (BOTTOM) ========== -->
+            <div class="rule-row">
+
+                <!-- LEFT LABEL -->
+                <div class="side-labels">
+                    <div class="side-label">Actions</div>
+                </div>
+
+                <!-- RIGHT CONTENT -->
+                <div class="content-wrapper">
+                    <div class="main-content">
+                        <div class="action-section">
+
+                            <div *ngFor="let a of actions; let i = index" class="action-block">
+
+                                <!-- HEADER (LEFT LABEL + INPUT) -->
+                                <div class="action-header">
+                                    <label class="action-label">{{ a.label }}</label>
+
+                                    <div class="action-row">
+                                        <div class="dropdown-wrapper">
+                                            <div class="dropdown-input" (click)="toggleActionDropdown(i)">
+                                                <input type="text" [value]="a.selectedActionLabel"
+                                                    placeholder="Select action" readonly />
+                                            </div>
+
+                                            <ul class="condition-dropdown open-below" *ngIf="a.showActionDropdown">
+                                                <li (click)="selectAction('device', i)">Trigger Device</li>
+                                                <li (click)="selectAction('alarm', i)">Send an alarm</li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="add-btn">
+                                            <img src="assets/minus.png" class="btn-icon" *ngIf="i > 0"
+                                                (click)="removeAction(i)" />
+                                            <!-- <img src="assets/plusicon.png" class="btn-icon"
+                                                *ngIf="i === actions.length - 1 && actions.length < 3"
+                                                (click)="addAction()" /> -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 🔽 EXPANDED CONTENT (DOWN) -->
+
+                                <!-- DEVICE -->
+                                <div class="condition-expand" *ngIf="a.selectedAction === 'device'">
+                                    <select class="condition-input">
+                                        <option>Select Device</option>
+                                    </select>
+
+                                    <select class="condition-input">
+                                        <option>Select Parameter</option>
+                                    </select>
+
+                                    <input class="condition-input" placeholder="Value" />
+                                </div>
+
+                                <!-- ALARM OPTIONS -->
+                                <div class="condition-expand alarm-options" *ngIf="a.selectedAction === 'alarm'">
+                                    <button class="alarm-btn" [class.active]="a.selectedAlarmType === 'dashboard'"
+                                        (click)="selectAlarmType('dashboard', i)">
+                                        Dashboard
+                                    </button>
+
+                                    <button class="alarm-btn" [class.active]="a.selectedAlarmType === 'email'"
+                                        (click)="selectAlarmType('email', i)">
+                                        Email
+                                    </button>
+
+                                    <button class="alarm-btn" [class.active]="a.selectedAlarmType === 'task'"
+                                        (click)="selectAlarmType('task', i)">
+                                        Task
+                                    </button>
+                                </div>
+
+                                <!-- EMAIL / TASK INPUTS -->
+                                <div *ngIf="a.selectedAction === 'alarm' && a.selectedAlarmType === 'email'">
+
+                                    <select class="condition-input" [(ngModel)]="a.email.severity">
+                                        <option value="major">Major</option>
+                                        <option value="minor">Minor</option>
+                                        <option value="critical">Critical</option>
+                                    </select>
+
+                                    <input class="condition-input" placeholder="Enter Email 1"
+                                        [(ngModel)]="a.email.title" />
+
+                                    <input class="condition-input" placeholder="Enter Email 2"
+                                        [(ngModel)]="a.email.description" />
+
+                                    <input class="condition-input" placeholder="Recurrence"
+                                        [(ngModel)]="a.email.recurrence" />
+
+                                    <input class="condition-input" placeholder="Description"
+                                        [(ngModel)]="a.email.message" />
+                                </div>
+                                <div *ngIf="a.selectedAction === 'alarm' && a.selectedAlarmType === 'task'">
+
+                                    <select class="condition-input" [(ngModel)]="a.task.severity">
+                                        <option value="major">Major</option>
+                                        <option value="minor">Minor</option>
+                                        <option value="critical">Critical</option>
+                                    </select>
+
+                                    <input class="condition-input" placeholder="Task Title"
+                                        [(ngModel)]="a.task.title" />
+
+                                    <input class="condition-input" placeholder="Task Description"
+                                        [(ngModel)]="a.task.description" />
+
+                                    <input class="condition-input" placeholder="Recurrence"
+                                        [(ngModel)]="a.task.recurrence" />
+
+                                    <input class="condition-input" placeholder="Task Message"
+                                        [(ngModel)]="a.task.message" />
+                                </div>
+
+
+
+                            </div>
+
+
+
+
+
+                            <!-- <div class="dropdown-input">
+    <p>ACTION: When the Device</p>
+</div> -->
+
+                            <div class="action-inputs">
+
+                                <!-- Row 1 -->
+                                <div class="action-row">
+                                    <label class="action-label">Select Type</label>
+
+                                    <select class="condition-input device-input" [(ngModel)]="selectedActionType">
+                                        <option value="" disabled selected>Select Type</option>
+                                        <option value="Send an Alarm">Send an Alarm</option>
+                                    </select>
+                                </div>
+
+
+
+
+
+                                <div class="action-row">
+                                    <label class="action-label">Dashboard</label>
+
+                                    <input type="checkbox" class="dashboard-checkbox" [(ngModel)]="dashboardChecked" />
+                                </div>
+
+
+                                <!-- Row 2 -->
+                                <div class="input-row">
+                                    <label>Description</label>
+
+                                    <textarea class="condition-input description-box"
+                                        placeholder="Enter description here..." [(ngModel)]="description"></textarea>
+
+                                </div>
+
+
+                            </div>
+
+
+
+
+
+
+
+
+                            <div class="form-actions">
+                                <button class="cancel-btn" routerLink="/processautomation">Cancel</button>
+                                <button class="save-btn" (click)="saveProcessAutomation()">Update</button>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+    </div>
+</div>

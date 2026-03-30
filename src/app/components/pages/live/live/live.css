@@ -29,7 +29,7 @@ button.three:hover {
   gap: 20px;
   width: 100%;
   height: 100%;
-  padding: 10px;
+  /* padding: 10px; */
   box-sizing: border-box;
 }
 
@@ -70,6 +70,13 @@ button.three:hover {
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.device-controls-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  /* spacing between items */
 }
 
 /* Map div fills remaining space */
@@ -200,13 +207,18 @@ label {
   width: 100%;
 }
 
-.image-wrapper {
+/* .image-wrapper {
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+} */
+.image-wrapper {
+  position: relative;
+  display: inline-block;
+  transform-origin: center center;
+  transition: transform 0.2s ease;
 }
-
 .map-image {
   width: 100%;
   height: 100%;
@@ -216,6 +228,7 @@ label {
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
   display: block;
 }
+
 
 .drawing-canvas {
   position: absolute;
@@ -483,6 +496,8 @@ label {
   border-radius: 4px;
   cursor: pointer;
   transition: background 0.2s ease;
+  font-family: 'RedHatDisplay';
+  font-size: 14px;
 }
 
 .tabledata:hover {
@@ -494,6 +509,8 @@ label {
 .table-container>table>tbody>tr>.tabledata:not(.selected) {
   background-color: #e9def3 !important;
   font-weight: 600;
+  font-family: 'RedHatDisplay';
+  font-size: 14px;
 }
 
 
@@ -681,6 +698,8 @@ p {
   border-radius: 6px;
   outline: none;
   font-weight: 400;
+  font-family: 'RedHatDisplay';
+  font-size: 14px;
 }
 
 /* Label styling */
@@ -688,6 +707,8 @@ p {
   font-size: 14px;
   font-weight: 500;
   margin-right: 5px;
+  font-family: 'RedHatDisplay';
+
 }
 
 /* Hours group container */
@@ -897,7 +918,8 @@ p {
 
 .apply-buton {
   cursor: pointer;
-  /* box-shadow: 0 8px 20px rgba(96, 72, 114, 0.35); */
+  font-family: 'RedHatDisplay';
+  font-size: 14px;
 }
 
 .apply-buton:hover {
@@ -1002,6 +1024,7 @@ p {
   padding: 12px 20px;
   font-weight: 600;
   font-size: 14px;
+  font-family: 'RedHatDisplay';
 }
 
 /* Close Button */
@@ -1030,8 +1053,8 @@ p {
 
 /* Highlight key details */
 .asset-popup .popup-body p:first-child {
-  font-weight: 600;
-  font-size: 15px;
+  font-family: 'RedHatDisplay';
+  font-size: 14px;
 }
 
 .asset-popup .popup-body p span {
@@ -1079,6 +1102,7 @@ p {
   /* header color */
   color: #fff;
   padding: 0px 8px;
+  font-family: 'RedHatDisplay';
   font-size: 14px;
 }
 
@@ -1102,6 +1126,7 @@ p {
   /* display: block; */
   max-height: 70vh;
   z-index: 2001;
+
 }
 
 .asset-table thead {
@@ -1122,6 +1147,8 @@ p {
 .asset-table th {
   font-weight: 600;
   color: #333;
+  font-family: 'RedHatDisplay';
+  font-size: 14px;
 }
 
 .asset-table tbody tr:hover {
@@ -1133,12 +1160,86 @@ p {
 .asset-table td {
   color: #555;
   white-space: nowrap;
+  font-family: 'RedHatDisplay';
+  font-size: 14px;
 }
 
 
 
 
+/* Anchor for the tooltip */
+.delete-icon-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
 
+/* Tooltip bubble — appears to the right of the icon */
+.delete-tooltip {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 12px);
+  transform: translateY(-50%);
+  background: #1a1a2e;
+  color: #fff;
+  font-size: 12px;
+  line-height: 1.6;
+  padding: 8px 12px;
+  border-radius: 8px;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  z-index: 999;
+  animation: tooltipFadeIn 0.2s ease;
+}
+
+/* Arrow pointing left toward the icon */
+.delete-tooltip::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -6px;
+  transform: translateY(-50%);
+  border-width: 6px 6px 6px 0;
+  border-style: solid;
+  border-color: transparent #1a1a2e transparent transparent;
+}
+
+/* ✕ close button inside tooltip */
+.tooltip-close {
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  opacity: 0.7;
+  vertical-align: middle;
+}
+
+.tooltip-close:hover {
+  opacity: 1;
+}
+
+/* Delete icon turns red when active */
+.f-icon.active-delete {
+  filter: drop-shadow(0 0 5px rgba(255, 77, 79, 0.9));
+}
+
+/* Device markers show red dashed ring when in delete mode */
+.device-marker.delete-mode {
+  cursor: crosshair;
+  outline: 2px dashed #ff4d4f;
+  border-radius: 50%;
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) translateX(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+}
 
 
 
@@ -1150,3 +1251,134 @@ p {
 
 /* 10-2-26 */
 
+.confirm-popup {
+  position: fixed;
+  /* 🔥 MUST BE FIXED */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 99999;
+  /* 🔥 VERY HIGH */
+}
+
+.popup-box {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  min-width: 300px;
+  z-index: 100000;
+}
+
+.polygon-label {
+  background: #cb99f1;
+  border: 1px solid #7030a0;
+  color: white;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+
+.breadcrumb-wrapper {
+  font-size: 13px;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-link {
+  color: black;
+  text-decoration: none;
+  margin-right: 5px;
+}
+
+.breadcrumb-link:hover {
+  color: #7030a0;
+  font-weight: bold;
+
+}
+
+.breadcrumb-separator {
+  margin: 0 5px;
+  color: #666;
+}
+
+.breadcrumb-current {
+  color: #7030a0;
+  font-weight: bold;
+
+}
+
+.zoom-controls {
+  display: flex;
+  flex-direction: column;
+  /* ✅ vertical stack */
+  align-items: center;
+  gap: 10px;
+  margin-top: -12px;
+  margin-bottom: 10px;
+}
+
+.zoom-btn {
+  width: 25px;
+  height: 25px;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: #7030a0;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zoom-btn:hover {
+  background-color: #5a2080;
+}
+
+.zoom-label {
+  font-size: 12px;
+  color: #333;
+  text-align: center;
+}
+
+.floor-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;  /* ✅ align left */
+  gap: 4px;
+  margin-left: 0px;        /* ✅ adjust this value as needed */
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.floor-btn {
+  width:25px;
+  height: 25px;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: #7030a0;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.floor-btn:hover {
+  background-color: #5a2080;
+}

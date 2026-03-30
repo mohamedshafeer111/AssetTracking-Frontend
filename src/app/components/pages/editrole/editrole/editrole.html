@@ -1,0 +1,54 @@
+<div class="breadcrumb-wrapper">
+  <nav class="breadcrumb">
+    <a routerLink="/administration" class="breadcrumb-link">Administration</a>
+    <span class="breadcrumb-separator">››</span>
+    <a routerLink="/user-management" class="breadcrumb-link">UserManagement</a>
+    <span class="breadcrumb-separator">››</span>
+     <a routerLink="/role" class="breadcrumb-link">Role</a>
+    <span class="breadcrumb-separator">››</span>
+    <span class="breadcrumb-current">UpdateRole</span>
+  </nav>
+</div>
+
+
+<nav class="navbar">
+  <h3>Edit Role</h3>
+</nav>
+
+<div class="role-permission-container">
+
+  <div class="create-role-container">
+    <!-- <h2>Edit Role</h2> -->
+
+    <div class="role-header">
+      <div class="input-group">
+        <label>Role Name</label>
+        <input type="text" [(ngModel)]="editRoles.roleName" placeholder="Enter Role Name" />
+      </div>
+
+      <div class="input-group">
+        <label>Description</label>
+        <input type="text" [(ngModel)]="editRoles.description" placeholder="Enter Description" />
+      </div>
+    </div>
+  </div>
+
+  <div class="permission-sections">
+    <div class="access-permission">
+      <div class="access-list">
+        <h3>Access Permission</h3>
+        <div class="access-item" *ngFor="let module of modules">
+          <input type="checkbox" [checked]="isChecked(module)"
+            (change)="onCheckboxChange(module, $any($event.target).checked)" />
+          <span class="module-name">{{ module }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <button class="cancel-btn" routerLink="/role">Cancel</button>
+      <button class="save-btn" (click)="updateRole()">Update</button>
+    </div>
+  </div>
+
+</div>

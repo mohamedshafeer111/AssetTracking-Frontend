@@ -1,0 +1,1182 @@
+/* ==========================================================================
+   TABLE HIERARCHY
+   ========================================================================== */
+.table-container {
+  width: 35%;
+  background: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-family: 'RedHatDisplay-Regular', Arial, sans-serif;
+  padding: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  min-height: 100%;
+}
+
+.table-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabledata {
+  position: relative;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #333;
+  border: 1px solid #eee;
+  background: #fafafa;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  font-family: 'RedHatDisplay';
+}
+
+.tabledata:hover {
+  background-color: #ede6f7;
+}
+
+td.tabledata:not(.selected):has(.indent.level1) {
+  background: #e9def3 !important;
+  font-weight: 600;
+}
+
+.tabledata table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 4px;
+}
+
+.tabledata.selected {
+  background: #7030a0 !important;
+  color: #fff !important;
+  font-weight: 600;
+}
+
+.icons {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.table-container img.tab {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  transform: rotate(90deg);
+}
+
+.table-container img.tab.rotate {
+  transform: rotate(180deg);
+}
+
+.indent {
+  display: inline-block;
+  width: 15px;
+}
+
+.level1 {
+  margin-left: 0px;
+}
+
+.level2 {
+  margin-left: 15px;
+}
+
+.level3 {
+  margin-left: 30px;
+}
+
+.level4 {
+  margin-left: 45px;
+}
+
+.level5 {
+  margin-left: 60px;
+}
+
+.level6 {
+  margin-left: 75px;
+}
+
+.level7 {
+  margin-left: 90px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ==========================================================================
+   RULE BUILDER LAYOUT
+   ========================================================================== */
+
+
+
+
+/* .side-label {
+  font-weight: 600;
+  color: #7a3db8;
+  margin-bottom: 12px;
+} */
+
+
+
+
+
+.content-wrapper {
+  flex: 1;
+}
+
+/* ==========================================================================
+   CONDITIONS
+   ========================================================================== */
+
+
+
+
+
+.condition-label {
+  min-width: 30px;
+  font-weight: 600;
+  color: #444;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.dropdown-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.dropdown-input input {
+  width: 100%;
+  height: 40px;
+  padding: 8px 12px;
+  border: 1.5px solid #bfbfbf;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 14px;
+  box-sizing: border-box;
+  display: flex;
+}
+
+.dropdown-input input:hover {
+  border-color: #888;
+}
+
+.dropdown-input input:focus {
+  outline: none;
+  border-color: #2f80ed;
+  box-shadow: 0 0 0 2px rgba(47, 128, 237, 0.15);
+}
+
+.dropdown-input input::placeholder {
+  color: #999;
+}
+
+.condition-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 260px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0;
+  z-index: 10;
+}
+
+.condition-dropdown li {
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.condition-dropdown li:hover {
+  background: #f0f0f0;
+}
+
+.add-btn {
+  flex: 0 0 auto;
+  border: none;
+  background: transparent;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  padding: 5px;
+}
+
+.condition-expand {
+  padding: 12px;
+  border-radius: 6px;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.condition-input {
+  width: 70%;
+  height: 40px;
+  padding: 0 12px;
+  background: #ffffff;
+  border: 1px solid #cfcfcf;
+  border-radius: 5px;
+  font-size: 13px;
+  color: #333;
+  outline: none;
+  box-sizing: border-box;
+  margin-left: 100px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  margin-left: 7%;
+  font-family: 'RedHatDisplay';
+
+}
+
+.condition-input:focus {
+  border-color: #3f51b5;
+  box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.15);
+}
+
+.condition-input::placeholder {
+  color: #9e9e9e;
+}
+
+.people-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.people-inputs .condition-input {
+  width: 220px;
+}
+
+/* ==========================================================================
+   TIME PERIOD
+   ========================================================================== */
+.form-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+.checkbox-label input[type="checkbox"] {
+  margin-left: 10px;
+  width: 18px;
+  height: 18px;
+  accent-color: #9655a8;
+}
+
+/* .time-period-box {
+ 
+} */
+
+.time-inputs {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.time-group label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.time-box {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 6px 8px;
+  width: fit-content;
+  background: #fff;
+}
+
+.time-inner {
+  width: 38px;
+  padding: 6px 4px;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  text-align: center;
+  font-size: 14px;
+  outline: none;
+}
+
+.colon {
+  margin: 0 6px;
+  font-weight: bold;
+}
+
+.time-box:focus-within,
+.time-inner:focus {
+  border-color: #007bff;
+}
+
+.days-selection {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.days-selection span {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 13px;
+}
+
+.days-selection span.selected {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+/* ==========================================================================
+   ACTIONS
+   ========================================================================== */
+.action-section {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.action-block {
+  display: block;
+}
+
+.action-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.action-label {
+  min-width: 80px;
+  font-weight: 600;
+  color: #333;
+}
+
+.action-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.dropdown-wrapper {
+  flex: 1;
+  position: relative;
+}
+
+.alarm-options {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+.alarm-btn {
+  flex: 1;
+  text-align: center;
+  padding: 10px 0;
+  border: 1px solid #ccc;
+  background: #f5f5f5;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.alarm-btn.active {
+  background: #813fb4;
+  color: #fff;
+  border-color: #c28bec;
+}
+
+.alarm-inputs {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.alarm-inputs input {
+  height: 32px;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* ==========================================================================
+   FORM ELEMENTS & BUTTONS
+   ========================================================================== */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group input {
+  height: 30px;
+  padding: 2px 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.form-actions {
+  margin-top: 40px;
+  text-align: right;
+}
+
+.save-btn,
+.cancel-btn {
+  min-width: 90px;
+  font-size: 16px;
+  padding: 7px 0;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: 16px;
+  transition: background 0.2s;
+}
+
+.save-btn {
+  background: #7030a0;
+  color: #fff;
+  font-family: 'RedHatDisplay';
+  font-size: 14px;
+}
+
+.save-btn:hover {
+  background: #764282;
+}
+
+.cancel-btn {
+  background: #c7c6c7;
+  color: #000;
+  border: 1px solid #e8e2eb;
+  font-family: 'RedHatDisplay';
+  font-size: 14px;
+}
+
+.cancel-btn:hover {
+  background: #f4ecf9;
+}
+
+.pcolor {
+  color: #7030a0;
+  font-family: 'RedHatDisplay';
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* ==========================================================================
+   OTHER COMPONENTS
+   ========================================================================== */
+.navbar-section {
+  width: 145%;
+  background: #ddd;
+  border-radius: 10px;
+}
+
+.form-section {
+  width: 100%;
+  border-radius: 10px;
+  /* padding: 15px; */
+}
+
+.navbar {
+  padding: 10px 20px;
+  color: #7030a0;
+}
+
+.reports-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+  min-height: 100vh;
+  background: #fafafa;
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ==========================================================================
+   RULE BUILDER LAYOUT - BULLETPROOF ALIGNMENT
+   ========================================================================== */
+
+
+
+
+.side-label {
+  font-weight: 600;
+  color: #7a3db8;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+/* ABSOLUTE POSITIONING - NO FLEX SHIFTING */
+
+
+
+
+
+.condition-section {
+  margin-bottom: 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ==========================================================================
+   RULE BUILDER LAYOUT - BULLETPROOF ALIGNMENT
+   ========================================================================== */
+
+
+/* LEFT SIDE LABELS */
+
+.side-label {
+  font-weight: 600;
+  color: #7a3db8;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+
+
+
+
+
+.content-wrapper {
+  flex: 1;
+}
+
+/* ==========================================================================
+   CONDITIONS - FIXED HEIGHTS
+   ========================================================================== */
+.relationship-title {
+  color: #9655a8;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.condition-section {
+  margin-bottom: 0;
+}
+
+
+
+.condition-label {
+  min-width: 30px;
+  font-weight: 600;
+  color: #444;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* Keep all your existing dropdown, expand, etc. styles */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.side-label {
+  font-weight: 600 !important;
+  color: #7a3db8 !important;
+  margin-bottom: 12px !important;
+  text-align: center !important;
+  font-family: 'RedHatDisplay';
+  font-size: 14px;
+}
+
+/* BULLETPROOF LOGIC STACK */
+/* BULLETPROOF LOGIC STACK ALIGNMENT */
+
+
+
+
+.content-wrapper {
+  flex: 1 !important;
+}
+
+
+.condition-section {
+  margin-bottom: 0 !important;
+}
+
+
+
+
+
+
+
+
+
+/* ==========================================================================
+   RULE BUILDER LAYOUT
+   ========================================================================== */
+.rule-container {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+  margin: 40px;
+}
+
+.rule-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+/* ==========================================================================
+   LEFT SIDE (Conditions + AND/OR)
+   ========================================================================== */
+
+.side-labels {
+  width: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.side-label {
+  font-weight: 600;
+  color: #7a3db8;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+/* 🔥 UPDATED: Remove fixed gap, let it flow naturally */
+.logic-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  /* Remove fixed gap */
+  width: 100%;
+}
+
+/* 🔥 UPDATED: Dynamic height based on condition block */
+.logic-box {
+  display: flex;
+  align-items: flex-start;
+  /* Align to top */
+  justify-content: center;
+  padding-top: 12px;
+  /* Small spacing from top */
+}
+
+.logic-box select {
+  width: 70px;
+  height: 32px;
+  padding: 4px 8px;
+  font-size: 12px;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   RIGHT SIDE (CONDITIONS)
+   ========================================================================== */
+
+
+.content-wrapper {
+  flex: 1;
+}
+
+.relationship-title {
+  color: #9655a8;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.condition-section {
+  margin-bottom: 0;
+}
+
+/* 🔥 UPDATED: Remove fixed margin, let content flow */
+.condition-block {
+  margin-bottom: 0;
+  /* Remove fixed spacing */
+  position: relative;
+}
+
+/* Add spacing between condition blocks */
+.condition-block:not(:last-child) {
+  margin-bottom: 24px;
+}
+
+/* MAIN CONDITION ROW */
+.condition-row-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  /* Minimum height */
+  position: relative;
+}
+
+.condition-label {
+  min-width: 30px;
+  font-weight: 600;
+  color: #444;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* done */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 13-2-26 start */
+.action-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 12px;
+  padding-left: 45px;
+}
+
+.input-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  font-family: 'RedHatDisplay';
+  font-size: 13px;
+}
+
+.input-row label {
+  width: 140px;
+  /* adjust alignment width */
+  font-weight: 500;
+}
+
+.input-row select,
+.input-row textarea {
+  flex: 1;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-left: 0%;
+}
+
+/* Bigger textarea */
+.description-box {
+  min-height: 70px;
+  resize: vertical;
+}
+
+
+
+
+
+
+
+
+
+
+.action-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.action-label {
+  min-width: 120px;
+  font-weight: 500;
+}
+
+.condition-input {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  min-width: 200px;
+}
+
+
+
+
+
+
+
+
+
+
+.action-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dashboard-checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  margin-left: 7%;
+}
+
+.action-label {
+
+  cursor: pointer;
+  font-family: 'RedHatDisplay';
+  font-size: 14px;
+}
+
+
+
+
+
+
+
+
+
+
+
+.condition-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.input-row label {
+  width: 140px;
+  /* controls left alignment */
+  font-size: 14px;
+  font-family: 'RedHatDisplay';
+  font-size: 14px;
+}
+
+.input-row input {
+  flex: 1;
+  padding: 10px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-family: 'RedHatDisplay';
+  font-size: 13px;
+}
+
+/* end */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* endddddddddddddddddddddd */
+
+
+
+
+/* new 13-2-26 */
+
+
+
+
+/* Multi-select device picker */
+.multi-select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.multi-select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  background: #fff;
+  min-height: 38px;
+  font-size: 14px;
+}
+
+.multi-select-trigger:hover {
+  border-color: #888;
+}
+
+.multi-select-list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 999;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.multi-select-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.15s;
+}
+
+.multi-select-item:hover {
+  background: #f5f5f5;
+}
+
+.multi-select-item input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  accent-color: #4a90e2;
+}
+
+.no-devices {
+  display: block;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #999;
+}
+
+/* Chips for selected devices */
+.selected-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #e8f0fe;
+  color: #3367d6;
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.chip-remove {
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  color: #3367d6;
+  margin-left: 2px;
+}
+
+.chip-remove:hover {
+  color: #c00;
+}
+
+.headnavbar {
+  display: flex;
+  justify-content: space-between;
+  /* space between title and icons */
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #ddd;
+  /* border: 1px solid rgb(206, 201, 201); */
+  height: 35px;
+  color: #000;
+  margin-top: 0%;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  font-size: 14px;
+
+    position: sticky;
+  top: 0;
+  z-index: 1000;
+
+}
+
+.headnavbar h3 {
+  padding: 6px;
+}
+
+
+
+
+
+/* 16-2-26 */
+
+
+/* Red border on invalid inputs/wrappers */
+
+.breadcrumb-wrapper {
+  font-size: 13px;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-link {
+  color: black;
+  text-decoration: none;
+  margin-right: 5px;
+}
+
+.breadcrumb-link:hover {
+  color: #7030a0;
+  font-weight: bold;
+
+}
+
+.breadcrumb-separator {
+  margin: 0 5px;
+  color: #666;
+}
+
+.breadcrumb-current {
+  color: #7030a0;
+  font-weight: bold;
+
+}

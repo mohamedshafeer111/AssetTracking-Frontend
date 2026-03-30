@@ -1,7 +1,3 @@
-
-
-
-
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -11,11 +7,11 @@
   background-color: #ddd;
   /* border: 1px solid rgb(206, 201, 201); */
   height: 35px;
-  color: #7030a0;
+  color: #000;
   margin-top: 0%;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  /* ✅ round top-right */
+  font-size: 15px;
 
 
 
@@ -37,9 +33,10 @@
   background-color: white;
   border: 1px solid rgb(206, 201, 201);
   height: 35px;
-  color: #7030a0;
-  /* margin-top: 0%; */
-  margin-left: 20px;
+  color: black;
+  margin-top: 3%;
+  font-size: 15px;
+
 
 
 }
@@ -106,7 +103,6 @@ table {
   width: 100%;
   border-collapse: collapse;
   background: white;
-  margin-left: 20px;
 
 }
 
@@ -115,12 +111,13 @@ td {
   border: 1px solid #ddd;
   padding: 10px;
   text-align: center;
-  max-width:100%;
+  max-width: 100%;
+  font-size: 14px;
 }
 
 th {
   background: #f4f4f4;
-  font-weight: bold;
+
 }
 
 
@@ -152,6 +149,7 @@ th {
   align-items: center;
   gap: 15px;
   margin-right: 5px;
+
 }
 
 
@@ -162,31 +160,28 @@ th {
 
 }
 
+.upload-icon {
+  border: 2px solid #7030a0;
+  border-radius: 50%;
+}
+
 
 .navicons img {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   cursor: pointer;
   transition: transform 0.3s;
 }
 
 .navicons img:hover {
   transform: scale(1.1);
-  /* subtle hover effect */
+
 }
-
-
-/* img */
-
-
-
-
 
 
 .nav-icons {
   display: flex;
   gap: 15px;
-  /* spacing between icons */
 }
 
 .nav-icons img {
@@ -195,11 +190,14 @@ th {
   cursor: pointer;
 }
 
-
+.action-icons {
+  display: flex;
+  align-items: center;
+}
 
 .action-icon {
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
   cursor: pointer;
   margin: 0 6px;
   transition: transform 0.2s ease;
@@ -251,7 +249,7 @@ th {
 /* Limit to max 3 columns */
 .popup .user-input-container {
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  max-width: calc(3 * 220px + 60px);
+  max-width: calc(5 * 220px + 60px);
   /* max 3 cols + gaps */
 }
 
@@ -259,7 +257,9 @@ th {
 .popup h2 {
   margin-bottom: 20px;
   text-align: center;
-  color: #7030a0;
+  color: #333;
+  font-family: 'RedHatDisplay';
+  font-size: 15px;
 }
 
 .user-data {
@@ -268,8 +268,9 @@ th {
 }
 
 .user-data label {
-  font-weight: bold;
   margin-bottom: 5px;
+  font-family: 'RedHatDisplay';
+  font-size: 14px;
 }
 
 .user-data input {
@@ -277,6 +278,8 @@ th {
   border: 1px solid #ccc;
   border-radius: 6px;
   width: 100%;
+  font-family: 'RedHatDisplay';
+  font-size: 14px;
 }
 
 /* Buttons */
@@ -284,7 +287,6 @@ th {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  margin-top: 20px;
 }
 
 
@@ -375,6 +377,8 @@ th {
   margin: 0 8px;
   font-size: 14px;
   transition: background 0.3s;
+    font-family: 'RedHatDisplay';
+  font-size: 14px;
 }
 
 .btn.delete {
@@ -416,12 +420,13 @@ th {
 }
 
 .aone {
-  color: #7030a0;
+
   padding: 5px 12px;
   border: none;
   background: transparent;
   cursor: pointer;
   font-size: 14px;
+  font-family: "RedHatDisplay";
 }
 
 .aone:hover {
@@ -503,6 +508,8 @@ search */
   -moz-appearance: none;
   /* Firefox */
   cursor: pointer;
+    font-family: 'RedHatDisplay';
+  font-size: 14px;
 }
 
 
@@ -519,6 +526,8 @@ search */
   box-shadow: 0 0 5px rgba(112, 48, 160, 0.3);
   /* subtle glow */
   transition: border 0.2s ease, box-shadow 0.2s ease;
+    font-family: 'RedHatDisplay';
+  font-size: 14px;
 }
 
 .popup input:hover,
@@ -906,7 +915,8 @@ input:checked+.slider:before {
   display: inline-flex !important;
   align-items: center;
   justify-content: space-between;
-  flex-direction: row !important; /* ensure left-to-right layout */
+  flex-direction: row !important;
+  /* ensure left-to-right layout */
   background: #f3e4ff;
   color: black;
   border-radius: 6px;
@@ -918,13 +928,15 @@ input:checked+.slider:before {
 
 /* Remove icon should appear after text */
 ::ng-deep .ng-value-icon.left {
-  order: 2 !important; /* move icon to the right */
+  order: 2 !important;
+  /* move icon to the right */
   margin-left: 6px;
   margin-right: 0;
 }
 
 ::ng-deep .ng-value-label {
-  order: 1 !important; /* ensure text stays left */
+  order: 1 !important;
+  /* ensure text stays left */
 }
 
 /* Style the icon */
@@ -951,7 +963,7 @@ input:checked+.slider:before {
 
 /* Highlighted option */
 ::ng-deep .ng-option:hover {
-   background-color: rgb(255, 241, 255);
+  background-color: rgb(255, 241, 255);
   border: 1px solid rgb(121, 121, 121);
   color: #7030a0;
 }
@@ -1023,8 +1035,10 @@ input:checked+.slider:before {
 
 /* Make popup scrollable */
 .popup {
-  max-height: 90vh; /* Limit height to 90% of viewport */
-  overflow-y: auto; /* Enable vertical scrolling */
+  max-height: 90vh;
+  /* Limit height to 90% of viewport */
+  overflow-y: auto;
+  /* Enable vertical scrolling */
 }
 
 
@@ -1056,10 +1070,38 @@ input:checked+.slider:before {
   color: #666;
   text-align: center;
 }
+
 /* end temporary  */
 
 
+.breadcrumb-wrapper {
+  font-size: 13px;
+}
 
+.breadcrumb {
+  display: flex;
+  align-items: center;
+}
 
+.breadcrumb-link {
+  color: black;
+  text-decoration: none;
+  margin-right: 5px;
+}
 
+.breadcrumb-link:hover {
+  color: #7030a0;
+  font-weight: bold;
 
+}
+
+.breadcrumb-separator {
+  margin: 0 5px;
+  color: #666;
+}
+
+.breadcrumb-current {
+  color: #7030a0;
+  font-weight: bold;
+
+}

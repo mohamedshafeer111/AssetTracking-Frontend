@@ -25,6 +25,8 @@ import { Customerdashboard } from './components/pages/customerdashboard/customer
 import { Newuser } from './components/pages/newuser/newuser/newuser';
 import { Projecthierarchy } from './components/pages/projecthierarchy/projecthierarchy/projecthierarchy';
 import { Asset } from './components/pages/asset/asset/asset';
+import { Editprocessautomation } from './components/pages/editprocessautomation/editprocessautomation/editprocessautomation';
+import { Editrole } from './components/pages/editrole/editrole/editrole';
 
 
 
@@ -64,6 +66,8 @@ export const routes: Routes = [
         path: 'projecthierarchy', component: Projecthierarchy
       },
       { path: 'asset', component: Asset },
+      {   path: 'editprocessautomation/:item.bsonId', component:Editprocessautomation},
+        { path: 'editrole/:id', component: Editrole }
     ]
   }
 

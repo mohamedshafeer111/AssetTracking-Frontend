@@ -4,18 +4,47 @@
 
 
 
-<div class="otp-container">
+<!-- <div class="otp-container">
   <h2>Verify OTP</h2>
 
   <form>
-
     <div class="form-group">
       <label for="otp">Enter OTP</label>
       <input type="text" id="otp" name="otp" [(ngModel)]="loginUser.otp" required class="form-control"
         placeholder="Enter the OTP sent to your email" />
     </div>
-
     <button type="submit" (click)="verifyOtp()" class="submit-btn">Verify Otp</button>
-
   </form>
+</div> -->
+
+
+
+<div class="auth-container">
+  <div class="auth-box">
+      <div class="auth-left">
+        <img [src]="'assets/otp.svg'" alt="Auth Image">
+      </div>
+      <div class="auth-right">
+          <h2>OTP Verification</h2>
+          <p>Please enter the OTP sent to your email.</p>
+          <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()">
+              <div class="input-group">
+                
+                  <div class="otp-input-group">
+                    <input type="text" maxlength="1" class="otp-box" (input)="moveFocus($event, 0)" (keydown)="handleBackspace($event, 0)" #otp0>
+                    <input type="text" maxlength="1" class="otp-box" (input)="moveFocus($event, 1)" (keydown)="handleBackspace($event, 1)" #otp1>
+                    <input type="text" maxlength="1" class="otp-box" (input)="moveFocus($event, 2)" (keydown)="handleBackspace($event, 2)" #otp2>
+                    <input type="text" maxlength="1" class="otp-box" (input)="moveFocus($event, 3)" (keydown)="handleBackspace($event, 3)" #otp3>
+                  </div>
+                  
+                  <div *ngIf="otpForm.controls['otp'].invalid && otpForm.controls['otp'].touched" class="error-message">
+                      OTP should be exactly 4 digits.
+                  </div>
+              </div>
+              
+              <button type="submit" class="submit-btn">Verify OTP</button>
+          </form>
+
+      </div>
+  </div>
 </div>

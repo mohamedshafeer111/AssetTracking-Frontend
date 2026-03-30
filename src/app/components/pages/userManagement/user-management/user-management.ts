@@ -305,8 +305,9 @@ export class UserManagement implements OnInit {
 
 
 ngOnInit(): void {
+      this.loadRolesAndUsers();
     this.loadUser();
-    this.loadRolesAndUsers();
+
   }
 
   users: any[] = [];
@@ -324,10 +325,16 @@ ngOnInit(): void {
         const userList = users.data || users;
 
         this.roles = roleList;
-        this.users = userList.map((user: any) => ({
-          ...user,
-          roleName: roleList.find((r: any) => r.id === user.role)?.roleName || user.role
-        }));
+      this.users = userList.map((user: any) => {
+  const matchedRole = roleList.find((r: any) => r.id === user.role);
+
+  return {
+    ...user,
+    roleName: matchedRole?.roleName || user.role,
+    roleId: matchedRole?.roleId || user.role
+  };
+});
+
         this.filteredUsers = [...this.users]; // NEW
         this.cdr.detectChanges();
       },
@@ -337,21 +344,26 @@ ngOnInit(): void {
     });
   }
 
-  loadUser() {
-    this.user.getUser().subscribe({
-      next: (res: any) => {
-        this.users = res.map((user: any) => ({
+loadUser() {
+  this.user.getUser().subscribe({
+    next: (res: any) => {
+      const userList = res.data || res;
+      this.users = userList.map((user: any) => {
+        const matchedRole = this.roles.find((r: any) => r.id === user.role || r.roleName === user.role);
+        return {
           ...user,
-          roleName: this.roles.find(r => r.id === user.role)?.roleName || user.role
-        }));
-        this.filteredUsers = [...this.users]; // NEW
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        console.log("Error loading user");
-      }
-    });
-  }
+          roleName: matchedRole?.roleName || user.role,
+          roleId: matchedRole?.roleId || matchedRole?.id || ''  // ← use actual roleId
+        };
+      });
+      this.filteredUsers = [...this.users];
+      this.cdr.detectChanges();
+    },
+    error: () => {
+      console.log("Error loading user");
+    }
+  });
+}
 
   // NEW SEARCH METHODS
   toggleSearch() {
@@ -376,27 +388,38 @@ ngOnInit(): void {
     );
   }
 
-  NewUser = {
+NewUser = {
+  userName: '',
+  contactNumber: '',
+  email: '',
+  password: '',
+  role: '',
+  roleId: '',           // ← add this
+  createdBy: '',
+  createdAt: new Date().toISOString()
+};
+
+  openNewUser = false;
+
+openCreateUserPopup() {
+  this.loadRole();
+  this.NewUser = {
     userName: '',
     contactNumber: '',
     email: '',
     password: '',
-    role: ''
+    role: '',
+    roleId: '',           // ← add this
+    createdBy: '',
+    createdAt: new Date().toISOString()
   };
+  this.openNewUser = true;
+}
 
-  openNewUser = false;
-
-  openCreateUserPopup() {
-    this.loadRole();
-    this.NewUser = {
-      userName: '',
-      contactNumber: '',
-      email: '',
-      password: '',
-      role: ''
-    }
-    this.openNewUser = true;
-  }
+onRoleChange(selectedRole: any) {
+  this.NewUser.role = selectedRole.roleName;
+  this.NewUser.roleId = selectedRole.roleId;   // ← from role summary
+}
 
   closeCreateUserPopup() {
     this.openNewUser = false;
@@ -448,36 +471,43 @@ ngOnInit(): void {
     });
   }
 
-  UpdateUser = {
-    userName: '',
-    contactNumber: '',
-    email: '',
-    password: '',
-    role: ''
-  };
+UpdateUser = {
+  userName: '',
+  contactNumber: '',
+  email: '',
+  password: '',
+  role: '',
+  roleId: ''    // ← add this
+};
 
   openUpdateUser = false;
   selectedUserId: string = '';
 
-  openUpdateUserPopup(user: any) {
-    this.loadRole();
-    this.selectedUserId = user.id;
+openUpdateUserPopup(user: any) {
+  this.loadRole();
+  this.selectedUserId = user.id;
 
-    const roleId =
-      typeof user.role === 'object' && user.role !== null
-        ? user.role.id
-        : user.role;
+  this.UpdateUser = {
+    userName: user.userName,
+    password: user.password,
+    contactNumber: user.contactNumber,
+    email: user.email,
+    role: user.role,
+    roleId: user.roleId    // ← add this
+  };
 
-    this.UpdateUser = {
-      userName: user.userName,
-      password: user.password,
-      contactNumber: user.contactNumber,
-      email: user.email,
-      role: roleId
-    };
+  this.openUpdateUser = true;
+}
 
-    this.openUpdateUser = true;
-  }
+
+onUpdateRoleSelect(event: any) {
+  const selected = event.target;
+  this.UpdateUser.role = selected.value;
+  this.UpdateUser.roleId = selected.options[selected.selectedIndex].getAttribute('data-id');
+  console.log('Update Role:', this.UpdateUser.role, 'RoleId:', this.UpdateUser.roleId);
+}
+
+
 
   closeUpdateUserPopup() {
     this.openUpdateUser = false;
@@ -565,6 +595,20 @@ ngOnInit(): void {
       }
     })
   }
+
+
+
+
+
+
+onRoleSelect(event: any) {
+  const selected = event.target;
+  this.NewUser.role = selected.value;                                                      // → "new one"
+  this.NewUser.roleId = selected.options[selected.selectedIndex].getAttribute('data-id'); // → "456"
+  console.log('Role:', this.NewUser.role, 'RoleId:', this.NewUser.roleId);
+}
+
+
 }
 
 

@@ -5,10 +5,12 @@ import { Peopletype } from '../../../service/peopletype/peopletype';
 import { FormsModule } from '@angular/forms';
 import { Roleservice } from '../../../service/role/roleservice';
 import { forkJoin } from 'rxjs';
+import { DevicesearchPipe } from '../../../pipe/devicesearch/devicesearch-pipe';
+import { Reusabletable } from '../../reusabletable/reusabletable/reusabletable';
 
 @Component({
   selector: 'app-devices',
-  imports: [RouterModule, CommonModule, FormsModule],
+  imports: [RouterModule, CommonModule, FormsModule, DevicesearchPipe, Reusabletable],
   templateUrl: './devices.html',
   styleUrl: './devices.css'
 })
@@ -30,9 +32,74 @@ export class Devices implements OnInit {
   }
   constructor(private deviceService: Peopletype, private cdr: ChangeDetectorRef, private role: Roleservice) { }
 
+
+
+
+
   activeTab: string = 'device';
   deviceList: any[] = [];
+  searchText: string = '';
 
+
+
+  deviceColumns = [
+    { header: 'Device Type', field: 'deviceType' },
+    { header: 'Device Name', field: 'deviceName' },
+    { header: 'Unique ID', field: 'uniqueId' },
+    { header: 'Model', field: 'model' },
+    { header: 'Project', field: 'projectName' },
+    { header: 'Country', field: 'countryName' },
+    { header: 'Area', field: 'areaName' },
+    { header: 'Outdoor Zone', field: 'outdoorZoneName' },
+    { header: 'Building', field: 'buildingName' },
+    { header: 'Floor', field: 'floorName' },
+    { header: 'Zone', field: 'zoneName' },
+    { header: 'Technology', field: 'technology' },
+    { header: 'Status', field: 'status', type: 'status' },
+    { header: 'Action', type: 'action' }
+  ];
+
+  // keep your existing list
+  deviceData = this.deviceList;
+
+  // handle actions
+  handleDeviceAction(event: any) {
+    if (event.type === 'edit') {
+      this.openEditDevicePopup(event.row);
+    } else {
+      this.openDeleteDevicePopup(event.row);
+    }
+  }
+  deviceTypeColumns = [
+    { header: 'Device Type', field: 'deviceType' },
+    { header: 'Description', field: 'description' },
+    { header: 'Status', field: 'status', type: 'status' },
+    { header: 'Action', type: "action" }
+  ]
+
+  handleDeviceTypeAction(event: any) {
+    if (event.type === 'edit') {
+      this.openEditDeviceTypePopup(event.row);
+    } else {
+      this.openDeleteDeviceTypePopup(event.row);
+    }
+
+  }
+
+  paraColumns = [
+    { header: 'Device Name', field: 'deviceName' },
+    { header: 'Parameters', field: 'parameterNames' },
+    { header: 'Actions', type: 'action' }
+  ]
+
+  handleParaTypeAction(events:any) {
+    if (events.type === 'edit') {
+      this.openUpdatePara(events.row);
+    } else {
+      this.openDeletePara(events.row);
+    }
+
+  }
   setActive(tab: string) {
     this.activeTab = tab;
     this.cdr.detectChanges();
@@ -251,7 +318,8 @@ export class Devices implements OnInit {
 
 
   technologyOptions: string[] = [
-    'BLE',
+    'BLE GATEWAY',
+    'BLE TAGS',
     'LORA',
     'QR BARCODE',
     'RFID',
@@ -541,11 +609,11 @@ export class Devices implements OnInit {
   // }
 
 
-openEditDevicePopup(device: any) {
+  openEditDevicePopup(device: any) {
     console.log('🔍 Opening edit popup for device:', device);
-    
+
     this.openEditDevice = true;
-    
+
     // ✅ Initialize editDevice with actual device values INCLUDING IDs
     this.editDevice = {
       id: device.id,
@@ -563,11 +631,11 @@ openEditDevicePopup(device: any) {
       floor: device.floorId || '',          // ✅ Use floorId
       zone: device.zoneId || ''             // ✅ Use zoneId
     };
-    
+
     // ✅ Set selected IDs BEFORE loading data
     this.selectedProjectId = device.projectId || '';
     this.selectedCountryId = device.countryId || '';
-    
+
     // ✅ Find project
     const project = this.projects.find(p => p.id === device.projectId);
     if (!project) {
@@ -575,12 +643,12 @@ openEditDevicePopup(device: any) {
       this.cdr.detectChanges();
       return;
     }
-    
+
     console.log('✅ Found project:', project);
-    
+
     // ✅ Load ALL hierarchical data
     this.loadHierarchicalDataParallel(device, project.id);
-}
+  }
 
 
 
@@ -717,7 +785,7 @@ openEditDevicePopup(device: any) {
 
 
 
-private loadHierarchicalDataParallel(device: any, projectId: string) {
+  private loadHierarchicalDataParallel(device: any, projectId: string) {
     console.log('🌍 Starting hierarchical data load for device:', device);
 
     // Step 1: Load countries
@@ -740,7 +808,7 @@ private loadHierarchicalDataParallel(device: any, projectId: string) {
             const areaArray = Array.isArray(areas) ? areas : [];
             this.areaByCountry[device.countryId] = areaArray;
             console.log('✅ Areas loaded:', areaArray);
-            
+
             this.cdr.detectChanges();
 
             if (!device.areaId) {
@@ -758,7 +826,7 @@ private loadHierarchicalDataParallel(device: any, projectId: string) {
                 const buildingArray = Array.isArray(buildings) ? buildings : [];
                 this.buildingByArea[device.areaId] = buildingArray;
                 console.log('✅ Buildings loaded:', buildingArray);
-                
+
                 this.cdr.detectChanges();
 
                 if (!device.buildingId) {
@@ -773,7 +841,7 @@ private loadHierarchicalDataParallel(device: any, projectId: string) {
                     const floorArray = Array.isArray(floors) ? floors : [];
                     this.floorByBuilding[device.buildingId] = floorArray;
                     console.log('✅ Floors loaded:', floorArray);
-                    
+
                     this.cdr.detectChanges();
 
                     if (!device.floorId) {
@@ -1558,18 +1626,18 @@ private loadHierarchicalDataParallel(device: any, projectId: string) {
 
 
 
-loadOutdoorZonesForArea(areaId: string) {
+  loadOutdoorZonesForArea(areaId: string) {
     console.log('🔍 Loading outdoor zones for area:', areaId);
     this.deviceService.getOutdoorZoneMapping(areaId).subscribe({
       next: (zones: any) => {
         console.log('✅ Raw outdoor zones response:', zones);
-        
+
         // ✅ Handle different response formats
         const zonesArray = Array.isArray(zones) ? zones : (zones.data ? zones.data : []);
-        
+
         this.outdoorZonesByArea[areaId] = zonesArray;
         console.log('✅ Outdoor zones stored for area', areaId, ':', this.outdoorZonesByArea[areaId]);
-        
+
         this.cdr.detectChanges();
       },
       error: (err: any) => {
@@ -1745,6 +1813,7 @@ loadOutdoorZonesForArea(areaId: string) {
     const payload = {
       deviceId: this.createPara.deviceId, // From dropdown
       deviceName: selectedDevice.deviceName, // Auto-filled from deviceList
+      deviceUniqueId: selectedDevice.uniqueId,
       deviceParameters: this.createPara.deviceParameters
         ? this.createPara.deviceParameters.split(',').map((p: string) => p.trim())
         : []
@@ -1808,6 +1877,7 @@ loadOutdoorZonesForArea(areaId: string) {
 
     const payload = {
       deviceId: this.updateParaData.deviceId,
+      deviceUniqueId: selectedDevice.uniqueId,
       deviceName: selectedDevice ? selectedDevice.deviceName : this.updateParaData.deviceName,
       deviceParameters: this.updateParaData.deviceParameters
         ? this.updateParaData.deviceParameters.split(',').map((p: string) => p.trim())

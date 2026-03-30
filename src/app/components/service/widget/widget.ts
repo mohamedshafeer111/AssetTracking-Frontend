@@ -12,7 +12,7 @@ export class Widget {
 
   private baseUrl = environment.apiUrl
 
-  private apiUrl = 'http://172.16.100.26:5202/api/PersonalDashboard';
+  // private apiUrl = 'http://172.16.100.26:5202/api/PersonalDashboard';
 
   createDashboard(payload: any): Observable<any> {
     return this.http.post(`${this.baseUrl}PersonalDashboard`, payload);

@@ -1,10 +1,21 @@
+<div class="breadcrumb-wrapper">
+  <nav class="breadcrumb">
+    <a routerLink="/administration" class="breadcrumb-link">Administration</a>
+    <span class="breadcrumb-separator">››</span>
+    <a class="breadcrumb-link">Configuration</a>
+    <span class="breadcrumb-separator">››</span>
+    <span class="breadcrumb-current">Project</span>
+  </nav>
+</div>
+
+
 <nav class="navbar">
   <h3>Project List</h3>
   <div class="tabs">
     <!-- <button class="aone" routerLink="/people" routerLinkActive="active">People</button> -->
     <button class="aone" routerLink="/project" routerLinkActive="active">Project</button>
     <button class="aone" routerLink="/devices" routerLinkActive="active">Devices</button>
-     <button class="aone" routerLink="/asset" routerLinkActive="active">Asset</button>
+    <button class="aone" routerLink="/asset" routerLinkActive="active">Asset</button>
   </div>
 </nav>
 
@@ -16,198 +27,6 @@
       <button class="three" (click)="openCreateProjectPopup()">Add Project</button>
     </div>
   </nav>
-  <!-- <table>
-    <tbody>
-      <ng-container *ngFor="let project of projects">
-
-
-
-
-
-        <tr>
-          <td class="tabledata">{{ project.projectName }}
-            <span class="icons">
-              <img src="assets/pencil.png" alt="Edit" (click)="openEditProjectPopup(project)" />
-              <img src="assets/add.png" alt="Add" (click)="openCreateCountryPopup(project.id)" />
-              <img src="assets/trash.png" alt="Delete" (click)="openDeleteProjectPopup(project)" />
-              <img src="assets/down.png" alt="DropDown" class="tab" [class.rotate]="expandedProjects.has(project.id)"
-                (click)="loadCountries(project.id)" />
-
-            </span>
-          </td>
-        </tr>
-
-
-
-        <tr *ngIf="expandedProjects.has(project.id)">
-          <td colspan="2">
-            <table>
-              <tbody>
-                <ng-container *ngFor="let country of countriesByProject[project.id]">
-
-
-                  <tr>
-                    <td class="tabledata">{{ country.countryName }}
-                      <span class="icons">
-                        <img src="assets/pencil.png" alt="Edit" (click)="openEditCountryPopup(country)" />
-                        <img src="assets/add.png" alt="Add" (click)="openCreateareaPopup(country.id)" />
-                        <img src="assets/trash.png" alt="Delete" (click)="openDeleteCountryPopup(country)" />
-                        <img src="assets/down.png" alt="DropDown" class="tab"
-                          [class.rotate]="expandedCountry.has(country.id)" (click)="loadArea(country.id)" />
-                      </span>
-                    </td>
-                  </tr>
-
-
-                  <ng-container *ngFor="let area of areaByCountry[country.id]">
-                    <tr *ngIf="expandedCountry.has(country.id)">
-                      <td colspan="2">
-                        <table>
-                          <tbody>
-              
-                            <tr>
-                              <td class="tabledata">{{ area.areaName }}
-                                <span class="icons">
-                                  <img src="assets/pencil.png" alt="Edit" (click)="openEditAreaPopup(area)" />
-                                  <img src="assets/add.png" alt="Add" (click)="openCreateBuildingPopup(area.id)" />
-                                   <img src="assets/add.png" alt="Add" (click)="openAreaZone(area.id)" />
-                                  <img src="assets/trash.png" alt="Delete" (click)="openDeleteAreaPopup(area)" />
-                                  <img src="assets/down.png" alt="DropDown" class="tab"
-                                    [class.rotate]="expandedArea.has(area.id)" (click)="loadBuilding(area.id)" />
-                                </span>
-                              </td>
-                            </tr>
-
-         
-                            <tr *ngIf="expandedArea.has(area.id)">
-                              <td colspan="2">
-                                <table>
-                                  <tbody>
-                                    <ng-container *ngFor="let building of buildingByArea[area.id]">
-
-                           
-                                      <tr>
-                                        <td class="tabledata">{{ building.buildingName }}
-                                          <span class="icons">
-                                            <img src="assets/pencil.png" alt="Edit"
-                                              (click)="openEditBuildingPopup(building)" />
-                                            <img src="assets/add.png" alt="Add"
-                                              (click)="openCreateFloorPopup(building.id)" />
-                                            <img src="assets/trash.png" alt="Delete"
-                                              (click)="openDeleteBuildingPopup(building)" />
-                                            <img src="assets/down.png" alt="DropDown" class="tab"
-                                              [class.rotate]="expandedBuilding.has(building.id)"
-                                              (click)="loadFloor(building.id)" />
-                                          </span>
-                                        </td>
-                                      </tr>
-
-               
-                 
-                                      <tr *ngIf="expandedBuilding.has(building.id)">
-                                        <td colspan="2">
-                                          <table>
-                                            <tbody>
-                                              <ng-container *ngFor="let floor of floorByBuilding[building.id]">
-                               
-                                                <tr>
-                                                  <td class="tabledata">{{ floor.floorName }}
-                                                    <span class="icons">
-                                                      <img src="assets/pencil.png" alt="Edit"
-                                                        (click)="openEditFloorPopup(floor)" />
-                                                      <img src="assets/add.png" alt="Add"
-                                                        (click)="openCreateZonePopup(floor.id)" />
-                                                        
-                                                      <img src="assets/trash.png" alt="Delete"
-                                                        (click)="openDeleteFloorPopup(floor)" />
-                                                      <img src="assets/down.png" alt="DropDown" class="tab"
-                                                        [class.rotate]="expandedFloor.has(floor.id)"
-                                                        (click)="loadZones(floor.id)" />
-                                                    </span>
-                                                  </td>
-                                                </tr>
-
-                                 
-                                                <tr *ngIf="expandedFloor.has(floor.id)">
-                                                  <td colspan="2">
-                                                    <table>
-                                                      <tbody>
-                                                        <ng-container *ngFor="let zone of zoneByFloor[floor.id]">
-                                            
-                                                          <tr>
-                                                            <td class="tabledata">{{ zone.zoneName }}
-                                                              <span class="icons">
-                                                                <img src="assets/pencil.png" alt="Edit"
-                                                                  (click)="openEditZonePopup(zone)" />
-                                                                <img src="assets/add.png" alt="Add"
-                                                                  (click)="openCreateSubZonePopup(zone.id)" />
-                                                                <img src="assets/trash.png" alt="Delete"
-                                                                  (click)="openDeleteZonePopup(zone)" />
-                                                                <img src="assets/down.png" alt="DropDown" class="tab"
-                                                                  [class.rotate]="expandedZone.has(zone.id)"
-                                                                  (click)="loadSubZones(zone.id)" />
-                                                              </span>
-                                                            </td>
-                                                          </tr>
-
-                                     
-                                                          <tr *ngIf="expandedZone.has(zone.id)">
-                                                            <td colspan="2">
-                                                              <table>
-                                                                <tbody>
-                                                                  <ng-container
-                                                                    *ngFor="let subZone of subZoneByZone[zone.id]">
-                                                                    <tr>
-                                                                      <td class="tabledata">{{ subZone.subZoneName }}
-                                                                        <span class="icons">
-
-                                                                          <img src="assets/pencil.png" alt="Edit"
-                                                                            (click)="openEditSubZonePopup(subZone)" />
-                                                                          <img src="assets/trash.png" alt="Delete"
-                                                                            (click)="openDeleteSubZonePopup(subZone)" />
-                                                                        </span>
-                                                                      </td>
-                                                                    </tr>
-                                                                  </ng-container>
-                                                                </tbody>
-                                                              </table>
-                                                            </td>
-                                                          </tr>
-
-                                                        </ng-container>
-                                                      </tbody>
-                                                    </table>
-                                                  </td>
-                                                </tr>
-
-                                              </ng-container>
-                                            </tbody>
-                                          </table>
-                                        </td>
-                                      </tr>
-
-                                    </ng-container>
-                                  </tbody>
-                                </table>
-                              </td>
-                            </tr>
-
-                          </tbody>
-                        </table>
-                      </td>
-                    </tr>
-                  </ng-container>
-
-                </ng-container>
-              </tbody>
-            </table>
-          </td>
-        </tr>
-
-      </ng-container>
-    </tbody>
-  </table> -->
-
 
   <table>
     <tbody>
@@ -273,7 +92,7 @@
 
                             <!-- AREA -->
                             <tr>
-                              <td class="tabledata">
+                              <td class="tabledata country-row">
                                 {{ area.areaName }}
                                 <span class="icons">
                                   <span class="icon-wrapper">
@@ -310,7 +129,7 @@
                                     <!-- 🔵 AREA ZONES -->
                                     <ng-container *ngIf="zoneByArea[area.id]?.length">
                                       <tr *ngFor="let zone of zoneByArea[area.id]">
-                                        <td class="tabledata zone-row">
+                                        <td class="tabledata area-row">
                                           {{ zone.zoneName }}
                                           <span class="icons">
                                             <span class="icon-wrapper">
@@ -363,7 +182,7 @@
                                             <tbody>
                                               <ng-container *ngFor="let floor of floorByBuilding[building.id]">
                                                 <tr>
-                                                  <td class="tabledata">
+                                                  <td class="tabledata floor-row">
                                                     {{ floor.floorName }}
                                                     <span class="icons">
                                                       <span class="icon-wrapper">
@@ -395,7 +214,7 @@
                                                       <tbody>
                                                         <ng-container *ngFor="let zone of zoneByFloor[floor.id]">
                                                           <tr>
-                                                            <td class="tabledata">
+                                                            <td class="tabledata zone-row">
                                                               {{ zone.zoneName }}
                                                               <span class="icons">
                                                                 <span class="icon-wrapper"> <img src="assets/pencil.png"
@@ -426,7 +245,7 @@
                                                               <table>
                                                                 <tbody>
                                                                   <tr *ngFor="let subZone of subZoneByZone[zone.id]">
-                                                                    <td class="tabledata">
+                                                                    <td class="tabledata subzone-row">
                                                                       {{ subZone.subZoneName }}
                                                                       <span class="icons">
                                                                         <span class="icon-wrapper">
@@ -1129,6 +948,15 @@
         <label>Description</label>
         <input type="text" [(ngModel)]="zoneAreaData.description" />
       </div>
+      <div class="user-data">
+        <label>Latitude</label>
+        <input type="text" [(ngModel)]="zoneAreaData.latitude" />
+      </div>
+
+      <div class="user-data">
+        <label>Longitude</label>
+        <input type="text" [(ngModel)]="zoneAreaData.longitude" />
+      </div>
 
 
       <div class="user-data">
@@ -1162,6 +990,16 @@
       <div class="user-data">
         <label>Description</label>
         <input type="text" [(ngModel)]="zoneAreaData.description" />
+      </div>
+
+      <div class="user-data">
+        <label>Latitude</label>
+        <input type="text" [(ngModel)]="zoneAreaData.latitude" />
+      </div>
+
+      <div class="user-data">
+        <label>Longitude</label>
+        <input type="text" [(ngModel)]="zoneAreaData.longitude" />
       </div>
 
 

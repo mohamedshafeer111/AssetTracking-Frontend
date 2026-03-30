@@ -81,4 +81,21 @@ getAssetByTechnology(technology: string) {
 
 
 
+
+
+
+
+
+
+// 20-2-26
+
+
+getRoleById(roleId: string): Observable<any> {
+  return this.http.get(`${this.apiUrl}Role/${roleId}`);
+}
+
+getAlert(pageNumber: number = 1, pageSize: number = 10){
+  return this.http.get(`${this.apiUrl}device-notifications?pageNumber=${pageNumber}&pageSize=${pageSize}`)
+}
+
 }

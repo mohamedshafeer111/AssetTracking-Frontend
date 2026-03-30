@@ -1,9 +1,9 @@
 <div class="dashboard-layout">
 
     <!-- LEFT SIDE : Vertical Dashboard text -->
-    <div class="vertical-dashboard">
+    <!-- <div class="vertical-dashboard">
         Dashboard
-    </div>
+    </div> -->
 
 
 
@@ -37,10 +37,10 @@
             </span>
 
             <!-- Personal Dashboard Button -->
-            <span class="Personal-text">
+            <!-- <span class="Personal-text">
                 <span class="plus-symbol">+</span>
                 <span class="personal-text" routerLink="/personalDashboard">Personal Dashboard</span>
-            </span>
+            </span> -->
             <span class="Personal-text">
                 <span class="plus-symbol">+</span>
                 <span class="personal-text" routerLink="/customerdashboard">Customer Dashboard</span>
@@ -479,10 +479,7 @@
 
         <div class="dashboard-content">
             <ng-container *ngIf="selectedDashboard; else noDashboard">
-                <h2>{{ selectedDashboard.dashboardName }}</h2>
-
-                <!-- dashboard-specific content here -->
-                <!-- widgets, charts, tables, etc -->
+                <p>{{ selectedDashboard.dashboardName }}</p>
             </ng-container>
 
             <ng-template #noDashboard>
@@ -574,4 +571,43 @@
 
 
 
+</div>
+
+
+
+
+<div class="offline-alert-overlay" *ngIf="showOfflineAlertBox">
+  <div class="offline-alert-box">
+
+    <div class="alert-header">
+      <span class="alert-icon"></span>
+      <span class="alert-title">Device Offline Alert ({{ offlineAlerts.length }})</span>
+      <span class="alert-close" (click)="closeAllAlerts()">✕</span>
+    </div>
+
+    <!-- ✅ One row per device -->
+    <div class="alert-body">
+      <div class="alert-card" *ngFor="let alert of offlineAlerts">
+        <div class="alert-row">
+          <span class="alert-label">Device Name</span>
+          <span class="alert-value">{{ alert.deviceName }}</span>
+        </div>
+        <div class="alert-row">
+          <span class="alert-label">Description</span>
+          <span class="alert-value">{{ alert.description }}</span>
+        </div>
+        <div class="alert-row">
+          <span class="alert-label">Timestamp</span>
+          <span class="alert-value">{{ alert.timestamp | date: 'dd MMM yyyy, hh:mm:ss a' : '+0400' }}</span>
+        </div>
+        <!-- ✅ Dismiss individual alert -->
+        <div class="alert-footer">
+          <button class="alert-dismiss-btn" (click)="closeOfflineAlert(alert.deviceId)">
+            Dismiss
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>

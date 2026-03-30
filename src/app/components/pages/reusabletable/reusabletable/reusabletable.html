@@ -1,0 +1,65 @@
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th *ngFor="let col of columns">
+          {{ col.header }}
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <!-- <tr *ngFor="let row of data"> -->
+      <tr *ngFor="let row of paginatedData">
+
+        <td *ngFor="let col of columns">
+
+          <!-- Normal Field -->
+          <span *ngIf="!col.type">
+            {{ row[col.field] }}
+          </span>
+
+          <!-- Status -->
+          <span *ngIf="col.type === 'status'">
+            {{ row[col.field] ? 'Active' : 'Inactive' }}
+          </span>
+
+          <!-- Actions -->
+          <span *ngIf="col.type === 'action'">
+            <img src="assets/pencil.png" class="action-icon edit" (click)="onAction('edit', row)" />
+
+            <img src="assets/trash.png" class="action-icon delete" (click)="onAction('delete', row)" />
+          </span>
+
+        </td>
+
+      </tr>
+    </tbody>
+    <tr class="pagination-row">
+      <td [attr.colspan]="columns.length">
+
+        <div class="pagination-container">
+
+
+          <label>
+            Items per page:
+            <select [(ngModel)]="pageSize" (change)="changePageSize()">
+              <option *ngFor="let size of pageSizes" [value]="size">{{ size }}</option>
+            </select>
+          </label>
+
+        
+          <span style="margin: 0 10px;">
+            {{ currentPage }} of {{ totalPages }}
+          </span>
+
+  
+          <button class="arrow-btn" (click)="prevPage()" [disabled]="currentPage === 1">⏴</button>
+          <button class="arrow-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">⏵</button>
+
+        </div>
+
+      </td>
+    </tr>
+  </table>
+</div>

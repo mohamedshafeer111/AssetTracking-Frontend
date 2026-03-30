@@ -22,9 +22,10 @@ export class Dashboard implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadProject();
     this.loadZoneSensors();
-    //this.connectWebSocket();
+    this.connectWebSocket();
     this.loadDashboard();
     this.getDashboards();
+    this.connectDeviceNotificationWS();
   }
 
   constructor(private cdr: ChangeDetectorRef, private role: Roleservice,
@@ -88,7 +89,7 @@ export class Dashboard implements OnInit, OnDestroy {
 
         this.cdr.detectChanges();
         this.selectedProjectId = projectId;
-        this.devicesGetByProjectId(projectId);
+        // this.devicesGetByProjectId(projectId);
 
       },
       error: () => {
@@ -109,28 +110,6 @@ export class Dashboard implements OnInit, OnDestroy {
   }
 
 
-  // loadArea(countryId: string) {
-  //   if (this.expandedCountry.has(countryId)) {
-  //     this.expandedCountry.delete(countryId);
-  //     return;
-  //   }
-
-  //   if (!this.areaByCountry[countryId]) {
-  //     this.role.getSummary(countryId).subscribe({
-  //       next: (res: any) => {
-  //         this.areaByCountry[countryId] = Array.isArray(res) ? res : [];
-  //         this.expandedCountry.add(countryId);
-  //         this.cdr.detectChanges();
-  //       },
-  //       error: () => {
-  //         console.log("Error loading areas");
-  //       }
-  //     });
-  //   } else {
-  //     this.expandedCountry.add(countryId);
-  //     this.cdr.detectChanges();
-  //   }
-  // }
 
   selectedProjectId: string = '';
   loadArea(countryId: string, projectId?: string) {
@@ -151,9 +130,9 @@ export class Dashboard implements OnInit, OnDestroy {
           this.cdr.detectChanges();
 
           // ✅ Call devices API for this country
-          if (this.selectedProjectId) {
-            this.devicesGetByCountryId(this.selectedProjectId, countryId);
-          }
+          // if (this.selectedProjectId) {
+          //   this.devicesGetByCountryId(this.selectedProjectId, countryId);
+          // }
         },
         error: () => {
           console.log("Error loading areas");
@@ -164,9 +143,9 @@ export class Dashboard implements OnInit, OnDestroy {
       this.cdr.detectChanges();
 
       // ✅ Also call devices API when re-expanding
-      if (this.selectedProjectId) {
-        this.devicesGetByCountryId(this.selectedProjectId, countryId);
-      }
+      // if (this.selectedProjectId) {
+      //   this.devicesGetByCountryId(this.selectedProjectId, countryId);
+      // }
     }
   }
 
@@ -199,7 +178,7 @@ export class Dashboard implements OnInit, OnDestroy {
         this.cdr.detectChanges();
 
         console.log("Before calling devicesGetByAreaId", this.selectedProjectId, this.selectedCountryId, areaId);
-        this.devicesGetByAreaId(this.selectedProjectId, this.selectedCountryId, areaId);
+        //this.devicesGetByAreaId(this.selectedProjectId, this.selectedCountryId, areaId);
       },
       error: () => {
         console.log("Error loading buildings");
@@ -241,14 +220,14 @@ export class Dashboard implements OnInit, OnDestroy {
         this.cdr.detectChanges();
 
         // ✅ Fetch devices for this building
-        if (this.selectedProjectId && this.selectedCountryId && this.selectedAreaId) {
-          this.devicesGetByBuildingId(
-            this.selectedProjectId,
-            this.selectedCountryId,
-            this.selectedAreaId,
-            buildingId
-          );
-        }
+        // if (this.selectedProjectId && this.selectedCountryId && this.selectedAreaId) {
+        //   this.devicesGetByBuildingId(
+        //     this.selectedProjectId,
+        //     this.selectedCountryId,
+        //     this.selectedAreaId,
+        //     buildingId
+        //   );
+        // }
       },
       error: () => {
         console.log("Error loading floors");
@@ -288,15 +267,15 @@ export class Dashboard implements OnInit, OnDestroy {
         this.cdr.detectChanges();
 
         // ✅ Fetch devices for this floor
-        if (this.selectedProjectId && this.selectedCountryId && this.selectedAreaId && this.selectedBuildingId) {
-          this.devicesGetByFloorId(
-            this.selectedProjectId,
-            this.selectedCountryId,
-            this.selectedAreaId,
-            this.selectedBuildingId,
-            floorId
-          );
-        }
+        // if (this.selectedProjectId && this.selectedCountryId && this.selectedAreaId && this.selectedBuildingId) {
+        //   this.devicesGetByFloorId(
+        //     this.selectedProjectId,
+        //     this.selectedCountryId,
+        //     this.selectedAreaId,
+        //     this.selectedBuildingId,
+        //     floorId
+        //   );
+        // }
       },
       error: () => {
         console.log("Error loading zones");
@@ -877,12 +856,20 @@ export class Dashboard implements OnInit, OnDestroy {
 
 
   private ws!: WebSocket;
-  //private wsUrl = 'ws://172.16.100.29:5202/ws/ZoneCount';
+  private wsUrl = 'ws://172.16.100.29:5202/ws/ZoneCount';
 
-  private wsUrl = 'wss://phcc.purpleiq.ai/ws/ZoneCount';
+   //private wsUrl = 'wss://phcc.purpleiq.ai/ws/ZoneCount';
 
   ngOnDestroy() {
     if (this.ws) this.ws.close();
+
+
+    if (this.deviceNotificationWs) {
+      this.deviceNotificationWs.close();
+    }
+    if (this.alertIntervalId) {
+      clearInterval(this.alertIntervalId);
+    }
   }
 
 
@@ -927,133 +914,72 @@ export class Dashboard implements OnInit, OnDestroy {
   }
 
 
+  convertToDubaiTime(utcTimestamp: string): string {
+    if (!utcTimestamp) return '—';
+    try {
+      return new Date(utcTimestamp).toLocaleString('en-GB', {
+        timeZone: 'Asia/Dubai',
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      });
+    } catch {
+      return utcTimestamp;
+    }
+  }
 
-  // connectWebSocket() {
-  //   this.ws = new WebSocket(this.wsUrl);
 
-  //   this.ws.onopen = () => {
-  //     console.log('✅ WebSocket Connected');
 
-  //     // 🔥 HARD-CODE status = online for all widgets
-  //     this.widgets.forEach((widget) => {
-  //       let statusParam = widget.params.find(
-  //         (p: any) => p.name.toLowerCase() === 'status'
-  //       );
-
-  //       if (statusParam) {
-  //         statusParam.value = 'online';
-  //       } else {
-  //         widget.params.push({ name: 'Status', value: 'online' });
-  //       }
-  //     });
-
-  //     this.cdr.detectChanges();
-  //   };
-
-  //   this.ws.onmessage = (event) => {
-  //     try {
-  //       const data = JSON.parse(event.data);
-
-  //       // 🔥 Empty array → PeopleCount = 0 for all widgets
-  //       if (Array.isArray(data) && data.length === 0) {
-  //         console.log("📭 Empty update received. Setting PeopleCount = 0");
-
-  //         this.widgets.forEach((widget) => {
-  //           let countParam = widget.params.find(
-  //             (p: any) => p.name.toLowerCase() === 'peoplecount'
-  //           );
-
-  //           if (countParam) countParam.value = 0;
-  //           else widget.params.push({ name: 'PeopleCount', value: 0 });
-  //         });
-
-  //         this.cdr.detectChanges();
-  //         return;
-  //       }
-
-  //       const updates = Array.isArray(data) ? data : [data];
-
-  //       updates.forEach((update: any) => {
-  //         const zoneId = (update.ZoneId || '').trim().toLowerCase();
-  //         const count = update.Count ?? 0; // default 0
-
-  //         console.log('📨 Received update:', update);
-
-  //         const widget = this.widgets.find(
-  //           (w) => w.deviceName.trim().toLowerCase() === zoneId
-  //         );
-
-  //         if (!widget?.params) return;
-
-  //         // ZoneName
-  //         let zoneParam = widget.params.find(
-  //           (p: any) => p.name.toLowerCase() === 'zonename'
-  //         );
-  //         if (zoneParam) zoneParam.value = update.ZoneId;
-  //         else widget.params.push({ name: 'ZoneName', value: update.ZoneId });
-
-  //         // PeopleCount
-  //         let countParam = widget.params.find(
-  //           (p: any) => p.name.toLowerCase() === 'peoplecount'
-  //         );
-  //         if (countParam) countParam.value = count;
-  //         else widget.params.push({ name: 'PeopleCount', value: count });
-
-  //         // 🔥 HARD-CODE status = online (always)
-  //         let statusParam = widget.params.find(
-  //           (p: any) => p.name.toLowerCase() === 'status'
-  //         );
-  //         if (statusParam) statusParam.value = 'online';
-  //         else widget.params.push({ name: 'Status', value: 'online' });
-  //       });
-
-  //       this.cdr.detectChanges();
-  //     } catch (err) {
-  //       console.error('⚠️ WebSocket message parse error:', err);
-  //     }
-  //   };
-
-  //   this.ws.onerror = (err) => console.error('❌ WebSocket Error:', err);
-
-  //   this.ws.onclose = () => {
-  //     console.warn('🔌 WebSocket Disconnected — retrying in 1s...');
-  //     setTimeout(() => this.connectWebSocket(), 1000);
-  //   };
-  // }
 
 
   connectWebSocket() {
     console.log("🚀 connectWebSocket() called");
+
+    if (this.ws) {
+      this.ws.close();
+    }
+
     this.ws = new WebSocket(this.wsUrl);
 
+    // -------------------------
+    // ON OPEN
+    // -------------------------
     this.ws.onopen = () => {
-      console.log('✅ WebSocket Connected');
-
-      this.widgets.forEach((widget) => {
-        let statusParam = widget.params.find(
+      console.log("✅ WebSocket Connected");
+      this.widgets.forEach((widget: any) => {
+        const statusParam = widget.params?.find(
           (p: any) => p.name.toLowerCase() === 'status'
         );
         if (statusParam) {
-          statusParam.value = 'online';
-        } else {
-          widget.params.push({ name: 'Status', value: 'online' });
+          statusParam.value = 'offline';
         }
       });
       this.cdr.detectChanges();
     };
 
-    this.ws.onmessage = (event) => {
+    // -------------------------
+    // ON MESSAGE
+    // -------------------------
+    this.ws.onmessage = (event: MessageEvent) => {
       try {
         const data = JSON.parse(event.data);
 
+        // ✅ Empty array → reset all widgets
         if (Array.isArray(data) && data.length === 0) {
-          console.log("📭 Empty update received. Setting Asset Count = 0");
-          this.widgets.forEach((widget) => {
-            let countParam = widget.params.find(
-              (p: any) => p.name.toLowerCase().includes('asset count')
+          console.log("📭 Empty update received. Setting AssetCount = 0");
+          this.widgets.forEach((widget: any) => {
+            const countParam = widget.params?.find(
+              (p: any) => p.name.toLowerCase().includes('asset')
+            );
+            const statusParam = widget.params?.find(
+              (p: any) => p.name.toLowerCase() === 'status'
             );
             if (countParam) countParam.value = 0;
-            else widget.params.push({ name: 'Asset Count (IN)', value: 0 });
+            if (statusParam) statusParam.value = 'Inactive';
           });
           this.cdr.detectChanges();
           return;
@@ -1062,73 +988,221 @@ export class Dashboard implements OnInit, OnDestroy {
         const updates = Array.isArray(data) ? data : [data];
 
         updates.forEach((update: any) => {
-          const wsZoneId = (update.ZoneId || '').trim().toUpperCase();
-          const count = update.Count ?? 0;
 
-          console.log('📨 Received update:', { ZoneId: wsZoneId, Count: count });
+          // ─── MATCH BY ZoneId (Gateway widgets) ──────────────
+          if (update.ZoneId !== undefined) {
+            const wsZoneId = (update.ZoneId || '').trim().toUpperCase();
+            const count = update.Count ?? 0;
+            console.log("📨 WS Zone Update:", wsZoneId, count);
 
-          // ✅ Match by deviceUniqueId (case-insensitive)
-          const widget = this.widgets.find((w) => {
-            const deviceUniqueId = (w.deviceUniqueId || '').trim().toUpperCase();
-            return deviceUniqueId === wsZoneId;
-          });
-
-          if (!widget) {
-            console.warn(`⚠️ No widget found for ZoneId: ${wsZoneId}`);
-            return;
-          }
-
-          console.log(`✅ Matched widget: ${widget.deviceName}`);
-
-          if (!widget.params) return;
-
-          // Update Zone Name
-          let zoneParam = widget.params.find(
-            (p: any) => p.name.toLowerCase().includes('zone name')
-          );
-          if (zoneParam) {
-            zoneParam.value = widget.deviceName || update.ZoneId;
-          } else {
-            widget.params.push({
-              name: 'Zone Name',
-              value: widget.deviceName || update.ZoneId
+            const widget = this.widgets.find((w: any) => {
+              const deviceUniqueId = (w.deviceUniqueId || '').trim().toUpperCase();
+              return deviceUniqueId === wsZoneId;
             });
+
+            if (widget && widget.params) {
+              // Update Zone Name
+              const zoneParam = widget.params.find(
+                (p: any) => p.name.toLowerCase().includes('zone')
+              );
+              if (zoneParam) {
+                zoneParam.value = widget.deviceName || update.ZoneId;
+              }
+
+              // Update Asset Count
+              const countParam = widget.params.find(
+                (p: any) => p.name.toLowerCase().includes('asset')
+              );
+              if (countParam) {
+                countParam.value = count;
+              }
+
+              // Update Status
+              const statusParam = widget.params.find(
+                (p: any) => p.name.toLowerCase() === 'status'
+              );
+              if (statusParam) {
+                statusParam.value = count > 0 ? 'Active' : 'Inactive';
+              }
+
+              console.log(`✅ Widget updated for ZoneId ${wsZoneId}`);
+            } else {
+              console.warn("⚠️ No matching widget for ZoneId:", wsZoneId);
+            }
           }
 
-          // Update Asset Count (IN)
-          let countParam = widget.params.find(
-            (p: any) => p.name.toLowerCase().includes('asset count')
-          );
-          if (countParam) {
-            countParam.value = count;
-          } else {
-            widget.params.push({ name: 'Asset Count (IN)', value: count });
+          // ─── MATCH BY tagId (Robot/GPS widgets) ─────────────
+          if (update.tagId !== undefined) {
+            const wsTagId = (update.tagId || '').trim();
+            console.log("📨 WS Tag Update:", wsTagId);
+
+            const widget = this.widgets.find((w: any) => {
+              const deviceUniqueId = (w.deviceUniqueId || '').trim();
+              return deviceUniqueId === wsTagId;
+            });
+
+            if (widget && widget.params) {
+              // Update Timestamp
+              const timestampParam = widget.params.find(
+                (p: any) => p.name.toLowerCase().includes('timestamp')
+              );
+              // if (timestampParam) {
+              //   timestampParam.value = update.Gsmtimestamp || update.timestamp || '—';
+              // }
+              if (timestampParam) {
+                // ✅ Convert to Dubai time
+                timestampParam.value = this.convertToDubaiTime(
+                  update.Gsmtimestamp || update.timestamp
+                );
+              }
+
+              // Update Latitude
+              const latParam = widget.params.find(
+                (p: any) => p.name.toLowerCase().includes('lat')
+              );
+              if (latParam) {
+                latParam.value = update.latitude ?? '—';
+              }
+
+              // Update Longitude
+              const lngParam = widget.params.find(
+                (p: any) => p.name.toLowerCase().includes('lon') ||
+                  p.name.toLowerCase().includes('lng')
+              );
+              if (lngParam) {
+                lngParam.value = update.longitude ?? '—';
+              }
+
+              console.log(`✅ Widget updated for tagId ${wsTagId}`);
+            } else {
+              console.warn("⚠️ No matching widget for tagId:", wsTagId);
+            }
           }
 
-          // Update Status
-          let statusParam = widget.params.find(
-            (p: any) => p.name.toLowerCase() === 'status'
-          );
-          const statusValue = count > 0 ? 'Active' : 'Inactive';
-          if (statusParam) {
-            statusParam.value = statusValue;
-          } else {
-            widget.params.push({ name: 'Status', value: statusValue });
+          // ─── MATCH BY BleTagid (Asset widgets) ──────────────
+          // if (update.BleTagid !== undefined) {
+          //   const wsBleTagId = (update.BleTagid || '').trim().toUpperCase();
+          //   console.log("📨 WS BLE Update:", wsBleTagId);
+
+          //   const widget = this.widgets.find((w: any) => {
+          //     const deviceUniqueId = (w.deviceUniqueId || '').trim().toUpperCase();
+          //     return deviceUniqueId === wsBleTagId;
+          //   });
+
+          //   if (widget && widget.params) {
+          //     // ✅ Update Zone Name — display as device name
+          //     const zoneParam = widget.params.find(
+          //       (p: any) => p.name.toLowerCase().includes('zone')
+          //     );
+          //     if (zoneParam) {
+          //       zoneParam.value = widget.deviceName || '—';
+          //     }
+
+          //     // ✅ Update Timestamp — from checkintime
+          //     const timestampParam = widget.params.find(
+          //       (p: any) => p.name.toLowerCase().includes('timestamp')
+          //     );
+          //     if (timestampParam) {
+          //       timestampParam.value = update.checkintime || update.Gsmtimestamp || '—';
+          //     }
+
+          //     // ✅ Update Status
+          //     const statusParam = widget.params.find(
+          //       (p: any) => p.name.toLowerCase() === 'status'
+          //     );
+          //     if (statusParam) {
+          //       statusParam.value = update.checkintime ? 'Active' : 'Inactive';
+          //     }
+
+          //     console.log(`✅ Widget updated for BleTagid ${wsBleTagId}:`, update.checkintime);
+          //   } else {
+          //     console.warn("⚠️ No matching widget for BleTagid:", wsBleTagId);
+          //   }
+          // }
+
+          // ─── MATCH BY BleTagid (Asset widgets) ──────────────
+          if (update.BleTagid !== undefined) {
+            const wsBleTagId = (update.BleTagid || '').trim().toUpperCase();
+            console.log("📨 WS BLE Update:", wsBleTagId);
+
+            const widget = this.widgets.find((w: any) => {
+              const deviceUniqueId = (w.deviceUniqueId || '').trim().toUpperCase();
+              return deviceUniqueId === wsBleTagId;
+            });
+
+            if (widget && widget.params) {
+
+              // ✅ Find the Gateway widget whose deviceUniqueId === WS zoneId
+              // e.g. zoneId: "AC233FC2280F" → matches "Gate Out Reader" widget
+              const wsZoneId = (update.zoneId || update.ZoneId || '').trim().toUpperCase();
+
+              const gatewayWidget = this.widgets.find((w: any) => {
+                const deviceUniqueId = (w.deviceUniqueId || '').trim().toUpperCase();
+                return deviceUniqueId === wsZoneId;
+              });
+
+              // ✅ Update ZoneName — use matched gateway widget's deviceName
+              const zoneParam = widget.params.find(
+                (p: any) => p.name.toLowerCase().includes('zone')
+              );
+              if (zoneParam) {
+                zoneParam.value = gatewayWidget?.deviceName || wsZoneId || '—';
+                console.log(`✅ ZoneName set to: ${zoneParam.value}`);
+              }
+
+              // ✅ Update Timestamp — from checkintime
+              const timestampParam = widget.params.find(
+                (p: any) => p.name.toLowerCase().includes('timestamp')
+              );
+              // if (timestampParam) {
+              //   timestampParam.value = update.checkintime || update.Gsmtimestamp || '—';
+              // }
+              if (timestampParam) {
+                // ✅ Convert to Dubai time
+                timestampParam.value = this.convertToDubaiTime(
+                  update.checkintime || update.Gsmtimestamp
+                );
+              }
+
+              // ✅ Update Status
+              const statusParam = widget.params.find(
+                (p: any) => p.name.toLowerCase() === 'status'
+              );
+              if (statusParam) {
+                statusParam.value = update.checkintime ? 'Active' : 'Inactive';
+              }
+
+              console.log(`✅ Widget updated for BleTagid ${wsBleTagId}:`, update.checkintime);
+            } else {
+              console.warn("⚠️ No matching widget for BleTagid:", wsBleTagId);
+            }
           }
+
         });
 
         this.cdr.detectChanges();
-      } catch (err) {
-        console.error('⚠️ WebSocket message parse error:', err);
+
+      } catch (error) {
+        console.error("❌ WebSocket Parse Error:", error);
       }
     };
 
-    this.ws.onerror = (err) => console.error('❌ WebSocket Error:', err);
-
-    this.ws.onclose = () => {
-      console.warn('🔌 WebSocket Disconnected — retrying in 1s...');
-      setTimeout(() => this.connectWebSocket(), 1000);
+    // -------------------------
+    // ON ERROR
+    // -------------------------
+    this.ws.onerror = (error) => {
+      console.error("❌ WebSocket Error:", error);
     };
+
+    // -------------------------
+    // ON CLOSE (Auto Reconnect)
+    // -------------------------
+    // this.ws.onclose = () => {
+    //   console.warn("🔌 WebSocket Disconnected. Reconnecting in 2 seconds...");
+    //   setTimeout(() => {
+    //     this.connectWebSocket();
+    //   }, 2000);
+    // };
   }
 
   selectedWidgetId = ""
@@ -1391,7 +1465,7 @@ export class Dashboard implements OnInit, OnDestroy {
 
 
         this.cdr.detectChanges();
-          this.connectWebSocket();
+        this.connectWebSocket();
       },
       error: (err) => {
         this.widgets = [];
@@ -1509,6 +1583,119 @@ export class Dashboard implements OnInit, OnDestroy {
       }
     })
   }
+
+
+
+  // ─── Device Notification WS Properties ───────────────
+  deviceNotificationWs!: WebSocket;
+  offlineAlerts: { deviceId: string; deviceName: string; description: string; timestamp: string }[] = [];
+
+  alertIntervalId: any = null;
+  lastAlertTimeMap: { [deviceId: string]: number } = {};
+
+  connectDeviceNotificationWS() {
+    if (this.deviceNotificationWs) {
+      this.deviceNotificationWs.close();
+    }
+
+    //this.deviceNotificationWs = new WebSocket('wss://phcc.purpleiq.ai/ws/DeviceNotification');
+     this.deviceNotificationWs = new WebSocket('ws://172.16.100.29:5202/ws/DeviceNotification');
+
+    this.deviceNotificationWs.onopen = () => {
+      console.log('✅ Device Notification WS Connected');
+    };
+
+    this.deviceNotificationWs.onmessage = (event: MessageEvent) => {
+      try {
+        const data = JSON.parse(event.data);
+        const updates = Array.isArray(data) ? data : [data];
+
+        updates.forEach((update: any) => {
+          if (!update.DeviceId) return;
+
+          console.log(`📡 Device ${update.DeviceId} → ${update.Status}`);
+
+          // ✅ Only process offline status
+          if (update.Status?.toLowerCase() === 'offline') {
+            this.handleOfflineAlert({
+              deviceId: update.DeviceId,                        // ✅ add deviceId
+              deviceName: update.DeviceName || update.DeviceId,
+              description: update.Description || 'Device went offline',
+              timestamp: update.Timestamp || new Date().toISOString()
+            });
+          }
+          // ✅ Online — no alert needed
+        });
+
+        this.cdr.detectChanges();
+      } catch (err) {
+        console.error('❌ Device Notification WS parse error', err);
+      }
+    };
+
+    this.deviceNotificationWs.onclose = () => {
+      console.warn('🔌 Device Notification WS Closed. Reconnecting in 2s...');
+      setTimeout(() => this.connectDeviceNotificationWS(), 2000);
+    };
+
+    this.deviceNotificationWs.onerror = (err) => {
+      console.error('❌ Device Notification WS Error', err);
+    };
+  }
+
+
+  handleOfflineAlert(alert: { deviceId: string; deviceName: string; description: string; timestamp: string }) {
+    const now = Date.now();
+    const fiveSeconds = 5 * 1000;
+
+    const lastTime = this.lastAlertTimeMap[alert.deviceId] || 0;
+
+    if (now - lastTime >= fiveSeconds) {
+      // ✅ Update per-device timer
+      this.lastAlertTimeMap[alert.deviceId] = now;
+      this.showOfflineAlert(alert);
+    } else {
+      const remaining = Math.ceil((fiveSeconds - (now - lastTime)) / 1000);
+      console.log(`⏳ Alert suppressed for ${alert.deviceId}. Next in ${remaining}s`);
+    }
+  }
+
+  // ─── Alert State ─────────────────────────────────────
+  showOfflineAlertBox: boolean = false;
+  currentOfflineAlert: {
+    deviceId: string;      // ✅ add deviceId
+    deviceName: string;
+    description: string;
+    timestamp: string
+  } | null = null;
+
+showOfflineAlert(alert: { deviceId: string; deviceName: string; description: string; timestamp: string }) {
+  // ✅ Add to queue — avoid duplicate deviceId
+  const exists = this.offlineAlerts.find(a => a.deviceId === alert.deviceId);
+  if (!exists) {
+    this.offlineAlerts.push(alert);
+  } else {
+    // Update existing
+    Object.assign(exists, alert);
+  }
+  this.showOfflineAlertBox = true;
+  console.log('🚨 Offline Alerts:', this.offlineAlerts.length);
+  this.cdr.detectChanges();
+}
+
+closeOfflineAlert(deviceId: string) {
+  // ✅ Remove specific device alert
+  this.offlineAlerts = this.offlineAlerts.filter(a => a.deviceId !== deviceId);
+  if (this.offlineAlerts.length === 0) {
+    this.showOfflineAlertBox = false;
+  }
+  this.cdr.detectChanges();
+}
+closeAllAlerts() {
+  this.offlineAlerts = [];
+  this.showOfflineAlertBox = false;
+  this.cdr.detectChanges();
+}
 
 
 }

@@ -1,102 +1,152 @@
+<div class="breadcrumb-wrapper">
+  <nav class="breadcrumb">
+        <a routerLink="/createreport" class="breadcrumb-link">Reports</a>
+    <span class="breadcrumb-separator">››</span>
+
+    <a class="breadcrumb-current">ViewReort</a>
+  </nav>
+</div>
+
+
+
+
+
 <div class="view-report-container" *ngIf="report; else noReport">
-  <h2>{{ report.reportName }}</h2>
+  <!-- <h2>{{ report.reportName }}</h2> -->
 </div>
 
 <div class="navbar">
   <div class="left-section">
     <div class="picture">
-      <img src="assets/send.png" alt="share">
-      <img src="assets/download.png" alt="download" style="cursor: pointer;" (click)="onDownloadClick()" />
+
+      <h3>View Report</h3>
+      <!-- <img src="assets/send.png" alt="share" class="nav-icon upload-icon"> -->
+      <!-- <img src="assets/download.png" alt="download" style="cursor: pointer;" (click)="onDownloadClick()" class="nav-icon upload-icon" /> -->
 
 
     </div>
   </div>
 
   <div class="right-section nav-icons">
-    <img src="assets/refresh.png" alt="Refresh">
-    <img src="assets/columns.png" alt="columns">
+    <img src="assets/refresh.png" alt="Refresh" class="nav-icon upload-icon">
+    <img src="assets/columns.png" alt="columns" class="nav-icon upload-icon">
+    <img src="assets/download.png" alt="download" style="cursor: pointer;" (click)="onDownloadClick()" class="nav-icon upload-icon" />
   </div>
 </div>
 
 <ng-template #noReport>
-  <p>No report selected.</p>
+  <!-- <p>No report selected.</p> -->
 </ng-template>
 
-<button routerLink="/createreport" class="back-btn">← Back to Reports</button>
-
-
-
-
-
-
-
+<!-- <button routerLink="/createreport" class="back-btn">← Back to Reports</button> -->
 
 <div class="view-report-container" *ngIf="reportData; else loading">
-  <h2>{{ reportData.reportName }}</h2>
-
-
+  <p>Report Name : {{ reportData.reportName }}</p>
 
   <div *ngIf="reportData" class="report-summary">
-    <!-- <p><strong>Report Name:</strong> {{ reportData.reportName }}</p> -->
-    <p><strong>Start Time:</strong> {{ reportData.startTime | date:'medium' }}</p>
-    <p><strong>End Time:</strong> {{ reportData.endTime | date:'medium' }}</p>
-    <p><strong>Created On:</strong> {{ reportData.createdAt | date:'medium' }}</p>
+    <p>Start Time : {{ reportData.startTime | date: 'dd MMM yyyy, hh:mm:ss a' : '+0400' }}</p>
+    <p>End Time : {{ reportData.endTime | date: 'dd MMM yyyy, hh:mm:ss a' : '+0400' }}</p>
+    <p>Generated At : {{ reportData.generatedAt | date: 'dd MMM yyyy, hh:mm:ss a' : '+0400' }}</p>
   </div>
 
-
-  <!-- <h3 class="visit-header" *ngIf="reportData">
-    Total Visits ({{ reportData.totalVisits || 0 }})
-  </h3> -->
-
   <div *ngIf="visits.length > 0; else noVisits">
-  <table class="visits-table">
-    <thead>
-      <tr>
-        <th>S.No</th>
-        <th>Asset Name</th>
-        <th>Unique ID</th>
-        <th>Project</th>
-        <th>Department</th>
-        <th>Category</th>
-        <th>Brand</th>
-        <th>Model</th>
-        <th>Status</th>
-        <th>Check-In</th>
-        <th>Check-Out</th>
-      </tr>
-    </thead>
+    <table class="visits-table">
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Asset Name</th>
+          <th>Unique ID</th>
+          <th>Zone</th>
+          <th>Total Events</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let asset of visits; let aIndex = index">
 
-    <tbody>
-      <tr *ngFor="let visit of visits; let i = index">
-        <td>{{ (page - 1) * pageSize + i + 1 }}</td>
-        <td>{{ visit.assetName || '—' }}</td>
-        <td>{{ visit.uniqueId || '—' }}</td>
-        <td>{{ visit.projectName || '—' }}</td>
-        <td>{{ visit.department || '—' }}</td>
-        <td>{{ visit.mainCategory || '—' }}</td>
-        <td>{{ visit.brand || '—' }}</td>
-        <td>{{ visit.model || '—' }}</td>
-        <td>
-          <span [class.status-online]="visit.status === 'Online'" 
-                [class.status-offline]="visit.status === 'Offline'">
-            {{ visit.status || '—' }}
-          </span>
-        </td>
-        <td>{{ visit.checkInTime | date:'short' }}</td>
-        <td>{{ visit.checkOutTime | date:'short' }}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+          <!-- Asset Row -->
+          <tr class="asset-row" (click)="toggleAsset(asset)">
+            <td>{{ aIndex + 1 }}</td>
+            <td>{{ asset.assetName || '—' }}</td>
+            <td>{{ asset.uniqueId || '—' }}</td>
+            <td>{{ asset.zoneName || '—' }}</td>
+            <td>{{ asset.events?.length || 0 }}</td>
+            <td>
+              <span class="toggle-icon">
+                {{ asset.expanded ? '▲ Hide' : '▼ View Events' }}
+              </span>
+            </td>
+          </tr>
+
+          <!-- Event Sub-Header Row -->
+          <tr *ngIf="asset.expanded" class="event-subheader">
+            <th>#</th>
+            <th>Status</th>
+            <th>Time-In</th>
+            <th>Time-Out</th>
+            <th>GSM Time</th>
+            <th>Zone</th>
+          </tr>
+
+          <!-- Event Rows -->
+          <ng-container *ngIf="asset.expanded">
+            <tr *ngFor="let event of asset.events; let eIndex = index" class="event-row">
+              <td>{{ eIndex + 1 }}</td>
+              <td>
+                <span
+                  [class.status-online]="event.status === 'Online'"
+                  [class.status-offline]="event.status === 'Offline'">
+                  {{ event.status || '—' }}
+                </span>
+              </td>
+              <td>{{ event.checkInTime | date: 'dd MMM yyyy, hh:mm:ss a' : '+0400' }}</td>
+              <td>
+                {{ event.checkOutTime
+                  ? (event.checkOutTime | date: 'dd MMM yyyy, hh:mm:ss a' : '+0400')
+                  : 'Still Active' }}
+              </td>
+              <td>{{ event.gsmTimeStamp || '—' }}</td>
+              <td>{{ event.zoneName || '—' }}</td>
+            </tr>
+
+            
+          </ng-container>
+
+        </ng-container>
+
+
+        <!-- Asset-Level Pagination -->
+<tr class="pagination-row" style="height: 50px;">
+  <td colspan="6">
+    <div class="pagination-container">
+      <label>
+        Items per page:
+        <select [(ngModel)]="pageSize" (change)="onPageSizeChange()" style="margin-left: 5px;">
+          <option *ngFor="let size of pageSizes" [value]="size">{{ size }}</option>
+        </select>
+      </label>
+      <span class="range-info">{{ pageNumber }} of {{ totalAssets }}</span>
+      <div>
+        <button (click)="loadAssetLiveSummary(bsonId, pageNumber - 1)" [disabled]="pageNumber === 1" class="arrow-btn">⏴</button>
+        <button (click)="loadAssetLiveSummary(bsonId, pageNumber + 1)" [disabled]="pageNumber === totalPages" class="arrow-btn">⏵</button>
+      </div>
+    </div>
+  </td>
+</tr>
+      </tbody>
+    </table>
+
+
+    
+  </div>
 
   <ng-template #noVisits>
     <p class="no-data-text">No visit data found for this report.</p>
   </ng-template>
 </div>
 
-<!-- 🔥 Fix: Add missing loading template -->
 <ng-template #loading>
-  <p class="loading-text">Loading report data...</p>
+  <p>Loading report...</p>
 </ng-template>
 
 
@@ -107,8 +157,7 @@
 
 
 
-
-<div class="pagination-container">
+<!-- <div class="pagination-container">
   <div class="pagination-controls">
     <label>Rows per page:</label>
     <select [(ngModel)]="pageSize" (change)="changePageSize()">
@@ -129,7 +178,7 @@
     <button (click)="nextPage()" [disabled]="(page * pageSize) >= totalRecords">Next</button>
 
   </div>
-</div>
+</div> -->
 
 
 

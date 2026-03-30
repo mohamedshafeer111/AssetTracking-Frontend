@@ -43,7 +43,7 @@ html, body {
 
 /* Apply RedHatDisplay font to the whole app */
 html, body {
-  font-family: 'RedHatDisplay', sans-serif;
+  font-family: 'RedHatDisplay';
   font-weight: 400;
   margin: 0;
   padding: 0;

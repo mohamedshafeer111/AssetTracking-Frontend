@@ -1,16 +1,11 @@
-
-
-<nav class="navbar">
-  <!-- <h3>User Management</h3> -->
-  
-  <!-- Navigation buttons container -->
-  <div class="nav-buttons">
-    <button class="nav-button active" routerLink="/user-management">User</button>
-    <button class="nav-button" routerLink="/role">Role</button>
+<!-- <nav class="navbar">
+  <h3>User</h3>
+  <div>
+    <button class="rolebutton" routerLink="/role">Role</button>
   </div>
-
   <div class="nav-icons">
-    <!-- Expandable Search -->
+    
+    Expandable Search --1111111111
     <div class="search-container" [ngClass]="{'search-open': searchOpen}">
       <img 
         src="assets/search.png" 
@@ -62,7 +57,6 @@
   </table>
 </div>
 
-<!-- Popups remain the same -->
 <div class="overlay" *ngIf="openNewUser">
   <div class="popup">
     <h2>Create New User</h2>
@@ -140,5 +134,186 @@
     <p>Are You Sure You Want To delete this User?</p>
     <button class="btn delete" (click)="deleteUser()">yes</button>
     <button class="btn cancel" (click)="closeDeleteUserPopup()">No</button>
+  </div>
+</div> -->
+
+
+
+
+
+
+
+
+
+<!-- <nav class="navbar">
+  <div class="nav-buttons">
+    <button class="nav-button active" routerLink="/user-management">User</button>
+    <button class="nav-button" routerLink="/role">Role</button>
+  </div>
+
+  <div class="nav-icons">
+
+    <div class="search-container" [ngClass]="{'search-open': searchOpen}">
+      <img src="assets/search.png" alt="Search" (click)="toggleSearch()" class="search-icon" />
+      <input type="text" [(ngModel)]="searchTerm" (input)="filterUsers()" placeholder="Search users..."
+        class="search-input" [ngClass]="{'visible': searchOpen}" />
+    </div>
+
+    <img src="assets/add.png" alt="Add" (click)="openCreateUserPopup()">
+    <img src="assets/upload.png" alt="upload">
+    <img src="assets/download.png" alt="download">
+    <img src="assets/refresh.png" alt="Refresh">
+    <img src="assets/columns.png" alt="columns">
+  </div>
+</nav> -->
+
+
+<div class="breadcrumb-wrapper">
+  <nav class="breadcrumb">
+    <a routerLink="/administration" class="breadcrumb-link">Administration</a>
+    <span class="breadcrumb-separator">››</span>
+    <span class="breadcrumb-current">UserManagement</span>
+  </nav>
+</div>
+
+
+<nav class="navbar">
+  <h3>User</h3>
+  <div class="tabs">
+    <button class="aone" routerLink="/user-management" routerLinkActive="active">User</button>
+    <button class="aone" routerLink="/role" routerLinkActive="active">Role</button>
+  </div>
+</nav>
+
+<nav class="navbarSub">
+  <h3>User</h3>
+  <div class="navicons">
+
+    <div class="search-container" [ngClass]="{'search-open': searchOpen}">
+      <img src="assets/search.png" alt="Search" (click)="toggleSearch()" class="search-icon" />
+      <input type="text" [(ngModel)]="searchTerm" (input)="filterUsers()" placeholder="Search users..."
+        class="search-input" [ngClass]="{'visible': searchOpen}" />
+    </div>
+    <img src="assets/add.png" alt="Add" (click)="openCreateUserPopup()" class="nav-icon upload-icon">
+    <img src="assets/upload.png" alt="upload" class="nav-icon upload-icon">
+    <img src="assets/download.png" alt="download" class="nav-icon upload-icon">
+    <img src="assets/refresh.png" alt="Refresh" class="nav-icon upload-icon">
+  </div>
+</nav>
+
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>User Name</th>
+        <th>Contact No</th>
+        <th>Email Id</th>
+        <th>Role</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of filteredUsers">
+        <td>{{ user.userName | uppercase}}</td>
+        <td>{{ user.contactNumber }}</td>
+        <td>{{ user.email | lowercase}}</td>
+        <td>{{ user.roleName }} ({{ user.roleId }})</td>
+
+        <td>
+          <img src="assets/pencil.png" alt="Edit" (click)="openUpdateUserPopup(user)" class="action-icon edit" />
+          <img src="assets/trash.png" alt="Delete" class="action-icon delete" (click)="openDeleteUserPopup(user)" />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Popups remain the same -->
+<div class="overlay" *ngIf="openNewUser">
+  <div class="popup">
+    <h2>Create New User</h2>
+    <div class="user-input-container">
+      <div class="user-data">
+        <label>User Name</label>
+        <input type="text" [(ngModel)]="NewUser.userName">
+      </div>
+      <div class="user-data">
+        <label>Email</label>
+        <input type="email" [(ngModel)]="NewUser.email">
+      </div>
+      <div class="user-data">
+        <label>Password</label>
+        <input type="password" [(ngModel)]="NewUser.password">
+      </div>
+      <div class="user-data">
+        <label>Contact Number</label>
+        <input type="text" [(ngModel)]="NewUser.contactNumber">
+      </div>
+     <div class="user-data">
+  <label>Role</label>
+  <select (change)="onRoleSelect($event)">
+    <option value="" disabled selected>Select Role</option>
+    <option *ngFor="let r of roles" [value]="r.roleName" [attr.data-id]="r.roleId">
+      {{ r.roleName }}
+    </option>
+  </select>
+</div>
+    </div>
+    <div class="user-button">
+      <button class="btn create" (click)="createUser()">Create</button>
+      <button class="btn cancel" (click)="closeCreateUserPopup()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" *ngIf="openUpdateUser">
+  <div class="popup">
+    <h2>Update User</h2>
+    <div class="user-input-container">
+      <div class="user-data">
+        <label>User Name</label>
+        <input type="text" [(ngModel)]="UpdateUser.userName">
+      </div>
+      <div class="user-data">
+        <label>Password</label>
+        <input type="password" [(ngModel)]="UpdateUser.password">
+      </div>
+      <div class="user-data">
+        <label>Email</label>
+        <input type="email" [(ngModel)]="UpdateUser.email">
+      </div>
+      <div class="user-data">
+        <label>Contact Number</label>
+        <input type="text" [(ngModel)]="UpdateUser.contactNumber">
+      </div>
+     <!-- ✅ replace with this -->
+<div class="user-data">
+  <label>Role</label>
+  <select (change)="onUpdateRoleSelect($event)">
+    <option value="" disabled>Select Role</option>
+    <option 
+      *ngFor="let r of roles" 
+      [value]="r.roleName" 
+      [attr.data-id]="r.roleId"
+      [selected]="r.roleName === UpdateUser.role">   <!-- ← pre-select current role -->
+      {{ r.roleName }}
+    </option>
+  </select>
+</div>
+    </div>
+    <div class="user-button">
+      <button class="btn create" (click)="updateUser()">update</button>
+      <button class="btn cancel" (click)="closeUpdateUserPopup()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlaydel" *ngIf="openDeleteUser">
+  <div class="popupdel">
+    <p>Are You Sure You Want To delete this User?</p>
+  <div class="del-btn">
+    <button class="btn delete" (click)="deleteUser()">yes</button>
+    <button class="btn cancel" (click)="closeDeleteUserPopup()">No</button>
+    </div>
   </div>
 </div>

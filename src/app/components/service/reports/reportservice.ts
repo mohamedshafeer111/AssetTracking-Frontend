@@ -11,21 +11,6 @@ export class Reportservice {
   private apiUrl = environment.apiUrl;
   constructor(private http: HttpClient) { }
 
-  // downloadReport() {
-  //   return this.http.get(`${this.apiUrl}BleTimeReport/download`)
-  // }
-
-
-  //   downloadReport(reportId: string) {
-  //   return this.http.get(`${this.apiUrl}BleTimeReport/download/${reportId}`, {
-  //     responseType: 'blob'
-  //   });
-  // }
-
-
-
-
-
 
   private reports: any[] = [];
 
@@ -38,118 +23,53 @@ export class Reportservice {
   }
 
 
+  getGenerateReport(
+    startTime: string,
+    endTime: string,
+    reportName: string,
+    shareWith?: string,
+    templateName?: string
+  ) {
+    const body: any = {
+      startTime: new Date(startTime).toISOString(), // ✅ FIX DATE
+      endTime: new Date(endTime).toISOString(),     // ✅ FIX DATE
+      reportName
 
+    };
 
+    if (shareWith) {
+      body.shareWith = shareWith;
+    }
 
+    if (templateName) {
+      body.templateName = templateName;
+    }
 
-  // // ✅ reportservice.ts
-  // getGenerateReport(startTime: string, endTime: string, reportName: string) {
-  //   const params: any = {
-  //     startTime,
-  //     endTime,
-  //     reportName
-  //   };
-
-  //   return this.http.get(`${this.apiUrl}Reports/generate`, { params });
-  // }
-
-
-  // getGenerateReportZone(startTime: string, endTime: string, zoneName: string, reportName: string) {
-  //   const params = { startTime, endTime, zoneName, reportName };
-  //   return this.http.get(`${this.apiUrl}Reports/generate/zone`, { params });
-  // }
-
-
-
-
-  // ✅ reportservice.ts
-  // getGenerateReport(startTime: string, endTime: string, reportName: string, shareWith?: string) {
-  //   const body: any = {
-  //     startTime,
-  //     endTime,
-  //     reportName
-  //   };
-
-  //   if (shareWith) {
-  //     body.shareWith = shareWith;  // optional
-  //   }
-
-  //   return this.http.post(`${this.apiUrl}Reports/generate`, body);
-  // }
-
-getGenerateReport(
-  startTime: string,
-  endTime: string,
-  reportName: string,
-  shareWith?: string,
-  templateName?: string
-) {
-  const body: any = {
-    startTime: new Date(startTime).toISOString(), // ✅ FIX DATE
-    endTime: new Date(endTime).toISOString(),     // ✅ FIX DATE
-    reportName
-    
-  };
-
-  if (shareWith) {
-    body.shareWith = shareWith;
+    return this.http.post(`${this.apiUrl}Asset/asset-history-report`, body);
   }
-
-  if (templateName) {
-    body.templateName = templateName;
-  }
-
-  return this.http.post(`${this.apiUrl}Reports/generate`, body);
-}
-
-
-
-
-
-
-  // getGenerateReportZone(
-  //   startTime: string,
-  //   endTime: string,
-  //   zoneName: string,
-  //   reportName: string,
-  //   shareWith?: string
-  // ) {
-  //   const params: any = {
-  //     startTime,
-  //     endTime,
-  //     zoneName,
-  //     reportName
-  //   };
-
-  //   if (shareWith) {
-  //     params.shareWithEmail = shareWith; // ✅ correct field name
-  //   }
-
-  //   return this.http.get(`${this.apiUrl}Reports/generate/zone`, { params });
-  // }
 
 
 
   getGenerateReportZone(
-  startTime: string,
-  endTime: string,
-  zoneName: string,
-  reportName: string,
-  shareWith?: string,
-  templateName?: string
-) {
-  const params: any = {
-    startTime,
-    endTime,
-    zoneName,
-    reportName
-  };
+    startTime: string,
+    endTime: string,
+    zoneName: string,
+    reportName: string,
+    shareWith?: string,
+    templateName?: string
+  ) {
+    const params: any = {
+      startTime,
+      endTime,
+      zoneName,
+      reportName
+    };
 
-  if (shareWith) params.shareWithEmail = shareWith;
-  if (templateName) params.templateName = templateName;
+    if (shareWith) params.shareWithEmail = shareWith;
+    if (templateName) params.templateName = templateName;
 
-  return this.http.get(`${this.apiUrl}Reports/generate/zone`, { params });
-}
+    return this.http.get(`${this.apiUrl}Reports/generate/zone`, { params });
+  }
 
 
 
@@ -161,152 +81,71 @@ getGenerateReport(
   }
 
 
-DeleteReport(id: string) {
-  return this.http.delete(`${this.apiUrl}Reports/${id}`);
-}
+  DeleteReport(id: string) {
+    return this.http.delete(`${this.apiUrl}Reports/${id}`);
+  }
+
+
+
+
+  getGenerateReportZoneByHours(
+    hours: number,
+    reportName: string,
+    shareWithEmail?: string,
+    zoneName?: string,
+    templateName?: string
+  ) {
+    const params: any = {
+      hours: hours.toString(),
+      reportName: reportName.trim(),
+
+      // ✅ ALWAYS send empty string if undefined
+      zoneName: zoneName ?? '',
+      shareWithEmail: shareWithEmail ?? '',
+      templateName: templateName ?? ''
+    };
+
+    return this.http.get(
+      `${this.apiUrl}Reports/generate/hours`,
+      { params }
+    );
+  }
+
+
+
+  getGenerateReportZoneByDays(
+    days: number,
+    reportName: string,
+    shareWithEmail?: string,
+    zoneName?: string,
+    templateName?: string
+  ) {
+    const params: any = {
+      days: days.toString(),
+      reportName
+    };
+
+    if (zoneName) params.zoneName = zoneName;
+    if (shareWithEmail) params.shareWithEmail = shareWithEmail;
+    if (templateName) params.templateName = templateName;
+
+    return this.http.get(`${this.apiUrl}Reports/generate/days`, { params });
+  }
 
 
 
 
 
+  // 9-2-26
 
 
+  getAssetLiveSummary(reportId: string, page: number, pageSize: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}Asset/asset-summary-live?reportId=${reportId}&page=${page}&pageSize=${pageSize}`);
+  }
 
 
-
-
-
-
-// getGenerateReportZoneByHours(
-//   hours: number,
-//   reportName: string,
-//   shareWithEmail?: string,
-//   zoneName?: string
-// ) {
-//   const params: any = {
-//     hours: hours.toString(),
-//     reportName
-//   };
-
-//   if (zoneName) {
-//     params.zoneName = zoneName;
-//   }
-
-//   if (shareWithEmail) {
-//     params.shareWithEmail = shareWithEmail;
-//   }
-
-//   return this.http.get(
-//     `${this.apiUrl}Reports/generate/hours`,
-//     { params }
-//   );
-// }
-
-
-// getGenerateReportZoneByHours(
-//   hours: number,
-//   reportName: string,
-//   shareWithEmail?: string,
-//   zoneName?: string,
-//   templateName?: string
-// ) {
-//   const params: any = {
-//     hours: hours.toString(),
-//     reportName
-//   };
-
-//   if (zoneName) params.zoneName = zoneName;
-//   if (shareWithEmail) params.shareWithEmail = shareWithEmail;
-//   if (templateName) params.templateName = templateName;
-
-//   return this.http.get(`${this.apiUrl}Reports/generate/hours`, { params });
-// }
-
-
-getGenerateReportZoneByHours(
-  hours: number,
-  reportName: string,
-  shareWithEmail?: string,
-  zoneName?: string,
-  templateName?: string
-) {
-  const params: any = {
-    hours: hours.toString(),
-    reportName: reportName.trim(),
-
-    // ✅ ALWAYS send empty string if undefined
-    zoneName: zoneName ?? '',
-    shareWithEmail: shareWithEmail ?? '',
-    templateName: templateName ?? ''
-  };
-
-  return this.http.get(
-    `${this.apiUrl}Reports/generate/hours`,
-    { params }
-  );
-}
-
-
-
-
-// getGenerateReportZoneByDays(
-//   days: number,
-//   reportName: string,
-//   shareWithEmail?: string,
-//   zoneName?: string
-// ) {
-//   const params: any = {
-//     days: days.toString(),
-//     reportName
-//   };
-
-//   if (zoneName) {
-//     params.zoneName = zoneName;
-//   }
-
-//   if (shareWithEmail) {
-//     params.shareWithEmail = shareWithEmail;
-//   }
-
-//   return this.http.get(
-//     `${this.apiUrl}Reports/generate/days`,
-//     { params }
-//   );
-// }
-
-
-getGenerateReportZoneByDays(
-  days: number,
-  reportName: string,
-  shareWithEmail?: string,
-  zoneName?: string,
-  templateName?: string
-) {
-  const params: any = {
-    days: days.toString(),
-    reportName
-  };
-
-  if (zoneName) params.zoneName = zoneName;
-  if (shareWithEmail) params.shareWithEmail = shareWithEmail;
-  if (templateName) params.templateName = templateName;
-
-  return this.http.get(`${this.apiUrl}Reports/generate/days`, { params });
-}
-
-
-
-
-
-
-
-
-// 9-2-26
-
-
-getAssetLiveSummary(reportId: string, page: number, pageSize: number): Observable<any> {
-  return this.http.get(`${this.apiUrl}Asset/asset-summary-live?reportId=${reportId}&page=${page}&pageSize=${pageSize}`);
-}
-
+    getAssetReportSummary(bsonId: string,pageNumber: number = 1, pageSize: number = 10): Observable<any> {
+    return this.http.get(`${this.apiUrl}Asset/asset-history-report/${bsonId}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+  }
 
 }

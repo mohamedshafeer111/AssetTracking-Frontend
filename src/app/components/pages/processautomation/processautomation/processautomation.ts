@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { Device } from '../../../service/device/device';
 
 @Component({
   selector: 'app-processautomation',
@@ -15,31 +16,53 @@ export class Processautomation implements OnInit {
 
 
   
-
   searchQuery = '';
   isSearchOpen = false;
 
-  /** Full list (mock / static / later API data) */
   allItems: any[] = [];
-
-  /** What you show in UI */
   filteredItems: any[] = [];
 
-  ngOnInit() {
-    this.allItems = [
-      {
-        description: 'Door opened',
-        timestamp: '2026-01-08 10:30:00'
-      },
-      {
-        description: 'Motion detected',
-        timestamp: '2026-01-07 18:45:00'
-      }
-    ];
+  constructor(private device: Device, private cdr: ChangeDetectorRef, private router: Router) {}
 
-    // initially show all
-    this.filteredItems = [...this.allItems];
+  ngOnInit() {
+    this.loadAll();
   }
+
+
+  goToEdit(id: string) {
+  this.router.navigate(['/editprocessautomation', id]);
+}
+
+loadAll() {
+  this.device.getAllProcessAutomation().subscribe({
+    next: (res: any) => {
+      // Handle both array response and wrapped response
+      const list: any[] = Array.isArray(res) ? res : (res?.data ?? res?.items ?? []);
+
+      this.allItems = list.map(item => ({
+        ...item,
+        condition:  item.condition  ?? '-',
+        action:     item.action     ?? '-',
+        zoneName:   item.zoneName   ?? '-',
+        createdAt:  item.createdAt  ?? '',
+        status:
+          item.status === true  || item.status === 'true'  ? 'ONLINE'  :
+          item.status === false || item.status === 'false' ? 'OFFLINE' :
+          item.status ?? 'OFFLINE'
+      }));
+
+      this.filteredItems = [...this.allItems];
+      this.cdr.detectChanges();
+    },
+    error: (err) => {
+      console.error('❌ Error loading process automations:', err.status, err.message);
+      this.allItems = [];
+      this.filteredItems = [];
+      this.cdr.detectChanges();
+    }
+  });
+}
+
 
   toggleSearch() {
     this.isSearchOpen = !this.isSearchOpen;
@@ -56,7 +79,7 @@ export class Processautomation implements OnInit {
     this.filteredItems = this.allItems.filter(item => {
       const desc = (item.description || '').toLowerCase();
 
-      const raw = item.timestamp?.replace(' ', 'T');
+      const raw = item.createdAt?.replace(' ', 'T');
       const date = new Date(raw);
 
       const yyyyMMdd = !isNaN(date.getTime())
@@ -74,4 +97,68 @@ export class Processautomation implements OnInit {
       );
     });
   }
+
+  formatDate(dateStr: string): string {
+    if (!dateStr) return '-';
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return '-';
+    return date.toLocaleDateString('en-GB') + ' ' +
+           date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  }
+
+
+
+// toggleStatus(item: any) {
+//   // Handle both old boolean and new string values
+//   const isCurrentlyActive =
+//     item.status === true ||
+//     item.status === 'true' ||
+//     item.status === 'ONLINE';
+
+//   const newStatus = isCurrentlyActive ? 'OFFLINE' : 'ONLINE';
+//   const previousStatus = item.status;
+//   item.status = newStatus;
+
+//   const payload = {
+//     ...item,
+//     status: newStatus,
+//     devices: [...(item.devices ?? [])]
+//   };
+
+//   this.device.updateProcessAutomation(item.id, payload).subscribe({
+//     next: () => this.loadAll(),
+//     error: (err) => {
+//       console.error('❌ Error toggling status', err);
+//       item.status = previousStatus; // revert on failure
+//       this.cdr.detectChanges();
+//     }
+//   });
+// }
+
+
+toggleStatus(item: any) {
+  // Handle both old boolean and new string values
+  const isCurrentlyActive =
+    item.status === true ||
+    item.status === 'true' ||
+    item.status === 'ONLINE';
+
+ item.status = isCurrentlyActive ? 'OFFLINE' : 'ONLINE';
+ 
+  }
+
+deleteItem(id: string) {
+  if (!confirm('Are you sure you want to delete this record?')) return;
+  this.device.deleteProcessAutomation(id).subscribe({
+    next: () => {
+      this.router.navigate(['/processautomation']);
+      this.loadAll(); // ← just reload data directly, no navigation needed
+
+    },
+    error: () => {
+      console.log('Error deleting process automation');
+    }
+  });
+}
+
 }

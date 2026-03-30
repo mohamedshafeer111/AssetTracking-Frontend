@@ -1,136 +1,86 @@
-<div class="content1">
+<nav class="navbar">
   <img class="menu-icon" data-tooltip="Menu" data-tooltip="Menu" src="assets/menu.png" alt="Menu"
     (click)="toggleSidebar()">
-  <h1>Asset Tracking</h1>
-  <div class="right-icons">
-     <!-- <span class="icon-wrapper" data-tooltip="Notifications">
-      <img class="last" src="assets/navclock.png" alt="Notification icon">
-    </span> -->
+  <div class="navbar-title">Asset Tracking</div>
 
-<!-- 
-<span class="icon-wrapper" (click)="toggleDropdown($event)">
-  
-  <img class="last" src="assets/admin.png">
+  <div class="navbar-right">
+    <span class="username">{{ userid }}</span>
 
-  <div class="user-info">
-    {{ userid }}
-  </div>
-
-   Do NOT stopPropagation here unless needed 
-  <div class="dropdown" *ngIf="menuOpen">
-    <ul>
-      <li (click)="goToProfile()">My Profile</li>
-      <li (click)="changePassword()">Change Password</li>
-      <li (click)="openHelp()">Help & Support</li>
-      <li (click)="logout()">Logout</li>
-    </ul>
-  </div>
-
-</span> -->
-
-
-
-    <span class="icon-wrapper" data-tooltip="Admin" (click)="toggleDropdown($event)">
-      <img class="last" src="assets/user.png"  alt="Dashboard icon">
-      <div class="user-info">
-        {{ userid }}
+    <div class="user-dropdown-container" (click)="toggleDropdown($event)">
+      <img src="assets/user.png" alt="User Icon" class="navbar-logo1" />
+      <div class="user-dropdown" *ngIf="menuOpen">
+        <a (click)="changePassword()">Change Password</a>
+        <a (click)="logout()">Logout</a>
       </div>
-      <div class="dropdown" *ngIf="menuOpen">
-    <ul>
-      <li (click)="goToProfile()">My Profile</li>
-      <li (click)="changePassword()">Change Password</li>
-      <li (click)="openHelp()">Help & Support</li>
-      <li (click)="logout()">Logout</li>
-    </ul>
+    </div>
   </div>
-    </span>
-    <span class="icon-wrapper" data-tooltip="Notifications">
-      <img class="last" src="assets/bell.png" alt="Notification icon">
-    </span>
-  </div>
-</div>
+  <img src="assets/PurpleIQ.png" alt="Logo" class="navbar-logo" />
+</nav>
 
-
-
-
-
-
-<!-- Sidebar + Main Layout -->
 <div class="layout">
 
   <div class="sidebar" [class.collapsed]="isSidebarCollapsed">
     <nav>
 
-      <a class="main tooltip" routerLink="/dashboard" (click)="closeAdminMenu()" data-tooltip="Dashboard">
+      <a *ngIf="canViewDashboard" class="main tooltip" routerLink="/dashboard" [class.active]="isDashboardActive()"
+        (click)="closeAllSubmenus()" data-tooltip="Dashboard">
         <img src="assets/dashboard.png" alt="Dashboard icon" class="white-icon">
-        <span class="link-text">Dashboard</span> </a>
+        <span class="link-text">Dashboard</span>
+      </a>
 
 
-      <!-- Tracking with submenu -->
-      <div class="menu-item" [class.open]="isTrackingMenuOpen">
-        <a href="javascript:void(0)" (click)="toggleTrackingMenu()">
-          <span class="main tooltip" data-tooltip="Tracking">
-            <img src="assets/marker.png" alt="Tracking" class="white-icon">
+      <div *ngIf="canViewTracking" class="menu-item" [class.open]="isTrackingMenuOpen"
+        [class.active]="isTrackingMenuOpen || isTrackingActive()">
+        <a href="javascript:void(0)" (click)="toggleTrackingMenu ()">
+          <span class="admintooltip" data-tooltip="Tracking">
+            <img src="assets/markers.png" alt="Tracking" class="white-icon">
             <span class="link-text">Tracking</span>
           </span>
         </a>
-
         <div class="submenu">
-          <!-- Heading -->
           <a href="#">
             <span class="tooltip" data-tooltip="Tracking">
-              <img src="assets/marker.png" alt="Tracking icon" class="purple-icon">
+              <img src="assets/markers.png" alt="Tracking icon" class="purple-icon">
             </span>
             Tracking
           </a>
-
-
-          <!-- Live -->
           <div class="submenu-item" [class.open]="isLiveOpen">
-            <a class="one-sub" [routerLink]="'/live'" href="javascript:void(0)" (click)="toggleLiveMenu()">
-              Live
-            </a>
+            <a class="one-sub" routerLink="/live" routerLinkActive="active" (click)="closeAllSubmenus()">Live</a>
           </div>
-
-          <!-- Historicals -->
-          <!-- <div class="submenu-item" [class.open]="isHistoricalsOpen">
-            <a class="one-sub" [routerLink]="'/historicals'" href="javascript:void(0)"
-              (click)="toggleHistoricalsMenu()">
-              Historicals
-            </a>
-          </div> -->
-
+          <div class="submenu-item" [class.open]="isHistoricalsOpen">
+            <a class="one-sub" routerLink="/historicals" routerLinkActive="active"
+              (click)="closeAllSubmenus()">Historicals</a>
+          </div>
         </div>
       </div>
 
 
-
-
-
-      <!-- <a class="main tooltip" href="#" data-tooltip="Events" routerLink="/events">
+      <a *ngIf="canViewEvents" class="main tooltip" routerLink="/events" routerLinkActive="active"
+        (click)="closeAllSubmenus()" data-tooltip="Events">
         <img src="assets/event.png" alt="Events" class="white-icon">
         <span class="link-text">Events</span>
-      </a> -->
+      </a>
 
-      <a class="main tooltip" href="#" data-tooltip="Reports" routerLink="/createreport">
+      <a *ngIf="canViewReports" class="main tooltip" routerLink="/createreport" [class.active]="isReportsActive()"
+        (click)="closeAllSubmenus()" data-tooltip="Reports">
         <img src="assets/reports.png" alt="Reports" class="white-icon">
         <span class="link-text">Reports</span>
       </a>
 
-      <!-- <a class="main tooltip" href="#" data-tooltip="Process & Automation" routerLink="/processautomation">
-        <img src="assets/automation.png" alt="Automation">
+      <a *ngIf="canViewProcessAutomation" class="main tooltip" routerLink="/processautomation"
+        [class.active]="isProcessActive()" (click)="closeAllSubmenus()" data-tooltip="Process & Automation">
+        <img src="assets/automation.png" alt="Automation" class="white-icon">
         <span class="link-text">Process & Automation</span>
-      </a> -->
+      </a>
 
-
-      <!-- Administration with submenu -->
-      <div class="menu-item" [class.open]="isAdminMenuOpen">
+      <div *ngIf="canViewAdministration" class="menu-item" [class.open]="isAdminMenuOpen"
+        [class.active]="isAdminMenuOpen || isAdminActive()">
         <a href="javascript:void(0)" (click)="toggleAdminMenu()">
           <span class="admintooltip" data-tooltip="Admin">
             <img src="assets/administration.png" alt="Admin" class="white-icon">
-
-            <span class="link-text">Administration</span></span></a>
-
+            <span class="link-text">Administration</span>
+          </span>
+        </a>
         <div class="submenu">
           <a href="#">
             <span class="tooltip" data-tooltip="Administration">
@@ -138,16 +88,16 @@
             </span>
             Administration
           </a>
-          <a class="one-sub" routerLink="/project" (click)="closeAdminMenu()"> Configuration</a>
-          <!-- <a class="one-sub" href="#" routerLink="/licensemanagement" (click)="closeAdminMenu()">License Management</a> -->
-          <a class="one-sub" href="#" routerLink="/user-management" (click)="closeAdminMenu()">User Management</a>
+          <a class="one-sub" routerLink="/project" routerLinkActive="active"
+            (click)="closeAllSubmenus()">Configuration</a>
+          <!-- <a class="one-sub" routerLink="/licensemanagement" routerLinkActive="active" (click)="closeAllSubmenus()">License Management</a> -->
+          <a class="one-sub" routerLink="/user-management" routerLinkActive="active" (click)="closeAllSubmenus()">User
+            Management</a>
         </div>
       </div>
     </nav>
   </div>
 
-
-  <!-- Main content -->
   <div class="content">
     <router-outlet></router-outlet>
   </div>

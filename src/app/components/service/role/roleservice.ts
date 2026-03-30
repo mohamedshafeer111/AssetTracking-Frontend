@@ -240,7 +240,9 @@ export class Roleservice {
     return this.http.get(`${this.apiUrl}zonesensor/by-dashboard/${id}`);
   }
 
-
+getRoleById(id: string) {
+  return this.http.get(`${this.apiUrl}Role/get/${id}`);  // try this
+}
 
   CreateDashboardName(dashboardName: string) {
     return this.http.post(`${this.apiUrl}zonesensor/createdashboard`, {

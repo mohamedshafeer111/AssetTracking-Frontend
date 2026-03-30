@@ -1,11 +1,9 @@
-
-
 /* ----- AWProject container layout ----- */
 .AWProject {
   flex: 1;
   background: #f4f4f8;
   padding: 20px;
-  border-right: 1px solid #ddd;
+  border: 1px solid #ddd;
   /* overflow-y: auto; */
 }
 
@@ -37,7 +35,10 @@
   border-radius: 4px;
   cursor: pointer;
   transition: background 0.2s ease;
+  font-family: 'RedHatDisplay';
+  font-size: 14px;
 }
+
 .tabledata:hover {
   background-color: #ede6f7;
 }
@@ -59,16 +60,19 @@
   transition: transform 0.3s ease;
   transform: rotate(90deg);
 }
+
 .table-container img.tab.rotate {
   transform: rotate(180deg);
 }
 
 
 .tabledata.selected {
-  background-color: #7030a0 !important; /* dark purple */
+  background-color: #7030a0 !important;
+  /* dark purple */
   color: #fff !important;
   font-weight: 600;
 }
+
 /* Hierarchy indentation */
 .indent {
   display: inline-block;
@@ -79,21 +83,27 @@
 .level1 {
   margin-left: 0px;
 }
+
 .level2 {
   margin-left: 15px;
 }
+
 .level3 {
   margin-left: 30px;
 }
+
 .level4 {
   margin-left: 45px;
 }
+
 .level5 {
   margin-left: 60px;
 }
+
 .level6 {
   margin-left: 75px;
 }
+
 .level7 {
   margin-left: 90px;
 }
@@ -155,8 +165,10 @@ td.tabledata:not(.selected):has(.indent.level1) {
 
 .header h3 {
   margin: 0;
-  color: #6c2a91;
-  font-weight: 600;
+  color: #000;
+  font-family: 'RedHatDisplay';
+  font-size: 14px;
+
 }
 
 .report-form {
@@ -164,9 +176,10 @@ td.tabledata:not(.selected):has(.indent.level1) {
 }
 
 .report-form h4 {
-  color: #7030a0;
-  font-weight: 700;
+  color: #000;
   margin-bottom: 15px;
+  font-family: 'RedHatDisplay';
+  font-size: 14px;
 }
 
 /* =============================
@@ -184,14 +197,18 @@ td.tabledata:not(.selected):has(.indent.level1) {
 }
 
 .control-group label {
-  font-weight: 600;
   margin-right: 10px;
+  font-family: 'RedHatDisplay';
+  font-size: 14px;
+  font-weight: bolder;
 }
 
 #timeSelect {
   padding: 5px;
   border-radius: 6px;
   border: 1px solid #ccc;
+  font-family: 'RedHatDisplay';
+  font-size: 13px;
 }
 
 .hours-group {
@@ -216,7 +233,9 @@ td.tabledata:not(.selected):has(.indent.level1) {
   cursor: pointer;
   background-color: #f8f8f8;
   transition: 0.2s ease;
-  font-size: 14px;
+  font-size: 13px;
+  font-family: 'RedHatDisplay';
+
 }
 
 .hour-button:hover {
@@ -226,8 +245,9 @@ td.tabledata:not(.selected):has(.indent.level1) {
 .hour-button.active {
   background-color: #7030a0;
   color: white;
-  border-color: #7030a0;
   font-weight: 600;
+  font-family: 'RedHatDisplay';
+  font-size: 13px;
 }
 
 /* Custom date range */
@@ -241,12 +261,15 @@ td.tabledata:not(.selected):has(.indent.level1) {
 .date-range label {
   font-weight: 600;
   color: #6c2a91;
+  font-family: 'RedHatDisplay';
+    font-size: 14px;
 }
 
 .date-range input[type="date"] {
-  padding: 6px 10px;
+  padding: 4px 8px;
   border: 1px solid #ccc;
   border-radius: 6px;
+      font-size: 13px;
 }
 
 /* =============================
@@ -270,9 +293,11 @@ td.tabledata:not(.selected):has(.indent.level1) {
 
 .form-group label {
   font-weight: bold;
-  color: #6c2a91;
+  color: #7030a0;
   display: block;
   margin-bottom: 8px;
+  font-family: 'RedHatDisplay';
+  font-size: 14px;
 }
 
 .radio-group {
@@ -299,6 +324,8 @@ textarea {
 textarea {
   min-height: 60px;
   resize: none;
+  font-family: 'RedHatDisplay';
+  font-size: 13px;
 }
 
 /* =============================
@@ -309,6 +336,7 @@ textarea {
   justify-content: flex-end;
   gap: 10px;
   margin-top: 20px;
+
 }
 
 .cancel-btn,
@@ -317,21 +345,27 @@ textarea {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: bold;
 }
 
 .cancel-btn {
   background-color: #f3f3f3;
-  color: #555;
+  color: #333;
+  font-family: 'RedHatDisplay';
+  font-size: 14px;
+  border: 1px solid rgb(212, 209, 209);
 }
 
 .generate-btn {
-  background-color: #6c2a91;
+  background-color: #7030a0;
   color: #fff;
+  font-family: 'RedHatDisplay';
+  font-size: 14px;
 }
 
 .generate-btn:hover {
-  background-color: #591f78;
+  background-color: #7030a0;
+  font-family: 'RedHatDisplay';
+  font-size: 14px;
 }
 
 
@@ -363,9 +397,11 @@ textarea {
 .time-inline:focus {
   border: 1px solid #7030a0 !important;
 }
+
 .time-inline:focus {
   border: 1px solid #7030a0 !important;
 }
+
 .red-border {
   border: 1px solid #7030a0 !important;
   outline: none !important;
@@ -385,7 +421,7 @@ textarea {
   border-radius: 6px;
   border: 1px solid #ccc;
   /* width: 150px; */
-  
+
   /* 🔥 Force same height */
   height: 30px;
   line-height: 30px;
@@ -393,6 +429,7 @@ textarea {
   /* Optional: remove default inner padding for time input */
   box-sizing: border-box;
 }
+
 /* .red-border {
   border: 2px solid #7030a0 !important;
   outline: none !important;
@@ -419,7 +456,7 @@ textarea {
   box-sizing: border-box;
 
   /* You can adjust width if needed */
-  width: 130px;      
+  width: 130px;
 }
 
 .between-text {
@@ -433,4 +470,38 @@ textarea {
 .monthly-time::-webkit-clear-button {
   padding: 0;
   margin: 0;
+}
+
+
+
+.breadcrumb-wrapper {
+  font-size: 13px;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-link {
+  color: black;
+  text-decoration: none;
+  margin-right: 5px;
+}
+
+.breadcrumb-link:hover {
+  color: #7030a0;
+  font-weight: bold;
+
+}
+
+.breadcrumb-separator {
+  margin: 0 5px;
+  color: #666;
+}
+
+.breadcrumb-current {
+  color: #7030a0;
+  font-weight: bold;
+
 }

@@ -1,33 +1,21 @@
 <nav class="navbar">
-    <h3>Process&Automation</h3>
+  <h3>Process&Automation</h3>
 
 
 
-    <div class="search-container" [class.open]="isSearchOpen">
-  <input
-    type="text"
-    placeholder="Search by text or date (Y-M-D)"
-    [(ngModel)]="searchQuery"
-    (input)="applyUnifiedSearch()"
-    class="search-input"
-  />
-
-  <img
-    src="assets/search.png"
-    alt="Search"
-    class="icon-img"
-    (click)="toggleSearch()"
-  />
+  <div class="search-container" [class.open]="isSearchOpen">
+    <div class="navicons">
+    <input type="text" placeholder="Search by text or date (Y-M-D)" [(ngModel)]="searchQuery"
+      (input)="applyUnifiedSearch()" class="search-input" />
+    <img src="assets/search.png" alt="Search" class="nav-icon upload-icon" (click)="toggleSearch()" />
+    <img src="assets/add.png" alt="Add" routerLink="/createprocessautomation" class="nav-icon upload-icon">
+    <img src="assets/refresh.png" alt="Refresh" class="nav-icon upload-icon">
+    <img src="assets/filter.png" alt="filter" class="nav-icon upload-icon">
+    </div>
+  </div>
 
 
-  <img src="assets/add.png" alt="Add" routerLink="/createprocessautomation" class="icon-img">
-        <img src="assets/refresh.png" alt="Refresh" class="icon-img">
-        <img src="assets/download.png" alt="download" class="icon-img">
-        <img src="assets/filter.png" alt="filter" class="icon-img">
-</div>
-
-
-    <!-- <div class="nav-icons">
+  <!-- <div class="nav-icons">
         
     </div> -->
 
@@ -49,13 +37,13 @@
 <!-- 9-2-26 -->
 
 
-<div class="rule-table-wrapper">
-  <table class="rule-table">
+<div class="table-container">
+  <table>
     <thead>
       <tr>
         <th>Rule Name</th>
-        <th>Type</th>
-        <th>Last Activated</th>
+        <!-- <th>Type</th> -->
+        <!-- <th>Last Activated</th> -->
         <th>Created On</th>
         <th>Status</th>
         <th>Edit</th>
@@ -63,65 +51,41 @@
     </thead>
 
     <tbody>
-      <tr>
-        <td>Rule 1</td>
-        <td>Standard</td>
-        <td>09-02-2026 18:50:210</td>
-        <td>09-02-2026 18:50:210</td>
-        <td>
-          <label class="switch">
-            <input type="checkbox" checked />
-            <span class="slider"></span>
-          </label>
-        </td>
-        <td class="actions">
-          <button class="icon-btn edit">
-            ✎
-          </button>
-          <button class="icon-btn delete">
-            🗑
-          </button>
+      <tr *ngIf="filteredItems.length === 0">
+        <td colspan="6" style="text-align:center; padding: 20px; color: #999;">
+          No records found.
         </td>
       </tr>
 
-      <tr>
-        <td>Rule 2</td>
-        <td>Standard</td>
-        <td>09-02-2026 18:50:210</td>
-        <td>09-02-2026 18:50:210</td>
+      <tr *ngFor="let item of filteredItems">
+
+        <!-- Rule Name → condition -->
+        <td>{{ item.condition || '-' }}</td>
+
+        <!-- Type → action -->
+        <!-- <td>{{ item.action || '-' }}</td> -->
+
+        <!-- Last Activated → zoneName -->
+        <!-- <td>{{ item.zoneName || '-' }}</td> -->
+
+        <!-- Created On → createdAt -->
+        <td>{{ formatDate(item.createdAt) }}</td>
+
+        <!-- Status → status string with toggle -->
         <td>
           <label class="switch">
-            <input type="checkbox" checked />
+            <input type="checkbox" [checked]="true" (change)="toggleStatus(item)" />
             <span class="slider"></span>
           </label>
+          <!-- <span class="status-text">{{ item.status }}</span> -->
         </td>
-        <td class="actions">
-          <button class="icon-btn edit">✎</button>
-          <button class="icon-btn delete">🗑</button>
-        </td>
-      </tr>
 
-         <tr>
-        <td>Rule 3</td>
-        <td>Standard</td>
-        <td>09-02-2026 18:50:210</td>
-        <td>09-02-2026 18:50:210</td>
-        <td>
-          <label class="switch">
-            <input type="checkbox" checked />
-            <span class="slider"></span>
-          </label>
-        </td>
         <td class="actions">
-          <button class="icon-btn edit">
-            ✎
-          </button>
-          <button class="icon-btn delete">
-            🗑
-          </button>
+          <img src="assets/pencil.png" (click)="goToEdit(item.id)" class="action-icon edit">
+          <img src="assets/trash.png" (click)="deleteItem(item.id)" class="action-icon delete">
         </td>
-      </tr>
 
+      </tr>
 
     </tbody>
   </table>

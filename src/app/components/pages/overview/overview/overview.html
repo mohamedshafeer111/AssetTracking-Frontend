@@ -1,68 +1,12 @@
-<!-- <div class="report-container">
-  <h3 class="section-heading">Sensor Timeline</h3>
-
-  <div class="time-container">
-
-    <div class="control-group">
-      <label for="timeSelect">Time Range:</label>
-      <select id="timeSelect" [(ngModel)]="selectedTimeRange" (change)="onTimeRangeChange()">
-        <option value="day">Day</option>
-        <option value="week">Week</option>
-        <option value="month">Month</option>
-      </select>
-    </div>
-
-
-    <div class="hours-group">
-      <span *ngFor="let hour of hours" (click)="selectHour(hour)" [class.active]="selectedHour === hour">
-        {{ hour }}
-      </span>
-    </div>
-
-
-    <div class="total-overview">
-      Total Time Overview:
-    </div>
-  </div>
-
-
+<div class="breadcrumb-wrapper">
+  <nav class="breadcrumb">
+        <a  class="breadcrumb-link">Tracking</a>
+    <span class="breadcrumb-separator">››</span>
+    <a routerLink="/historicals" class="breadcrumb-link">Historical</a>
+    <span class="breadcrumb-separator">››</span>
+    <a class="breadcrumb-current">overview</a>
+  </nav>
 </div>
-
-
-
-
-
-
-
-
-<div class="flowchart">
-  <div class="flow-line"></div>
-
-  <div class="flow-box left">
-    <div class="content">
-      <p>Person 1 login here at 11:00am</p>
-    </div>
-  </div>
-
-  <div class="flow-box right">
-    <div class="content">
-      <p>Person 1 logout here at 11:30am</p>
-    </div>
-  </div>
-
-  <div class="flow-box left">
-    <div class="content">
-      <p>Person 1 login here at 12:00pm</p>
-    </div>
-  </div>
-
-  <div class="flow-box right">
-    <div class="content">
-      <p>Person 1 logout here at 12:30pm</p>
-    </div>
-  </div>
-</div> -->
-
 
 
 <div class="page-layout">
@@ -72,52 +16,74 @@
 
     <!-- FILTER NAVBAR -->
     <form [formGroup]="filterForm" class="filter-bar">
+
       <span class="label">Date :</span>
 
-      <input type="datetime-local" formControlName="fromDate" />
+      <input type="date" formControlName="fromDate" />
 
       <span class="to-text">to</span>
 
-      <input type="datetime-local" formControlName="toDate" />
+      <input type="date" formControlName="toDate" />
 
       <span class="label">Zone :</span>
 
       <select formControlName="zone">
-        <option *ngFor="let zone of zones" [value]="zone">
-          {{ zone }}
+        <option value="">Select Zone</option>
+        <option *ngFor="let zone of zoneList" [value]="zone.zoneName">
+          {{ zone.zoneName }}
         </option>
       </select>
 
       <button type="button" class="apply-btn" (click)="applyFilter()">
         Apply
       </button>
-    </form>
 
+    </form>
     <!-- TABLE CONTAINER -->
     <div class="table-container">
       <table>
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Zone</th>
+            <th>Zone Name</th>
             <th>Time In</th>
             <th>Time Out</th>
-            <th>Time Spend</th>
+            <th>Time Spend(seconds)</th>
 
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let row of tableData">
-            <td>{{ row.name }}</td>
-            <td>{{ row.zone }}</td>
-            <td>{{ row.timeIn }}</td>
-            <td>{{ row.timeOut }}</td>
-            <td>{{ row.timeSpend }}</td>
+          <tr *ngFor="let overview of overviewData">
+            <td>{{ overview.zoneName }}</td>
+            <td>{{ overview.checkInTime }}</td>
+            <td>{{ overview.checkOutTime }}</td>
+            <td>{{ overview.timeSpentSeconds }}</td> 
 
           </tr>
         </tbody>
       </table>
     </div>
+    <!-- <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>UniqueId</th>
+            <th>Time In</th>
+            <th>Time Out</th>
+            <th>Time Spend(seconds)</th>
+
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let overview of tableData">
+            <td>{{ overview.name }}</td>
+            <td>{{ overview.timeIn }}</td>
+            <td>{{ overview.timeOut }}</td>
+            <td>{{ overview.timeSpend }}</td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div> -->
 
   </div>
 
@@ -131,14 +97,14 @@
 
     <!-- SUMMARY CONTAINER -->
     <div class="summary-box">
-      <p><strong>Total Entries :</strong> 100</p>
-      <p><strong>Total Exists :</strong> 50</p>
-      <p><strong>Total Time Spent :</strong> 22:45</p>
-      <p><strong>Avg Time Spent :</strong> 10:45</p>
-      <p><strong>Idle Time :</strong> 10:45</p>
-      <p><strong>Active Time :</strong> 10:45</p>
-      <p><strong>Work Hours Required :</strong> 10:45</p>
-      <p><strong>Work Hours Achieved :</strong> 10:45</p>
+      <p><strong>Total Entries :</strong> 03</p>
+      <p><strong>Total Exists :</strong> 03</p>
+      <p><strong>Total Time Spent :</strong> 255 Seconds</p>
+      <p><strong>Avg Time Spent :</strong> 85 Seconds</p>
+      <p><strong>Idle Time :</strong> NA</p>
+      <p><strong>Active Time :</strong> NA</p>
+      <p><strong>Work Hours Required :</strong> 10 hours</p>
+      <p><strong>Work Hours Achieved :</strong> NA</p>
     </div>
 
   </div>

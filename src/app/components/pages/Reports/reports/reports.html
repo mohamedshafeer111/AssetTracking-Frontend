@@ -1,3 +1,12 @@
+<div class="breadcrumb-wrapper">
+  <nav class="breadcrumb">
+    <a routerLink="/createreport" class="breadcrumb-link">Reports</a>
+    <span class="breadcrumb-separator">››</span>
+    <a class="breadcrumb-current">Create Report</a>
+  </nav>
+</div>
+
+
 <div class="reports-wrapper">
     <!-- 🔹 Left Side: Project Table -->
     <div *ngIf="activeTab === 'project'" class="table-container">
@@ -241,7 +250,7 @@
         </div>
 
         <div class="report-form">
-            <h4>CREATE REPORTS</h4>
+            <!-- <h4>CREATE REPORTS</h4> -->
 
             <!-- 🔹 Time Range -->
             <div class="control-group">

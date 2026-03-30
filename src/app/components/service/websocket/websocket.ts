@@ -17,7 +17,7 @@ export class Websocket {
   }
 
   private connect() {
- //this.socket$ = webSocket('ws://172.16.100.29:5202/ws/ZoneCount');
+//  this.socket$ = webSocket('ws://172.16.100.29:5202/ws/ZoneCount');
   this.socket$ = webSocket('wss://phcc.purpleiq.ai/ws/ZoneCount');
 
     this.socket$.subscribe({

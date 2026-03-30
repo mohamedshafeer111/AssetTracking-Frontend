@@ -1,3 +1,12 @@
+
+
+<div class="breadcrumb-wrapper">
+  <nav class="breadcrumb">
+    <a routerLink="/dashboard" class="breadcrumb-link">Dashboard</a>
+    <span class="breadcrumb-separator">››</span>
+    <a class="breadcrumb-current">CustomerDashboard</a>
+  </nav>
+</div>
 <nav class="navbar">
   <div class="navbar-left">
     <span class="navbar-title">Customer Dashboard</span>
@@ -6,14 +15,14 @@
 
 <div class="add-widget-container">
 
-  <span class="add-widget-text">
+  <!-- <span class="add-widget-text">
     <span class="plus-symbol">+</span>
     <span class="widget-text" routerLink="/dashboard">Dashboard</span>
-  </span>
-  <span class="add-widget-text" (click)="openAddWidgetPopup()">
+  </span> -->
+  <!-- <span class="add-widget-text" (click)="openAddWidgetPopup()">
     <span class="plus-symbol">+</span>
     <span class="widget-text">Add Widget</span>
-  </span>
+  </span> -->
 </div>
 
 
@@ -48,22 +57,6 @@
 
 
 
-<!-- 7-2-26 -->
-
-<!-- <div class="table-container">
-  <table>
-    <thead>
-      <tr>
-        <th>Technology</th>
-        <th>Count</th>
-        <th>Online</th>
-        <th>Offline</th>
-        
-      </tr>
-    </thead>
-
-  </table>
-</div> -->
 
 
 <div class="table-container">
@@ -72,8 +65,6 @@
       <tr>
         <th>Technology</th>
         <th>Count</th>
-        <th>Online</th>
-        <th>Offline</th>
       </tr>
     </thead>
 
@@ -82,8 +73,6 @@
         style="cursor: pointer;">
         <td>{{ item.technology || 'Unknown' }}</td>
         <td>{{ item.count }}</td>
-        <td>{{ item.count }}</td>
-        <td>0</td>
       </tr>
 
       <tr *ngIf="!isTechnologyLoading && technologyCount.length === 0">
@@ -102,68 +91,70 @@
 
 
 <!-- Asset Details Popup -->
-<!-- Asset Details Popup -->
 <div class="AWContainer" *ngIf="isAssetDetailsPopup">
-    <div class="AwContent asset-popup">
-        <div class="AWNavbar">
-            <span>{{ selectedTechnology }} Assets ({{ assetDetailsLoading ? '...' : assetDetails.length }})</span>
-            <span class="close-btn" (click)="closeAssetDetailsPopup()">×</span>
-        </div>
+  <div class="AwContent asset-popup">
+    <div class="AWNavbar">
+      <span>{{ selectedTechnology }} Assets ({{ assetDetailsLoading ? '...' : assetDetails.length }})</span>
+      <span class="close-btn" (click)="closeAssetDetailsPopup()">×</span>
+    </div>
 
-        <!-- Loading State -->
-        <div class="loading-section" *ngIf="assetDetailsLoading">
-            <p style="text-align: center; padding: 40px; color: #666; font-size: 14px;">
-                Loading assets...
-            </p>
-        </div>
+    <!-- Loading State -->
+    <div class="loading-section" *ngIf="assetDetailsLoading">
+      <p style="text-align: center; padding: 40px; color: #666; font-size: 14px;">
+        Loading assets...
+      </p>
+    </div>
 
-        <!-- Asset Data -->
-        <div class="asset-details-section" *ngIf="!assetDetailsLoading">
-            <!-- Data Available -->
-            <div class="asset-table-container" *ngIf="assetDetails && assetDetails.length > 0; else noAssets">
-                <table class="asset-table">
-                    <thead>
-                        <tr>
-                            <th>S.No</th>
-                            <th>Asset Name</th>
-                            <th>Unique ID</th>
-                            <th>Department</th>
-                            <th>Category</th>
-                            <th>Brand</th>
-                            <th>Model</th>
-                            <th>Mapped Device</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let asset of assetDetails; let i = index">
-                            <td>{{ i + 1 }}</td>
-                            <td>{{ asset.assetName || '—' }}</td>
-                            <td>{{ asset.uniqueId || '—' }}</td>
-                            <td>{{ asset.department || '—' }}</td>
-                            <td>{{ asset.mainCategory || '—' }}</td>
-                            <td>{{ asset.brand || '—' }}</td>
-                            <td>{{ asset.model || '—' }}</td>
-                            <td>{{ asset.mappedDevice || '—' }}</td>
-                            <td>
-                                <span [ngClass]="{
-                                    'status-active': asset.assetStatus === true,
-                                    'status-inactive': asset.assetStatus === false
-                                }">
-                                    {{ asset.assetStatus ? 'Active' : 'Inactive' }}
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+    <!-- Asset Data -->
+    <div class="asset-details-section" *ngIf="!assetDetailsLoading">
+      <!-- Data Available -->
+      <div class="asset-table-container" *ngIf="assetDetails && assetDetails.length > 0; else noAssets">
+        <table class="asset-table">
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>Asset Name</th>
+              <th>Unique ID</th>
+              <th>Department</th>
+              <th>Category</th>
+              <th>Brand</th>
+              <th>Model</th>
+              <th>Mapped Device</th>
+              <th>Timestamp</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let asset of assetDetails; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ asset.assetName || '—' }}</td>
+              <td>{{ asset.uniqueId || '—' }}</td>
+              <td>{{ asset.department || '—' }}</td>
+              <td>{{ asset.mainCategory || '—' }}</td>
+              <td>{{ asset.brand || '—' }}</td>
+              <td>{{ asset.model || '—' }}</td>
+              <td>{{ asset.mappedDevice || '—' }}</td>
+              <td>{{ getDeviceTimestamp(asset) }}</td>
 
-            <!-- No Data Template -->
-            <ng-template #noAssets>
-                <p style="text-align: center; padding: 40px; color: #666; font-size: 14px;">
-                    No assets found for {{ selectedTechnology }}
-                </p>
-            </ng-template>
-        </div>
+              <td>
+                <span [ngClass]="{
+    'status-online':  getDeviceStatus(asset) === 'online',
+    'status-offline': getDeviceStatus(asset) === 'offline'
+  }">
+                  {{ getDeviceStatus(asset) }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- No Data Template -->
+      <ng-template #noAssets>
+        <p style="text-align: center; padding: 40px; color: #666; font-size: 14px;">
+          No assets found for {{ selectedTechnology }}
+        </p>
+      </ng-template>
     </div>
   </div>
+</div>

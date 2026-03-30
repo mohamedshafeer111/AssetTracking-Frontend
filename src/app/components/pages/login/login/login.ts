@@ -18,7 +18,11 @@ export class Login {
 
 
   constructor(private user: User, private router: Router) { }
+  isPasswordVisible = false;
 
+  togglePasswordVisibility() {
+    this.isPasswordVisible = !this.isPasswordVisible;
+  }
   requestOtp() {
     this.user.sendOtp(this.users).subscribe(
       (res: any) => {
@@ -47,10 +51,6 @@ export class Login {
       }
     );
   }
-
-
-
-
 
 
 }

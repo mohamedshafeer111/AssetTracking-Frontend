@@ -1,3 +1,16 @@
+
+<div class="breadcrumb-wrapper">
+  <nav class="breadcrumb">
+    <a routerLink="/administration" class="breadcrumb-link">Administration</a>
+    <span class="breadcrumb-separator">››</span>
+    <a routerLink="/user-management" class="breadcrumb-link">UserManagement</a>
+    <span class="breadcrumb-separator">››</span>
+     <a routerLink="/role" class="breadcrumb-link">Role</a>
+    <span class="breadcrumb-separator">››</span>
+    <span class="breadcrumb-current">CreateRole</span>
+  </nav>
+</div>
+
 <nav class="navbar">
   <h3>Roles Creation</h3>
 </nav>
@@ -15,7 +28,7 @@
   <!-- 🔹 Top Inputs -->
  <div class="create-role-container">
 
-  <h2>Create New Role</h2>
+  <!-- <h2>Create New Role</h2> -->
 
   <div class="role-header">
 
@@ -42,7 +55,7 @@
   <!-- 🔹 Permission Sections -->
   <div class="permission-sections">
     <!-- Left: Hierarchy Permission -->
-    <div class="hierarchy-permission">
+    <!-- <div class="hierarchy-permission">
       <h3>Hierarchy Permission</h3>
       <div class="permission-list">
         <div>
@@ -56,7 +69,7 @@
               <table>
                 <tbody>
                   <ng-container *ngFor="let project of projects">
-                    <!-- 🔹 Project -->
+                  
                     <tr>
                       <td class="tabledata">
                         <input type="checkbox" [checked]="selectedProjects.has(project.id)"
@@ -69,23 +82,21 @@
                       </td>
                     </tr>
 
-                    <!-- 🔹 Countries under Project -->
+                  
                     <tr *ngIf="expandedProjects.has(project.id)">
                       <td colspan="2">
                         <table>
                           <tbody>
                             <ng-container *ngFor="let country of countriesByProject[project.id]">
-                              <!-- Country -->
+                           
                               <tr>
                                 <td class="tabledata">
-                                  <!-- ✅ Checkbox in front of country name -->
+                                 
                                   <input type="checkbox" [checked]="selectedCountries.has(country.id)"
                                     (change)="toggleCountrySelection(+country.id)" />
 
-                                  <!-- Country name -->
                                   {{ country.countryName }}
 
-                                  <!-- Dropdown icon -->
                                   <span class="icons">
                                     <img src="assets/down.png" alt="DropDown" class="tab"
                                       [class.rotate]="expandedCountry.has(country.id)" (click)="loadArea(country.id)" />
@@ -95,7 +106,7 @@
 
 
 
-                              <!-- 🔹 Areas under Country -->
+                        
                               <tr *ngIf="expandedCountry.has(country.id)">
                                 <td colspan="2">
                                   <table>
@@ -103,14 +114,13 @@
                                       <ng-container *ngFor="let area of areaByCountry[country.id]">
                                         <tr>
                                           <td class="tabledata">
-                                            <!-- ✅ Checkbox in front of area name -->
+                                            
                                             <input type="checkbox" [checked]="selectedAreas.has(area.id)"
                                               (change)="toggleAreaSelection(+area.id)" />
 
-                                            <!-- Area name -->
+                    
                                             {{ area.areaName }}
 
-                                            <!-- Dropdown icon -->
                                             <span class="icons">
                                               <img src="assets/down.png" alt="DropDown" class="tab"
                                                 [class.rotate]="expandedArea.has(area.id)"
@@ -120,7 +130,6 @@
                                         </tr>
 
 
-                                        <!-- 🔹 Buildings -->
                                         <tr *ngIf="expandedArea.has(area.id)">
                                           <td colspan="2">
                                             <table>
@@ -128,15 +137,14 @@
                                                 <ng-container *ngFor="let building of buildingByArea[area.id]">
                                                   <tr>
                                                     <td class="tabledata">
-                                                      <!-- ✅ Checkbox in front of building name -->
+                                                
                                                       <input type="checkbox"
                                                         [checked]="selectedBuildings.has(building.id)"
                                                         (change)="toggleBuildingSelection(+building.id)" />
 
-                                                      <!-- Building name -->
                                                       {{ building.buildingName }}
 
-                                                      <!-- Dropdown icon -->
+                                                     
                                                       <span class="icons">
                                                         <img src="assets/down.png" alt="DropDown" class="tab"
                                                           [class.rotate]="expandedBuilding.has(building.id)"
@@ -145,8 +153,7 @@
                                                     </td>
                                                   </tr>
 
-
-                                                  <!-- 🔹 Floors -->
+                        
                                                   <tr *ngIf="expandedBuilding.has(building.id)">
                                                     <td colspan="2">
                                                       <table>
@@ -155,15 +162,14 @@
                                                             *ngFor="let floor of floorByBuilding[building.id]">
                                                             <tr>
                                                               <td class="tabledata">
-                                                                <!-- ✅ Checkbox in front of floor name -->
+                                               
                                                                 <input type="checkbox"
                                                                   [checked]="selectedFloors.has(floor.id)"
                                                                   (change)="toggleFloorSelection(+floor.id)" />
 
-                                                                <!-- Floor name -->
                                                                 {{ floor.floorName }}
 
-                                                                <!-- Dropdown icon -->
+                                                         
                                                                 <span class="icons">
                                                                   <img src="assets/down.png" alt="DropDown" class="tab"
                                                                     [class.rotate]="expandedFloor.has(floor.id)"
@@ -173,7 +179,6 @@
                                                             </tr>
 
 
-                                                            <!-- 🔹 Zones -->
                                                             <tr *ngIf="expandedFloor.has(floor.id)">
                                                               <td colspan="2">
                                                                 <table>
@@ -182,15 +187,15 @@
                                                                       *ngFor="let zone of zoneByFloor[floor.id]">
                                                                       <tr>
                                                                         <td class="tabledata">
-                                                                          <!-- ✅ Checkbox in front of zone name -->
+                                                    
                                                                           <input type="checkbox"
                                                                             [checked]="selectedZones.has(zone.id)"
                                                                             (change)="toggleZoneSelection(+zone.id)" />
 
-                                                                          <!-- Zone name -->
+                                                         
                                                                           {{ zone.zoneName }}
 
-                                                                          <!-- Dropdown icon -->
+                                                                      
                                                                           <span class="icons">
                                                                             <img src="assets/down.png" alt="DropDown"
                                                                               class="tab"
@@ -201,7 +206,6 @@
                                                                       </tr>
 
 
-                                                                      <!-- 🔹 SubZones -->
                                                                       <tr *ngIf="expandedZone.has(zone.id)">
                                                                         <td colspan="2">
                                                                           <table>
@@ -210,12 +214,12 @@
                                                                                 *ngFor="let subZone of subZoneByZone[zone.id]">
                                                                                 <tr>
                                                                                   <td class="tabledata">
-                                                                                    <!-- ✅ Checkbox in front of SubZone name -->
+                                                                                
                                                                                     <input type="checkbox"
                                                                                       [checked]="selectedSubZones.has(subZone.id)"
                                                                                       (change)="toggleSubZoneSelection(+subZone.id)" />
 
-                                                                                    <!-- SubZone name -->
+                                                                                 
                                                                                     {{ subZone.subZoneName }}
                                                                                   </td>
                                                                                 </tr>
@@ -261,27 +265,29 @@
         </div>
       </div>
     </div>
+ -->
 
 
 
 
 
 
+ 
 
-    <div class="access-permission">
-      <div class="access-list">
-        <h3>Access Permission</h3>
-        <div class="access-item" *ngFor="let module of ['Dashboard', 'Tracking', 'Events', 'Reports', 'Process&Automation', 'Administration']">
-          <input type="checkbox" />
-          <span class="module-name">{{ module }}</span>
-        </div>
-      </div>
-      <div class="access-right">
-        <h3>View</h3>
-        <h3>Edit</h3>
-      </div>
+
+<div class="access-permission">
+  <div class="access-list">
+    <h3>Access Permission</h3>
+    <div class="access-item" *ngFor="let module of modules">
+      <input
+        type="checkbox"
+        [checked]="isChecked(module)"
+        (change)="onCheckboxChange(module, $any($event.target).checked)"
+      />
+      <span class="module-name">{{ module }}</span>
     </div>
-
+  </div>
+</div>
 
 
 
@@ -293,6 +299,6 @@
     <!-- 🔹 Footer Buttons -->
     <div class="action-buttons">
       <button class="cancel-btn" routerLink="/role">Cancel</button>
-      <button class="save-btn" routerLink="/role" (click)="createRole()">Save</button>
+      <button class="save-btn" routerLink="/role" (click)="createRole()">Create</button>
     </div>
   </div>

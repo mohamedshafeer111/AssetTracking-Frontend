@@ -471,9 +471,30 @@ roles: any[] = [];
 
 
 createRoles = {
-    roleName: "",
-    description: ""
-  };
+  roleName: "",
+  description: "",
+  createdBy: "",
+  createdAt: new Date().toISOString(),
+  assignPermissions: [] as { featureName: string; status: boolean }[]
+};
+
+modules = ['Dashboard', 'Tracking', 'Reports', 'Process & Automation', 'Administration'];
+
+
+
+onCheckboxChange(module: string, checked: boolean) {
+  if (checked) {
+    this.createRoles.assignPermissions.push({ featureName: module, status: true });
+  } else {
+    this.createRoles.assignPermissions = this.createRoles.assignPermissions.filter(
+      p => p.featureName !== module
+    );
+  }
+}
+
+isChecked(module: string): boolean {
+  return this.createRoles.assignPermissions.some(p => p.featureName === module);
+}
 
 
 

@@ -417,14 +417,15 @@ export class Reports implements OnInit {
           this.customEndDate,
           this.reportName.trim(),
           this.shareEmails,
-            this.selectedTemplate ?? '' 
+          this.selectedTemplate ?? ''
         );
       }
 
       apiCall.subscribe({
         next: (res: any) => {
           this.saveReport({
-            id: res.id || Date.now(),
+            // id: res.id || Date.now(),
+            bsonId: res.bsonId,
             reportName: this.reportName.trim(),
             timeRange: 'custom',
             createdOn: new Date().toLocaleString(),
@@ -464,13 +465,13 @@ export class Reports implements OnInit {
         return;
       }
 
-this.api.getGenerateReportZoneByHours(
-  hoursValue,
-  this.reportName.trim(),
-  this.shareEmails,
-  this.selectedZoneName ?? undefined,
-  this.selectedTemplate ?? ''   // ✅ ADD THIS
-)
+      this.api.getGenerateReportZoneByHours(
+        hoursValue,
+        this.reportName.trim(),
+        this.shareEmails,
+        this.selectedZoneName ?? undefined,
+        this.selectedTemplate ?? ''   // ✅ ADD THIS
+      )
 
         .subscribe({
           next: (res: any) => {

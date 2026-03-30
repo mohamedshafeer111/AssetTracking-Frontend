@@ -7,10 +7,11 @@
   background-color: #ddd;
   /* border: 1px solid rgb(206, 201, 201); */
   height: 35px;
-  color: #7030a0;
+
   margin-top: 0%;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
+  font-size: 14px;
   /* ✅ round top-right */
 
 
@@ -32,12 +33,10 @@
   background-color: white;
   border: 1px solid rgb(206, 201, 201);
   height: 35px;
-  color: #7030a0;
-  /* margin-top: 0%; */
-  margin-left: 20px;
-
-
+  font-size: 15px;
 }
+
+
 
 .navbarSub h3 {
   padding: 6px;
@@ -60,7 +59,7 @@
   /* tabs left, icons right */
   align-items: center;
   /* gap: 10px; */
-  margin-left: 20px;
+  /* margin-left: 20px; */
   margin-top: 20px;
 }
 
@@ -77,6 +76,7 @@
   cursor: pointer;
   font-size: 14px;
   transition: background 0.3s ease;
+  font-family: "RedHatDisplay";
 
 }
 
@@ -101,7 +101,7 @@ table {
   width: 100%;
   border-collapse: collapse;
   background: white;
-  margin-left: 20px;
+  /* margin-left: 20px; */
 
 }
 
@@ -110,6 +110,7 @@ td {
   border: 1px solid #ddd;
   padding: 10px;
   text-align: center;
+  font-size: 14px;
 }
 
 th {
@@ -146,8 +147,15 @@ th {
   align-items: center;
   gap: 15px;
   margin-right: 5px;
-  
+
 }
+
+.upload-icon {
+  border: 2px solid #7030a0;
+  border-radius: 50%;
+  /* circle */
+}
+
 
 
 
@@ -158,8 +166,8 @@ th {
 
 
 .navicons img {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   cursor: pointer;
   transition: transform 0.3s;
 }
@@ -192,8 +200,8 @@ th {
 
 
 .action-icon {
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
   cursor: pointer;
   margin: 0 6px;
   transition: transform 0.2s ease;
@@ -225,14 +233,16 @@ th {
   border-radius: 10px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
   animation: fadeIn 0.3s ease;
-  max-width: 95%;   /* keep responsive */
-  min-width: 300px; /* avoid too small */
+  max-width: 95%;
+  /* keep responsive */
+  min-width: 300px;
+  /* avoid too small */
 }
 
 /* Input container */
 .user-input-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   /* 1 column min, auto-fit up to 3 */
   gap: 15px 30px;
   padding: 20px;
@@ -242,7 +252,8 @@ th {
 /* Limit to max 3 columns */
 .popup .user-input-container {
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  max-width: calc(3 * 220px + 60px); /* max 3 cols + gaps */
+  max-width: calc(3 * 220px + 60px);
+  /* max 3 cols + gaps */
 }
 
 
@@ -254,7 +265,9 @@ th {
 .popup h2 {
   margin-bottom: 20px;
   text-align: center;
-  color: #7030a0;
+  color: #333;
+  font-family: 'RedHatDisplay';
+  font-size: 15px;
 }
 
 
@@ -264,8 +277,9 @@ th {
 }
 
 .user-data label {
-  font-weight: bold;
   margin-bottom: 5px;
+  font-family: 'RedHatDisplay';
+  font-size: 14px;
 }
 
 
@@ -289,11 +303,15 @@ th {
 .btn.create {
   background: #7030a0;
   color: white;
+    font-family: 'RedHatDisplay';
+  font-size: 14px;
 }
 
 .btn.cancel {
   background: #e0e0e0;
   color: #333;
+    font-family: 'RedHatDisplay';
+  font-size: 14px;
 }
 
 /* Animation */
@@ -364,6 +382,8 @@ th {
   margin: 0 8px;
   font-size: 14px;
   transition: background 0.3s;
+    font-family: 'RedHatDisplay';
+  font-size: 14px;
 }
 
 .btn.delete {
@@ -405,12 +425,13 @@ th {
 }
 
 .aone {
-  color: #7030a0;
+
   padding: 5px 12px;
   border: none;
   background: transparent;
   cursor: pointer;
   font-size: 14px;
+  font-family: "RedHatDisplay";
 }
 
 .aone:hover {
@@ -581,8 +602,9 @@ input:checked+.slider:before {
   border-radius: 6px;
   width: 100%;
   box-sizing: border-box;
-  
+
 }
+
 .user-data select {
   padding: 8px;
   border: 1px solid #ccc;
@@ -591,6 +613,8 @@ input:checked+.slider:before {
   background: white;
   font-size: 14px;
   box-sizing: border-box;
+    font-family: 'RedHatDisplay';
+  font-size: 14px;
 }
 
 
@@ -646,4 +670,36 @@ input:checked+.slider:before {
 
 .pagination button:hover:not(:disabled) {
   background: #7d5e94;
+}
+
+.breadcrumb-wrapper {
+  font-size: 13px;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-link {
+  color: black;
+  text-decoration: none;
+  margin-right: 5px;
+}
+
+.breadcrumb-link:hover {
+  color: #7030a0;
+  font-weight: bold;
+
+}
+
+.breadcrumb-separator {
+  margin: 0 5px;
+  color: #666;
+}
+
+.breadcrumb-current {
+  color: #7030a0;
+  font-weight: bold;
+
 }

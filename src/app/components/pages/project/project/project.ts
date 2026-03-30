@@ -1976,6 +1976,8 @@ export class Project implements OnInit {
   zoneAreaData: any = {
     zoneName: "",
     description: "",
+    latitude: '',
+    longitude: '',
     topZone: true,
     priority: "",
     status: true,
@@ -2012,6 +2014,8 @@ export class Project implements OnInit {
     this.zoneAreaData = {
       zoneName: "",
       description: "",
+      latitude: '',
+      longitude: '',
       topZone: true,
       priority: "",
       status: true,
@@ -2074,6 +2078,8 @@ export class Project implements OnInit {
     this.zoneAreaData = {
       zoneName: zone.zoneName,
       description: zone.description,
+      latitude:zone.latitude,
+      longitude:zone.longitude,
       topZone: zone.topZone,
       priority: zone.priority,
       status: zone.status,

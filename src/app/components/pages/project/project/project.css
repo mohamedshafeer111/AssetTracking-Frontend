@@ -11,11 +11,12 @@
   background-color: #ddd;
   /* border: 1px solid rgb(206, 201, 201); */
   height: 35px;
-  color: #7030a0;
+
   margin-top: 0%;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   /* ✅ round top-right */
+      font-size: 14px;
 
 
 }
@@ -35,7 +36,7 @@
 }
 
 .aone {
-  color: #7030a0;
+  font-family: "RedHatDisplay";
   padding: 5px 12px;
   border: none;
   background: transparent;
@@ -60,9 +61,9 @@
 
 
 
-.table-container {
+/* .table-container {
   width: 40%;
-  border: 2px solid #2421213f;   /* normal black border */
+  border: 2px solid #2421213f; 
   border-collapse: collapse;
   font-family: Arial, sans-serif;
   margin-left: auto;
@@ -73,36 +74,49 @@
   padding: 20px;
   border-radius: 5px;
   margin-top: 30px;
-
-  min-height: 100%;   /* increase container height */
+  min-height: 80%; 
  
+} */
+
+.table-container {
+  width: 60%;
+  margin: 30px auto;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  font-family: "Segoe UI", Arial, sans-serif;
 }
-/* Child tables always use full available width */
+
 .tabledata table {
-  width: 100% !important;   /* force child to stretch */
-  table-layout: auto;       /* allow natural sizing */
+  width: 100% !important;   
+  table-layout: auto;      
   border-collapse: collapse;
 }
 
-/* Parent tabledata stays normal */
-.tabledata {
+
+/* .tabledata {
   position: relative;
   border: 1px solid #ccc;
-  box-sizing: border-box;   /* include border/padding in size */
-  min-height: 30px;         /* parent cell keeps height */
-  min-width: 120px;         /* prevent width shrinking */
+  box-sizing: border-box;  
+  min-height: 30px;        
+  min-width: 120px;        
   padding: 5px;
-  height: auto;             /* allow child to expand downward */
-  vertical-align: top;      /* child table grows down */
+  height: auto;            
+  vertical-align: top;   
   
-}
+} */
 
+.tabledata {
+  position: relative;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #333;
+  border: none;
+    font-family: 'RedHatDisplay';
+} 
 
-
-
-
-
-/* Icons styling */
 .table-container img {
   width: 18px;
   height: 18px;
@@ -111,46 +125,104 @@
   
 }
 
+/* .table-container table {
+  width: 100%;
+  border-collapse: collapse;
 
-
-
-
-
-
-
-
-
-
+} */
 
 .table-container table {
   width: 100%;
   border-collapse: collapse;
+}
 
+.table-container tr {
+  border-bottom: 1px solid #eeeeee;
+}
+
+.table-container tr:hover {
+  background: #faf7fd;
+}
+
+/* Project */
+.table-container > table > tbody > tr > .tabledata {
+  background: #f1e7f8;
+  font-weight: 600;
+}
+
+/* Country */
+.country-row {
+  background: #f7f2fb;
+   padding-left: 25px;
+}
+
+/* Area */
+.area-row {
+  background: #fbf9fd;
+   padding-left: 45px;
+}
+
+/* Building */
+.building-row {
+  background: #ffffff;
+  padding-left: 65px;
+}
+
+.floor-row {
+  background: #f7f2fb;
+   padding-left: 85px;
+}
+/* Zone */
+.zone-row {
+  padding-left: 105px;
+}
+.zone-row {
+  padding-left: 125px;
 }
 
 
-
-
-
-
-.tabledata .icons {
+/* .tabledata .icons {
   position: absolute;
-  top: 5px;       /* always top */
-  right: 5px;     /* always right */
+  top: 5px;  
+  right: 5px;   
   display: flex;
-  /* gap: 5px; */
-  z-index: 1;     /* make sure icons stay above nested table */
-
+  z-index: 1;     
 }
 
 .tabledata .icons img {
-  width: 18px !important;  /* force same size */
-
+  width: 18px !important; 
   height: 18px !important;
   cursor: pointer;
+} */
+
+.tabledata .icons {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 8px;
 }
 
+.tabledata .icons img {
+  width: 16px;
+  height: 16px;
+  opacity: 0.7;
+  transition: 0.2s;
+}
 
+.tabledata .icons img:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.tab {
+  transition: transform 0.3s ease;
+}
+
+.rotate {
+  transform: rotate(180deg);
+}
 
 
 
@@ -174,6 +246,7 @@ button.three {
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.3s ease;
+    font-family: 'RedHatDisplay';
 }
 
 /* Hover effect */
@@ -186,6 +259,8 @@ button.three:hover {
 .table-container > table > tbody > tr > .tabledata {
   background-color:#e4d5ee !important;
   color:black;
+    font-family: 'RedHatDisplay';
+    font-size: 14px;
 }
 
 
@@ -231,7 +306,9 @@ button.three:hover {
 .popup h2 {
   margin-bottom: 20px;
   text-align: center;
-  color: #7030a0;
+  color: #333;
+    font-family: 'RedHatDisplay';
+  font-size: 15px;
 }
 
 
@@ -253,8 +330,10 @@ button.three:hover {
 
 
 .user-data label {
-  font-weight: bold;
+
   margin-bottom: 5px;
+    font-family: 'RedHatDisplay';
+  font-size: 14px;
 }
 
 /* Apply same style to all inputs including file */
@@ -266,6 +345,7 @@ button.three:hover {
   box-sizing: border-box;
   height: 36px; /* enforce same height */
   font-size: 14px;
+    font-family: 'RedHatDisplay';
 }
 
 /* Make file input visually match text inputs */
@@ -413,12 +493,14 @@ button.three:hover {
   margin: 0 8px;
   font-size: 14px;
   transition: background 0.3s;
+    font-family: 'RedHatDisplay';
+  font-size: 14px;
 }
 
 .btn.delete {
   background-color: #7030a0;
   color: white;
-  margin-top: 25px;
+
 }
 
 .btn.cancel {
@@ -551,4 +633,37 @@ border: 1px solid #7030a0;
 
 .icon-wrapper:hover .tooltip-text {
   opacity: 1;
+}
+
+
+.breadcrumb-wrapper {
+  font-size: 13px;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-link {
+  color: black;
+  text-decoration: none;
+  margin-right: 5px;
+}
+
+.breadcrumb-link:hover {
+  color: #7030a0;
+  font-weight: bold;
+
+}
+
+.breadcrumb-separator {
+  margin: 0 5px;
+  color: #666;
+}
+
+.breadcrumb-current {
+  color: #7030a0;
+  font-weight: bold;
+
 }

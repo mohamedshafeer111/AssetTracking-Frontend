@@ -5,11 +5,12 @@ import { Assetservice } from '../../../service/asset/assetservice';
 import { FormsModule } from '@angular/forms';
 import { Roleservice } from '../../../service/role/roleservice';
 import { Peopletype } from '../../../service/peopletype/peopletype';
+import { Reusabletable } from '../../reusabletable/reusabletable/reusabletable';
 
 
 @Component({
   selector: 'app-asset',
-  imports: [RouterModule, CommonModule, FormsModule],
+  imports: [RouterModule, CommonModule, FormsModule, Reusabletable],
   templateUrl: './asset.html',
   styleUrl: './asset.css'
 })
@@ -27,16 +28,13 @@ export class Asset implements OnInit {
     private role: Roleservice,
     private deviceService: Peopletype,
     private cdr: ChangeDetectorRef,
-  
+
   ) { }
 
-  ngOnInit(): void {
-   
-  
-     this.loadProject();
-  this.loadAssets(); // ✅ only once
+  ngOnInit(){
+    this.loadProject();
+    this.loadAssets();
     this.loadDevices();
-
   }
 
   activeTab: 'asset' | 'transaction' = 'asset';
@@ -61,6 +59,38 @@ export class Asset implements OnInit {
     });
   }
 
+  assetColumns = [
+    { header: 'Asset Name', field: 'assetName' },
+    { header: 'Unique ID', field: 'uniqueId' },
+    { header: 'Project', field: 'projectName' },
+    { header: 'Country', field: 'countryName' },
+    { header: 'Area', field: 'areaName' },
+    { header: 'Building', field: 'buildingName' },
+    { header: 'Floor', field: 'floorName' },
+    { header: 'Zone', field: 'zoneName' },
+    { header: 'Department', field: 'department' },
+    { header: 'Custodian', field: 'custodian' },
+    { header: 'Main Category', field: 'mainCategory' },
+    { header: 'Sub Category', field: 'subCategory' },
+    { header: 'Brand', field: 'brand' },
+    { header: 'Model', field: 'model' },
+    { header: 'Mapped Device', field: 'mappedDevice' },
+    { header: 'Status', field: 'assetStatus', type: 'status' },
+    { header: 'Action', type: 'action' }
+  ];
+
+  handleAssetAction(event: any) {
+    if (event.type === 'edit') {
+      this.openEditAssetPopup(event.row);
+    } else {
+      this.openDeleteAssetPopup(event.row);
+    }
+  }
+
+  searchText:string='';
+
+  
+
   // ✅ HIERARCHICAL DATA STORAGE
   projects: any[] = [];
   selectedProjectId: string = '';
@@ -75,7 +105,7 @@ export class Asset implements OnInit {
   outdoorZonesByArea: { [areaId: string]: any[] } = {};
 
   openAddAsset = false;
-isEditMode = false;
+  isEditMode = false;
   createAssetData: any = {
     assetName: '',
     uniqueId: '',
@@ -103,7 +133,7 @@ isEditMode = false;
     assetDescription: '',
     assetStatus: true,
     mappedDevice: '',
-      mappedDeviceUniqueId: '',
+    mappedDeviceUniqueId: '',
     deliverydate: '',
     capitalizationDate: '',
     invoiceDate: '',
@@ -145,7 +175,7 @@ isEditMode = false;
       assetDescription: '',
       assetStatus: false,
       mappedDevice: '',
-       mappedDeviceUniqueId: '',
+      mappedDeviceUniqueId: '',
       deliverydate: '',
       capitalizationDate: '',
       invoiceDate: '',
@@ -166,95 +196,95 @@ isEditMode = false;
 
 
   // ✅ Add helper method to extract unique ID from mapped device
-extractUniqueIdFromMappedDevice(mappedDevice: string): string {
-  if (!mappedDevice) return '';
-  
-  // Extract uniqueId from format: "deviceName (uniqueId)"
-  const match = mappedDevice.match(/\(([^)]+)\)/);
-  return match ? match[1] : '';
-}
+  extractUniqueIdFromMappedDevice(mappedDevice: string): string {
+    if (!mappedDevice) return '';
 
-createNewAsset() {
-  const mappedDeviceUniqueId = this.extractUniqueIdFromMappedDevice(this.createAssetData.mappedDevice);
-// ✅ Find related objects for mapping
-  const projectObj = this.projects.find(p => p.id === this.selectedProjectId);
-  const countryObj = (this.countriesByProject[this.selectedProjectId] || []).find(
-    c => c.id === this.selectedCountryId
-  );
-  const areaObj = (this.areaByCountry[this.selectedCountryId] || []).find(
-    a => a.id === this.createAssetData.areaId
-  );
-  const buildingObj = (this.buildingByArea[this.createAssetData.areaId] || []).find(
-    b => b.id === this.createAssetData.buildingId
-  );
-  const floorObj = (this.floorByBuilding[this.createAssetData.buildingId] || []).find(
-    f => f.id === this.createAssetData.floorId
-  );
-  const zoneObj = (this.zoneByFloor[this.createAssetData.floorId] || []).find(
-    z => z.id === this.createAssetData.zoneId
-  );
+    // Extract uniqueId from format: "deviceName (uniqueId)"
+    const match = mappedDevice.match(/\(([^)]+)\)/);
+    return match ? match[1] : '';
+  }
 
-  // ✅ Build final request body
-  const reqBody = {
-    assetName: this.createAssetData.assetName,
-    uniqueId: this.createAssetData.uniqueId,
-    createdBy: this.createAssetData.createdBy,
+  createNewAsset() {
+    const mappedDeviceUniqueId = this.extractUniqueIdFromMappedDevice(this.createAssetData.mappedDevice);
+    // ✅ Find related objects for mapping
+    const projectObj = this.projects.find(p => p.id === this.selectedProjectId);
+    const countryObj = (this.countriesByProject[this.selectedProjectId] || []).find(
+      c => c.id === this.selectedCountryId
+    );
+    const areaObj = (this.areaByCountry[this.selectedCountryId] || []).find(
+      a => a.id === this.createAssetData.areaId
+    );
+    const buildingObj = (this.buildingByArea[this.createAssetData.areaId] || []).find(
+      b => b.id === this.createAssetData.buildingId
+    );
+    const floorObj = (this.floorByBuilding[this.createAssetData.buildingId] || []).find(
+      f => f.id === this.createAssetData.floorId
+    );
+    const zoneObj = (this.zoneByFloor[this.createAssetData.floorId] || []).find(
+      z => z.id === this.createAssetData.zoneId
+    );
 
-    projectId: this.selectedProjectId,
-    projectName: projectObj?.projectName || '',
+    // ✅ Build final request body
+    const reqBody = {
+      assetName: this.createAssetData.assetName,
+      uniqueId: this.createAssetData.uniqueId,
+      createdBy: this.createAssetData.createdBy,
 
-    countryId: this.selectedCountryId,
-    countryName: countryObj?.countryName || '',
+      projectId: this.selectedProjectId,
+      projectName: projectObj?.projectName || '',
 
-    areaId: this.createAssetData.areaId,
-    areaName: areaObj?.areaName || '',
+      countryId: this.selectedCountryId,
+      countryName: countryObj?.countryName || '',
 
-    outdoorZoneName: this.createAssetData.outdoorZoneName || '',
+      areaId: this.createAssetData.areaId,
+      areaName: areaObj?.areaName || '',
 
-    buildingId: this.createAssetData.buildingId,
-    buildingName: buildingObj?.buildingName || '',
+      outdoorZoneName: this.createAssetData.outdoorZoneName || '',
 
-    floorId: this.createAssetData.floorId,
-    floorName: floorObj?.floorName || '',
+      buildingId: this.createAssetData.buildingId,
+      buildingName: buildingObj?.buildingName || '',
 
-    zoneId: this.createAssetData.zoneId,
-    zoneName: zoneObj?.zoneName || '',
+      floorId: this.createAssetData.floorId,
+      floorName: floorObj?.floorName || '',
 
-    department: this.createAssetData.department,
-    custodian: this.createAssetData.custodian,
-    mainCategory: this.createAssetData.mainCategory,
-    subCategory: this.createAssetData.subCategory,
-    subSubCategory: this.createAssetData.subSubCategory,
-    brand: this.createAssetData.brand,
-    model: this.createAssetData.model,
-    assetDescription: this.createAssetData.assetDescription,
-    assetStatus: this.createAssetData.assetStatus,
-    mappedDevice: this.createAssetData.mappedDevice,
-    mappedDeviceUniqueId: mappedDeviceUniqueId, // ✅ Add extracted unique ID
-    deliverydate: this.createAssetData.deliverydate,
-    capitalizationDate: this.createAssetData.capitalizationDate,
-    invoiceDate: this.createAssetData.invoiceDate,
-    poDate: this.createAssetData.poDate,
-    expiryDate: this.createAssetData.expiryDate,
-    serviceStartDate: this.createAssetData.serviceStartDate,
-    serviceEndDate: this.createAssetData.serviceEndDate,
-    warrantyEndDate: this.createAssetData.warrantyEndDate
-  };
+      zoneId: this.createAssetData.zoneId,
+      zoneName: zoneObj?.zoneName || '',
 
-  console.log('🚀 Final Asset Payload:', reqBody);
+      department: this.createAssetData.department,
+      custodian: this.createAssetData.custodian,
+      mainCategory: this.createAssetData.mainCategory,
+      subCategory: this.createAssetData.subCategory,
+      subSubCategory: this.createAssetData.subSubCategory,
+      brand: this.createAssetData.brand,
+      model: this.createAssetData.model,
+      assetDescription: this.createAssetData.assetDescription,
+      assetStatus: this.createAssetData.assetStatus,
+      mappedDevice: this.createAssetData.mappedDevice,
+      mappedDeviceUniqueId: mappedDeviceUniqueId, // ✅ Add extracted unique ID
+      deliverydate: this.createAssetData.deliverydate,
+      capitalizationDate: this.createAssetData.capitalizationDate,
+      invoiceDate: this.createAssetData.invoiceDate,
+      poDate: this.createAssetData.poDate,
+      expiryDate: this.createAssetData.expiryDate,
+      serviceStartDate: this.createAssetData.serviceStartDate,
+      serviceEndDate: this.createAssetData.serviceEndDate,
+      warrantyEndDate: this.createAssetData.warrantyEndDate
+    };
 
-  this.assetservice.createAsset(reqBody).subscribe({
-    next: (res) => {
-      alert('✅ Asset created successfully');
-      this.closeCreateAssetPopup();
-      this.loadAssets();
-    },
-    error: (err) => {
-      console.error(err);
-      alert('❌ Failed to create asset');
-    }
-  });
-}
+    console.log('🚀 Final Asset Payload:', reqBody);
+
+    this.assetservice.createAsset(reqBody).subscribe({
+      next: (res) => {
+        alert('✅ Asset created successfully');
+        this.closeCreateAssetPopup();
+        this.loadAssets();
+      },
+      error: (err) => {
+        console.error(err);
+        alert('❌ Failed to create asset');
+      }
+    });
+  }
   // ✅ LOAD PROJECT
   loadProject() {
     this.role.getProject().subscribe({
@@ -443,30 +473,30 @@ createNewAsset() {
 
 
 
-// Add these properties
-deviceList: any[] = [];
-deviceOptions: string[] = [];
+  // Add these properties
+  deviceList: any[] = [];
+  deviceOptions: string[] = [];
 
-// Add this method (similar to loadDevices but adapted for assets)
-loadDevices(): void {
-  this.deviceService.getaddDevices().subscribe({
-    next: (res: any) => {
-      this.deviceList = res.data ? res.data : res;
-      console.log("Device List:", this.deviceList);
-      
-      // ✅ Build dropdown options in format: "deviceName (uniqueId)"
-      this.deviceOptions = this.deviceList.map((d: any) => 
-        `${d.deviceName} (${d.uniqueId})`
-      );
-      
-      console.log("Device Options:", this.deviceOptions);
-      this.cdr.detectChanges();
-    },
-    error: (err: any) => {
-      console.error("Error loading devices", err);
-    }
-  });
-}
+  // Add this method (similar to loadDevices but adapted for assets)
+  loadDevices(): void {
+    this.deviceService.getaddDevices().subscribe({
+      next: (res: any) => {
+        this.deviceList = res.data ? res.data : res;
+        console.log("Device List:", this.deviceList);
+
+        // ✅ Build dropdown options in format: "deviceName (uniqueId)"
+        this.deviceOptions = this.deviceList.map((d: any) =>
+          `${d.deviceName} (${d.uniqueId})`
+        );
+
+        console.log("Device Options:", this.deviceOptions);
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        console.error("Error loading devices", err);
+      }
+    });
+  }
 
 
 
@@ -476,766 +506,766 @@ loadDevices(): void {
   assetList: any[] = []; // ✅ Add this property to store assets
 
 
-loadAssets() {
-  this.assetservice.getAllAssets().subscribe({
-    next: (res: any) => {
-      console.log('📦 Assets loaded:', res);
-
-      this.assetList = Array.isArray(res)
-        ? res
-        : res?.data ?? [];
-
-      // Force UI refresh (only needed in some cases)
-      this.cdr.detectChanges();
-    },
-    error: (err: any) => {
-      console.error('❌ Error loading assets', err);
-    }
-  });
-}
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// ✅ Add these properties
-openEditAsset = false;
-
-editAssetData: any = {
-  id: '',
-  assetName: '',
-  uniqueId: '',
-  createdBy: '',
-  outdoorZoneName: '',
-  projectId: '',
-  projectName: '',
-  countryId: '',
-  countryName: '',
-  areaId: '',
-  areaName: '',
-  buildingId: '',
-  buildingName: '',
-  floorId: '',
-  floorName: '',
-  zoneId: '',
-  zoneName: '',
-  department: '',
-  custodian: '',
-  mainCategory: '',
-  subCategory: '',
-  subSubCategory: '',
-  brand: '',
-  model: '',
-  assetDescription: '',
-  assetStatus: true,
-  mappedDevice: '',
-  mappedDeviceUniqueId: '',
-  deliverydate: '',
-  capitalizationDate: '',
-  invoiceDate: '',
-  poDate: '',
-  expiryDate: '',
-  serviceStartDate: '',
-  serviceEndDate: '',
-  warrantyEndDate: ''
-};
-
-// // ✅ Open Edit Popup
-// openEditAssetPopup(asset: any) {
-//   console.log('🔍 Opening edit popup for asset:', asset);
-
-//   this.openEditAsset = true;
-
-//   // ✅ Initialize editAssetData with actual asset values
-//   this.editAssetData = {
-//     id: asset.id,
-//     assetName: asset.assetName || '',
-//     uniqueId: asset.uniqueId || '',
-//     createdBy: asset.createdBy || '',
-//     outdoorZoneName: asset.outdoorZoneName || '',
-//     department: asset.department || '',
-//     custodian: asset.custodian || '',
-//     mainCategory: asset.mainCategory || '',
-//     subCategory: asset.subCategory || '',
-//     subSubCategory: asset.subSubCategory || '',
-//     brand: asset.brand || '',
-//     model: asset.model || '',
-//     assetDescription: asset.assetDescription || '',
-//     assetStatus: asset.assetStatus ?? true,
-//     mappedDevice: asset.mappedDevice || '',
-//     deliverydate: asset.deliverydate ? asset.deliverydate.split('T')[0] : '',
-//     capitalizationDate: asset.capitalizationDate ? asset.capitalizationDate.split('T')[0] : '',
-//     invoiceDate: asset.invoiceDate ? asset.invoiceDate.split('T')[0] : '',
-//     poDate: asset.poDate ? asset.poDate.split('T')[0] : '',
-//     expiryDate: asset.expiryDate ? asset.expiryDate.split('T')[0] : '',
-//     serviceStartDate: asset.serviceStartDate ? asset.serviceStartDate.split('T')[0] : '',
-//     serviceEndDate: asset.serviceEndDate ? asset.serviceEndDate.split('T')[0] : '',
-//     warrantyEndDate: asset.warrantyEndDate ? asset.warrantyEndDate.split('T')[0] : '',
-//     projectId: '',
-//     countryId: '',
-//     areaId: '',
-//     buildingId: '',
-//     floorId: '',
-//     zoneId: ''
-//   };
-
-//   // ✅ Find and set project ID
-//   const project = this.projects.find(p => p.projectName === asset.projectName);
-
-//   if (!project) {
-//     console.error('❌ Project not found for:', asset.projectName);
-//     this.cdr.detectChanges();
-//     return;
-//   }
-
-//   this.editAssetData.projectId = project.id;
-//   this.selectedProjectId = project.id;
-
-//   // ✅ Load hierarchical data
-//   this.loadHierarchicalDataForEdit(asset, project.id);
-// }
-
-
-
-
-openEditAssetPopup(asset: any) {
-  console.log('🔍 Opening edit popup for asset:', asset);
-
-  this.openEditAsset = true;
-
-  // ✅ Initialize editAssetData with actual asset values
-  this.editAssetData = {
-    id: asset.id,
-    assetName: asset.assetName || '',
-    uniqueId: asset.uniqueId || '',
-    createdBy: asset.createdBy || '',
-    outdoorZoneName: asset.outdoorZoneName || '',
-    department: asset.department || '',
-    custodian: asset.custodian || '',
-    mainCategory: asset.mainCategory || '',
-    subCategory: asset.subCategory || '',
-    subSubCategory: asset.subSubCategory || '',
-    brand: asset.brand || '',
-    model: asset.model || '',
-    assetDescription: asset.assetDescription || '',
-    assetStatus: asset.assetStatus ?? true,
-    mappedDevice: asset.mappedDevice || '',
-    deliverydate: asset.deliverydate ? asset.deliverydate.split('T')[0] : '',
-    capitalizationDate: asset.capitalizationDate ? asset.capitalizationDate.split('T')[0] : '',
-    invoiceDate: asset.invoiceDate ? asset.invoiceDate.split('T')[0] : '',
-    poDate: asset.poDate ? asset.poDate.split('T')[0] : '',
-    expiryDate: asset.expiryDate ? asset.expiryDate.split('T')[0] : '',
-    serviceStartDate: asset.serviceStartDate ? asset.serviceStartDate.split('T')[0] : '',
-    serviceEndDate: asset.serviceEndDate ? asset.serviceEndDate.split('T')[0] : '',
-    warrantyEndDate: asset.warrantyEndDate ? asset.warrantyEndDate.split('T')[0] : '',
-    // ✅ These will be set by loadHierarchicalDataForEdit
-    projectId: asset.projectId || '',
-    countryId: asset.countryId || '',
-    areaId: asset.areaId || '',
-    buildingId: asset.buildingId || '',
-    floorId: asset.floorId || '',
-    zoneId: asset.zoneId || ''
-  };
-
-  // ✅ Find and set project ID directly from asset data
-  const project = this.projects.find(p => p.id === asset.projectId || p.projectName === asset.projectName);
-
-  if (!project) {
-    console.error('❌ Project not found for:', asset.projectName);
-    this.cdr.detectChanges();
-    return;
-  }
-
-  this.editAssetData.projectId = project.id;
-  this.selectedProjectId = project.id;
-
-  console.log('✅ Set project ID:', this.editAssetData.projectId);
-
-  // ✅ Load hierarchical data
-  this.loadHierarchicalDataForEdit(asset, project.id);
-}
-
-
-
-// ✅ Load hierarchical data for edit mode
-// private loadHierarchicalDataForEdit(asset: any, projectId: string) {
-//   console.log('🌍 Starting hierarchical data load for edit');
-
-//   // Step 1: Load countries
-//   this.role.countryGetById(projectId).subscribe({
-//     next: (countries: any) => {
-//       const countryArray = Array.isArray(countries) ? countries : [];
-//       this.countriesByProject[projectId] = countryArray;
-
-//       const country = countryArray.find((c: any) => c.countryName === asset.countryName);
-
-//       if (!country) {
-//         console.error('❌ Country not found');
-//         this.cdr.detectChanges();
-//         return;
-//       }
-
-//       this.editAssetData.countryId = country.id;
-//       this.selectedCountryId = country.id;
-//       console.log('✅ Set country ID:', this.editAssetData.countryId);
-
-//       // Step 2: Load areas
-//       this.role.getSummary(country.id).subscribe({
-//         next: (areas: any) => {
-//           const areaArray = Array.isArray(areas) ? areas : [];
-//           this.areaByCountry[country.id] = areaArray;
-
-//           const area = areaArray.find((a: any) => a.areaName === asset.areaName);
-
-//           if (!area) {
-//             console.error('❌ Area not found');
-//             this.cdr.detectChanges();
-//             return;
-//           }
-
-//           this.editAssetData.areaId = area.id;
-//           console.log('✅ Set area ID:', this.editAssetData.areaId);
-
-//           // Load outdoor zones for this area
-//           this.loadOutdoorZonesForArea(area.id);
-
-//           // Step 3: Load buildings
-//           this.role.getBuilding(area.id).subscribe({
-//             next: (buildings: any) => {
-//               const buildingArray = Array.isArray(buildings) ? buildings : [];
-//               this.buildingByArea[area.id] = buildingArray;
-
-//               const building = buildingArray.find((b: any) => b.buildingName === asset.buildingName);
-
-//               if (!building) {
-//                 console.error('❌ Building not found');
-//                 this.cdr.detectChanges();
-//                 return;
-//               }
-
-//               this.editAssetData.buildingId = building.id;
-//               console.log('✅ Set building ID:', this.editAssetData.buildingId);
-
-//               // Step 4: Load floors
-//               this.role.getFloor(building.id).subscribe({
-//                 next: (floors: any) => {
-//                   const floorArray = Array.isArray(floors) ? floors : [];
-//                   this.floorByBuilding[building.id] = floorArray;
-
-//                   const floor = floorArray.find((f: any) => f.floorName === asset.floorName);
-
-//                   if (!floor) {
-//                     console.error('❌ Floor not found');
-//                     this.cdr.detectChanges();
-//                     return;
-//                   }
-
-//                   this.editAssetData.floorId = floor.id;
-//                   console.log('✅ Set floor ID:', this.editAssetData.floorId);
-
-//                   // Step 5: Load zones
-//                   this.role.getZones(floor.id).subscribe({
-//                     next: (zones: any) => {
-//                       const zoneArray = Array.isArray(zones) ? zones : [];
-//                       this.zoneByFloor[floor.id] = zoneArray;
-
-//                       const zone = zoneArray.find((z: any) => z.zoneName === asset.zoneName);
-
-//                       if (zone) {
-//                         this.editAssetData.zoneId = zone.id;
-//                         console.log('✅ Set zone ID:', this.editAssetData.zoneId);
-//                       } else {
-//                         console.error('❌ Zone not found');
-//                       }
-
-//                       console.log('🎉 All hierarchical data loaded!');
-//                       console.log('✅ Final editAssetData:', this.editAssetData);
-
-//                       this.cdr.detectChanges();
-//                     },
-//                     error: (err) => {
-//                       console.error('❌ Error loading zones:', err);
-//                       this.cdr.detectChanges();
-//                     }
-//                   });
-//                 },
-//                 error: (err) => {
-//                   console.error('❌ Error loading floors:', err);
-//                   this.cdr.detectChanges();
-//                 }
-//               });
-//             },
-//             error: (err) => {
-//               console.error('❌ Error loading buildings:', err);
-//               this.cdr.detectChanges();
-//             }
-//           });
-//         },
-//         error: (err) => {
-//           console.error('❌ Error loading areas:', err);
-//           this.cdr.detectChanges();
-//         }
-//       });
-//     },
-//     error: (err) => {
-//       console.error('❌ Error loading countries:', err);
-//       this.cdr.detectChanges();
-//     }
-//   });
-// }
-
-
-
-
-private loadHierarchicalDataForEdit(asset: any, projectId: string) {
-  console.log('🌍 Starting hierarchical data load for edit');
-
-  // ✅ ALWAYS load countries (don't check cache)
-  this.role.countryGetById(projectId).subscribe({
-    next: (countries: any) => {
-      const countryArray = Array.isArray(countries) ? countries : [];
-      this.countriesByProject[projectId] = countryArray;
-
-      const country = countryArray.find((c: any) => 
-        c.id === asset.countryId || c.countryName === asset.countryName
-      );
-
-      if (!country) {
-        console.error('❌ Country not found');
+  loadAssets() {
+    this.assetservice.getAllAssets().subscribe({
+      next: (res: any) => {
+        console.log('📦 Assets loaded:', res);
+
+        this.assetList = Array.isArray(res)
+          ? res
+          : res?.data ?? [];
+
+        // Force UI refresh (only needed in some cases)
         this.cdr.detectChanges();
-        return;
+      },
+      error: (err: any) => {
+        console.error('❌ Error loading assets', err);
       }
+    });
+  }
 
-      this.editAssetData.countryId = country.id;
-      this.selectedCountryId = country.id;
-      console.log('✅ Set country ID:', this.editAssetData.countryId);
 
-      // ✅ ALWAYS load areas
-      this.role.getSummary(country.id).subscribe({
-        next: (areas: any) => {
-          const areaArray = Array.isArray(areas) ? areas : [];
-          this.areaByCountry[country.id] = areaArray;
 
-          const area = areaArray.find((a: any) => 
-            a.id === asset.areaId || a.areaName === asset.areaName
-          );
 
-          if (!area) {
-            console.error('❌ Area not found');
-            this.cdr.detectChanges();
-            return;
-          }
 
-          this.editAssetData.areaId = area.id;
-          console.log('✅ Set area ID:', this.editAssetData.areaId);
 
-          // ✅ Load outdoor zones if needed
-          if (asset.outdoorZoneName) {
-            this.loadOutdoorZonesForArea(area.id);
-          }
 
-          // ✅ ALWAYS load buildings
-          this.role.getBuilding(area.id).subscribe({
-            next: (buildings: any) => {
-              const buildingArray = Array.isArray(buildings) ? buildings : [];
-              this.buildingByArea[area.id] = buildingArray;
 
-              const building = buildingArray.find((b: any) => 
-                b.id === asset.buildingId || b.buildingName === asset.buildingName
-              );
 
-              if (!building) {
-                console.error('❌ Building not found');
-                this.cdr.detectChanges();
-                return;
-              }
 
-              this.editAssetData.buildingId = building.id;
-              console.log('✅ Set building ID:', this.editAssetData.buildingId);
 
-              // ✅ ALWAYS load floors
-              this.role.getFloor(building.id).subscribe({
-                next: (floors: any) => {
-                  const floorArray = Array.isArray(floors) ? floors : [];
-                  this.floorByBuilding[building.id] = floorArray;
 
-                  const floor = floorArray.find((f: any) => 
-                    f.id === asset.floorId || f.floorName === asset.floorName
-                  );
 
-                  if (!floor) {
-                    console.error('❌ Floor not found');
-                    this.cdr.detectChanges();
-                    return;
-                  }
 
-                  this.editAssetData.floorId = floor.id;
-                  console.log('✅ Set floor ID:', this.editAssetData.floorId);
 
-                  // ✅ ALWAYS load zones
-                  this.role.getZones(floor.id).subscribe({
-                    next: (zones: any) => {
-                      const zoneArray = Array.isArray(zones) ? zones : [];
-                      this.zoneByFloor[floor.id] = zoneArray;
 
-                      const zone = zoneArray.find((z: any) => 
-                        z.id === asset.zoneId || z.zoneName === asset.zoneName
-                      );
 
-                      if (zone) {
-                        this.editAssetData.zoneId = zone.id;
-                        console.log('✅ Set zone ID:', this.editAssetData.zoneId);
-                      } else {
-                        console.error('❌ Zone not found');
-                      }
 
-                      console.log('🎉 All hierarchical data loaded!');
-                      console.log('✅ Final editAssetData:', this.editAssetData);
 
-                      // ✅ Force Angular to detect all changes
-                      setTimeout(() => {
-                        this.cdr.detectChanges();
-                      }, 100);
-                    },
-                    error: (err) => {
-                      console.error('❌ Error loading zones:', err);
-                      this.cdr.detectChanges();
-                    }
-                  });
-                },
-                error: (err) => {
-                  console.error('❌ Error loading floors:', err);
-                  this.cdr.detectChanges();
-                }
-              });
-            },
-            error: (err) => {
-              console.error('❌ Error loading buildings:', err);
-              this.cdr.detectChanges();
-            }
-          });
-        },
-        error: (err) => {
-          console.error('❌ Error loading areas:', err);
-          this.cdr.detectChanges();
-        }
-      });
-    },
-    error: (err) => {
-      console.error('❌ Error loading countries:', err);
-      this.cdr.detectChanges();
-    }
-  });
-}
 
-// ✅ Close Edit Popup
-closeEditAssetPopup() {
-  this.openEditAsset = false;
-}
 
-// ✅ Update Asset
-updateAssetData() {
-  // Extract unique ID from mappedDevice
-  const mappedDeviceUniqueId = this.extractUniqueIdFromMappedDevice(this.editAssetData.mappedDevice);
 
-  // ✅ Find related objects for mapping
-  const projectObj = this.projects.find(p => p.id === this.editAssetData.projectId);
-  const countryObj = (this.countriesByProject[this.editAssetData.projectId] || []).find(
-    c => c.id === this.editAssetData.countryId
-  );
-  const areaObj = (this.areaByCountry[this.editAssetData.countryId] || []).find(
-    a => a.id === this.editAssetData.areaId
-  );
-  const buildingObj = (this.buildingByArea[this.editAssetData.areaId] || []).find(
-    b => b.id === this.editAssetData.buildingId
-  );
-  const floorObj = (this.floorByBuilding[this.editAssetData.buildingId] || []).find(
-    f => f.id === this.editAssetData.floorId
-  );
-  const zoneObj = (this.zoneByFloor[this.editAssetData.floorId] || []).find(
-    z => z.id === this.editAssetData.zoneId
-  );
 
-  // ✅ Build final request body
-  const reqBody = {
-    assetName: this.editAssetData.assetName,
-    uniqueId: this.editAssetData.uniqueId,
-    createdBy: this.editAssetData.createdBy,
 
-    projectId: this.editAssetData.projectId,
-    projectName: projectObj?.projectName || '',
 
-    countryId: this.editAssetData.countryId,
-    countryName: countryObj?.countryName || '',
 
-    areaId: this.editAssetData.areaId,
-    areaName: areaObj?.areaName || '',
 
-    outdoorZoneName: this.editAssetData.outdoorZoneName || '',
 
-    buildingId: this.editAssetData.buildingId,
-    buildingName: buildingObj?.buildingName || '',
 
-    floorId: this.editAssetData.floorId,
-    floorName: floorObj?.floorName || '',
 
-    zoneId: this.editAssetData.zoneId,
-    zoneName: zoneObj?.zoneName || '',
 
-    department: this.editAssetData.department,
-    custodian: this.editAssetData.custodian,
-    mainCategory: this.editAssetData.mainCategory,
-    subCategory: this.editAssetData.subCategory,
-    subSubCategory: this.editAssetData.subSubCategory,
-    brand: this.editAssetData.brand,
-    model: this.editAssetData.model,
-    assetDescription: this.editAssetData.assetDescription,
-    assetStatus: this.editAssetData.assetStatus,
-    mappedDevice: this.editAssetData.mappedDevice,
-    mappedDeviceUniqueId: mappedDeviceUniqueId, // ✅ Add extracted unique ID
-    deliverydate: this.editAssetData.deliverydate,
-    capitalizationDate: this.editAssetData.capitalizationDate,
-    invoiceDate: this.editAssetData.invoiceDate,
-    poDate: this.editAssetData.poDate,
-    expiryDate: this.editAssetData.expiryDate,
-    serviceStartDate: this.editAssetData.serviceStartDate,
-    serviceEndDate: this.editAssetData.serviceEndDate,
-    warrantyEndDate: this.editAssetData.warrantyEndDate
+
+
+
+
+
+
+
+
+  // ✅ Add these properties
+  openEditAsset = false;
+
+  editAssetData: any = {
+    id: '',
+    assetName: '',
+    uniqueId: '',
+    createdBy: '',
+    outdoorZoneName: '',
+    projectId: '',
+    projectName: '',
+    countryId: '',
+    countryName: '',
+    areaId: '',
+    areaName: '',
+    buildingId: '',
+    buildingName: '',
+    floorId: '',
+    floorName: '',
+    zoneId: '',
+    zoneName: '',
+    department: '',
+    custodian: '',
+    mainCategory: '',
+    subCategory: '',
+    subSubCategory: '',
+    brand: '',
+    model: '',
+    assetDescription: '',
+    assetStatus: true,
+    mappedDevice: '',
+    mappedDeviceUniqueId: '',
+    deliverydate: '',
+    capitalizationDate: '',
+    invoiceDate: '',
+    poDate: '',
+    expiryDate: '',
+    serviceStartDate: '',
+    serviceEndDate: '',
+    warrantyEndDate: ''
   };
 
+  // // ✅ Open Edit Popup
+  // openEditAssetPopup(asset: any) {
+  //   console.log('🔍 Opening edit popup for asset:', asset);
+
+  //   this.openEditAsset = true;
+
+  //   // ✅ Initialize editAssetData with actual asset values
+  //   this.editAssetData = {
+  //     id: asset.id,
+  //     assetName: asset.assetName || '',
+  //     uniqueId: asset.uniqueId || '',
+  //     createdBy: asset.createdBy || '',
+  //     outdoorZoneName: asset.outdoorZoneName || '',
+  //     department: asset.department || '',
+  //     custodian: asset.custodian || '',
+  //     mainCategory: asset.mainCategory || '',
+  //     subCategory: asset.subCategory || '',
+  //     subSubCategory: asset.subSubCategory || '',
+  //     brand: asset.brand || '',
+  //     model: asset.model || '',
+  //     assetDescription: asset.assetDescription || '',
+  //     assetStatus: asset.assetStatus ?? true,
+  //     mappedDevice: asset.mappedDevice || '',
+  //     deliverydate: asset.deliverydate ? asset.deliverydate.split('T')[0] : '',
+  //     capitalizationDate: asset.capitalizationDate ? asset.capitalizationDate.split('T')[0] : '',
+  //     invoiceDate: asset.invoiceDate ? asset.invoiceDate.split('T')[0] : '',
+  //     poDate: asset.poDate ? asset.poDate.split('T')[0] : '',
+  //     expiryDate: asset.expiryDate ? asset.expiryDate.split('T')[0] : '',
+  //     serviceStartDate: asset.serviceStartDate ? asset.serviceStartDate.split('T')[0] : '',
+  //     serviceEndDate: asset.serviceEndDate ? asset.serviceEndDate.split('T')[0] : '',
+  //     warrantyEndDate: asset.warrantyEndDate ? asset.warrantyEndDate.split('T')[0] : '',
+  //     projectId: '',
+  //     countryId: '',
+  //     areaId: '',
+  //     buildingId: '',
+  //     floorId: '',
+  //     zoneId: ''
+  //   };
+
+  //   // ✅ Find and set project ID
+  //   const project = this.projects.find(p => p.projectName === asset.projectName);
+
+  //   if (!project) {
+  //     console.error('❌ Project not found for:', asset.projectName);
+  //     this.cdr.detectChanges();
+  //     return;
+  //   }
+
+  //   this.editAssetData.projectId = project.id;
+  //   this.selectedProjectId = project.id;
+
+  //   // ✅ Load hierarchical data
+  //   this.loadHierarchicalDataForEdit(asset, project.id);
+  // }
 
 
-   console.log('🧾 Final Update Payload:', reqBody);
 
-  // ✅ UPDATE API call
-  this.assetservice.updateAsset(this.editAssetData.id, reqBody).subscribe({
-    next: (res: any) => {
-      alert(res.message || '✅ Asset updated successfully!');
-      this.closeEditAssetPopup();
-      this.loadAssets();
-    },
-    error: (err: any) => {
-      console.error('❌ Error updating asset:', err);
-      alert('❌ Error updating asset.');
+
+  openEditAssetPopup(asset: any) {
+    console.log('🔍 Opening edit popup for asset:', asset);
+
+    this.openEditAsset = true;
+
+    // ✅ Initialize editAssetData with actual asset values
+    this.editAssetData = {
+      id: asset.id,
+      assetName: asset.assetName || '',
+      uniqueId: asset.uniqueId || '',
+      createdBy: asset.createdBy || '',
+      outdoorZoneName: asset.outdoorZoneName || '',
+      department: asset.department || '',
+      custodian: asset.custodian || '',
+      mainCategory: asset.mainCategory || '',
+      subCategory: asset.subCategory || '',
+      subSubCategory: asset.subSubCategory || '',
+      brand: asset.brand || '',
+      model: asset.model || '',
+      assetDescription: asset.assetDescription || '',
+      assetStatus: asset.assetStatus ?? true,
+      mappedDevice: asset.mappedDevice || '',
+      deliverydate: asset.deliverydate ? asset.deliverydate.split('T')[0] : '',
+      capitalizationDate: asset.capitalizationDate ? asset.capitalizationDate.split('T')[0] : '',
+      invoiceDate: asset.invoiceDate ? asset.invoiceDate.split('T')[0] : '',
+      poDate: asset.poDate ? asset.poDate.split('T')[0] : '',
+      expiryDate: asset.expiryDate ? asset.expiryDate.split('T')[0] : '',
+      serviceStartDate: asset.serviceStartDate ? asset.serviceStartDate.split('T')[0] : '',
+      serviceEndDate: asset.serviceEndDate ? asset.serviceEndDate.split('T')[0] : '',
+      warrantyEndDate: asset.warrantyEndDate ? asset.warrantyEndDate.split('T')[0] : '',
+      // ✅ These will be set by loadHierarchicalDataForEdit
+      projectId: asset.projectId || '',
+      countryId: asset.countryId || '',
+      areaId: asset.areaId || '',
+      buildingId: asset.buildingId || '',
+      floorId: asset.floorId || '',
+      zoneId: asset.zoneId || ''
+    };
+
+    // ✅ Find and set project ID directly from asset data
+    const project = this.projects.find(p => p.id === asset.projectId || p.projectName === asset.projectName);
+
+    if (!project) {
+      console.error('❌ Project not found for:', asset.projectName);
+      this.cdr.detectChanges();
+      return;
     }
-  });
-}
 
-// ✅ Update the event handlers for edit mode
-onProjectChangeEdit(projectId: string) {
-  console.log('📍 Project changed to:', projectId);
-  this.editAssetData.projectId = projectId;
-  this.selectedProjectId = projectId;
+    this.editAssetData.projectId = project.id;
+    this.selectedProjectId = project.id;
 
-  this.editAssetData.countryId = '';
-  this.editAssetData.areaId = '';
-  this.editAssetData.buildingId = '';
-  this.editAssetData.floorId = '';
-  this.editAssetData.zoneId = '';
-  this.editAssetData.outdoorZoneName = '';
+    console.log('✅ Set project ID:', this.editAssetData.projectId);
 
-  if (!projectId) {
-    this.cdr.detectChanges();
-    return;
+    // ✅ Load hierarchical data
+    this.loadHierarchicalDataForEdit(asset, project.id);
   }
 
-  if (!this.countriesByProject[projectId]) {
+
+
+  // ✅ Load hierarchical data for edit mode
+  // private loadHierarchicalDataForEdit(asset: any, projectId: string) {
+  //   console.log('🌍 Starting hierarchical data load for edit');
+
+  //   // Step 1: Load countries
+  //   this.role.countryGetById(projectId).subscribe({
+  //     next: (countries: any) => {
+  //       const countryArray = Array.isArray(countries) ? countries : [];
+  //       this.countriesByProject[projectId] = countryArray;
+
+  //       const country = countryArray.find((c: any) => c.countryName === asset.countryName);
+
+  //       if (!country) {
+  //         console.error('❌ Country not found');
+  //         this.cdr.detectChanges();
+  //         return;
+  //       }
+
+  //       this.editAssetData.countryId = country.id;
+  //       this.selectedCountryId = country.id;
+  //       console.log('✅ Set country ID:', this.editAssetData.countryId);
+
+  //       // Step 2: Load areas
+  //       this.role.getSummary(country.id).subscribe({
+  //         next: (areas: any) => {
+  //           const areaArray = Array.isArray(areas) ? areas : [];
+  //           this.areaByCountry[country.id] = areaArray;
+
+  //           const area = areaArray.find((a: any) => a.areaName === asset.areaName);
+
+  //           if (!area) {
+  //             console.error('❌ Area not found');
+  //             this.cdr.detectChanges();
+  //             return;
+  //           }
+
+  //           this.editAssetData.areaId = area.id;
+  //           console.log('✅ Set area ID:', this.editAssetData.areaId);
+
+  //           // Load outdoor zones for this area
+  //           this.loadOutdoorZonesForArea(area.id);
+
+  //           // Step 3: Load buildings
+  //           this.role.getBuilding(area.id).subscribe({
+  //             next: (buildings: any) => {
+  //               const buildingArray = Array.isArray(buildings) ? buildings : [];
+  //               this.buildingByArea[area.id] = buildingArray;
+
+  //               const building = buildingArray.find((b: any) => b.buildingName === asset.buildingName);
+
+  //               if (!building) {
+  //                 console.error('❌ Building not found');
+  //                 this.cdr.detectChanges();
+  //                 return;
+  //               }
+
+  //               this.editAssetData.buildingId = building.id;
+  //               console.log('✅ Set building ID:', this.editAssetData.buildingId);
+
+  //               // Step 4: Load floors
+  //               this.role.getFloor(building.id).subscribe({
+  //                 next: (floors: any) => {
+  //                   const floorArray = Array.isArray(floors) ? floors : [];
+  //                   this.floorByBuilding[building.id] = floorArray;
+
+  //                   const floor = floorArray.find((f: any) => f.floorName === asset.floorName);
+
+  //                   if (!floor) {
+  //                     console.error('❌ Floor not found');
+  //                     this.cdr.detectChanges();
+  //                     return;
+  //                   }
+
+  //                   this.editAssetData.floorId = floor.id;
+  //                   console.log('✅ Set floor ID:', this.editAssetData.floorId);
+
+  //                   // Step 5: Load zones
+  //                   this.role.getZones(floor.id).subscribe({
+  //                     next: (zones: any) => {
+  //                       const zoneArray = Array.isArray(zones) ? zones : [];
+  //                       this.zoneByFloor[floor.id] = zoneArray;
+
+  //                       const zone = zoneArray.find((z: any) => z.zoneName === asset.zoneName);
+
+  //                       if (zone) {
+  //                         this.editAssetData.zoneId = zone.id;
+  //                         console.log('✅ Set zone ID:', this.editAssetData.zoneId);
+  //                       } else {
+  //                         console.error('❌ Zone not found');
+  //                       }
+
+  //                       console.log('🎉 All hierarchical data loaded!');
+  //                       console.log('✅ Final editAssetData:', this.editAssetData);
+
+  //                       this.cdr.detectChanges();
+  //                     },
+  //                     error: (err) => {
+  //                       console.error('❌ Error loading zones:', err);
+  //                       this.cdr.detectChanges();
+  //                     }
+  //                   });
+  //                 },
+  //                 error: (err) => {
+  //                   console.error('❌ Error loading floors:', err);
+  //                   this.cdr.detectChanges();
+  //                 }
+  //               });
+  //             },
+  //             error: (err) => {
+  //               console.error('❌ Error loading buildings:', err);
+  //               this.cdr.detectChanges();
+  //             }
+  //           });
+  //         },
+  //         error: (err) => {
+  //           console.error('❌ Error loading areas:', err);
+  //           this.cdr.detectChanges();
+  //         }
+  //       });
+  //     },
+  //     error: (err) => {
+  //       console.error('❌ Error loading countries:', err);
+  //       this.cdr.detectChanges();
+  //     }
+  //   });
+  // }
+
+
+
+
+  private loadHierarchicalDataForEdit(asset: any, projectId: string) {
+    console.log('🌍 Starting hierarchical data load for edit');
+
+    // ✅ ALWAYS load countries (don't check cache)
     this.role.countryGetById(projectId).subscribe({
-      next: (res: any) => {
-        this.countriesByProject[projectId] = Array.isArray(res) ? res : [];
-        this.cdr.detectChanges();
+      next: (countries: any) => {
+        const countryArray = Array.isArray(countries) ? countries : [];
+        this.countriesByProject[projectId] = countryArray;
+
+        const country = countryArray.find((c: any) =>
+          c.id === asset.countryId || c.countryName === asset.countryName
+        );
+
+        if (!country) {
+          console.error('❌ Country not found');
+          this.cdr.detectChanges();
+          return;
+        }
+
+        this.editAssetData.countryId = country.id;
+        this.selectedCountryId = country.id;
+        console.log('✅ Set country ID:', this.editAssetData.countryId);
+
+        // ✅ ALWAYS load areas
+        this.role.getSummary(country.id).subscribe({
+          next: (areas: any) => {
+            const areaArray = Array.isArray(areas) ? areas : [];
+            this.areaByCountry[country.id] = areaArray;
+
+            const area = areaArray.find((a: any) =>
+              a.id === asset.areaId || a.areaName === asset.areaName
+            );
+
+            if (!area) {
+              console.error('❌ Area not found');
+              this.cdr.detectChanges();
+              return;
+            }
+
+            this.editAssetData.areaId = area.id;
+            console.log('✅ Set area ID:', this.editAssetData.areaId);
+
+            // ✅ Load outdoor zones if needed
+            if (asset.outdoorZoneName) {
+              this.loadOutdoorZonesForArea(area.id);
+            }
+
+            // ✅ ALWAYS load buildings
+            this.role.getBuilding(area.id).subscribe({
+              next: (buildings: any) => {
+                const buildingArray = Array.isArray(buildings) ? buildings : [];
+                this.buildingByArea[area.id] = buildingArray;
+
+                const building = buildingArray.find((b: any) =>
+                  b.id === asset.buildingId || b.buildingName === asset.buildingName
+                );
+
+                if (!building) {
+                  console.error('❌ Building not found');
+                  this.cdr.detectChanges();
+                  return;
+                }
+
+                this.editAssetData.buildingId = building.id;
+                console.log('✅ Set building ID:', this.editAssetData.buildingId);
+
+                // ✅ ALWAYS load floors
+                this.role.getFloor(building.id).subscribe({
+                  next: (floors: any) => {
+                    const floorArray = Array.isArray(floors) ? floors : [];
+                    this.floorByBuilding[building.id] = floorArray;
+
+                    const floor = floorArray.find((f: any) =>
+                      f.id === asset.floorId || f.floorName === asset.floorName
+                    );
+
+                    if (!floor) {
+                      console.error('❌ Floor not found');
+                      this.cdr.detectChanges();
+                      return;
+                    }
+
+                    this.editAssetData.floorId = floor.id;
+                    console.log('✅ Set floor ID:', this.editAssetData.floorId);
+
+                    // ✅ ALWAYS load zones
+                    this.role.getZones(floor.id).subscribe({
+                      next: (zones: any) => {
+                        const zoneArray = Array.isArray(zones) ? zones : [];
+                        this.zoneByFloor[floor.id] = zoneArray;
+
+                        const zone = zoneArray.find((z: any) =>
+                          z.id === asset.zoneId || z.zoneName === asset.zoneName
+                        );
+
+                        if (zone) {
+                          this.editAssetData.zoneId = zone.id;
+                          console.log('✅ Set zone ID:', this.editAssetData.zoneId);
+                        } else {
+                          console.error('❌ Zone not found');
+                        }
+
+                        console.log('🎉 All hierarchical data loaded!');
+                        console.log('✅ Final editAssetData:', this.editAssetData);
+
+                        // ✅ Force Angular to detect all changes
+                        setTimeout(() => {
+                          this.cdr.detectChanges();
+                        }, 100);
+                      },
+                      error: (err) => {
+                        console.error('❌ Error loading zones:', err);
+                        this.cdr.detectChanges();
+                      }
+                    });
+                  },
+                  error: (err) => {
+                    console.error('❌ Error loading floors:', err);
+                    this.cdr.detectChanges();
+                  }
+                });
+              },
+              error: (err) => {
+                console.error('❌ Error loading buildings:', err);
+                this.cdr.detectChanges();
+              }
+            });
+          },
+          error: (err) => {
+            console.error('❌ Error loading areas:', err);
+            this.cdr.detectChanges();
+          }
+        });
       },
-      error: () => console.log("Error loading countries")
-    });
-  } else {
-    this.cdr.detectChanges();
-  }
-}
-
-onCountryChangeEdit(countryId: string) {
-  console.log('📍 Country changed to:', countryId);
-  this.editAssetData.countryId = countryId;
-  this.selectedCountryId = countryId;
-
-  this.editAssetData.areaId = '';
-  this.editAssetData.buildingId = '';
-  this.editAssetData.floorId = '';
-  this.editAssetData.zoneId = '';
-  this.editAssetData.outdoorZoneName = '';
-
-  if (!countryId) {
-    this.cdr.detectChanges();
-    return;
-  }
-
-  if (!this.areaByCountry[countryId]) {
-    this.role.getSummary(countryId).subscribe({
-      next: (res: any) => {
-        this.areaByCountry[countryId] = Array.isArray(res) ? res : [];
+      error: (err) => {
+        console.error('❌ Error loading countries:', err);
         this.cdr.detectChanges();
-      },
-      error: () => console.log("Error loading areas")
+      }
     });
-  } else {
-    this.cdr.detectChanges();
-  }
-}
-
-onAreaChangeEdit(areaId: string) {
-  console.log('📍 Area changed to:', areaId);
-  this.editAssetData.areaId = areaId;
-  this.editAssetData.outdoorZoneName = '';
-  this.editAssetData.buildingId = '';
-  this.editAssetData.floorId = '';
-  this.editAssetData.zoneId = '';
-
-  if (!areaId) {
-    this.cdr.detectChanges();
-    return;
   }
 
-  if (!this.outdoorZonesByArea[areaId]) {
-    this.loadOutdoorZonesForArea(areaId);
+  // ✅ Close Edit Popup
+  closeEditAssetPopup() {
+    this.openEditAsset = false;
   }
 
-  if (!this.buildingByArea[areaId]) {
-    this.role.getBuilding(areaId).subscribe({
+  // ✅ Update Asset
+  updateAssetData() {
+    // Extract unique ID from mappedDevice
+    const mappedDeviceUniqueId = this.extractUniqueIdFromMappedDevice(this.editAssetData.mappedDevice);
+
+    // ✅ Find related objects for mapping
+    const projectObj = this.projects.find(p => p.id === this.editAssetData.projectId);
+    const countryObj = (this.countriesByProject[this.editAssetData.projectId] || []).find(
+      c => c.id === this.editAssetData.countryId
+    );
+    const areaObj = (this.areaByCountry[this.editAssetData.countryId] || []).find(
+      a => a.id === this.editAssetData.areaId
+    );
+    const buildingObj = (this.buildingByArea[this.editAssetData.areaId] || []).find(
+      b => b.id === this.editAssetData.buildingId
+    );
+    const floorObj = (this.floorByBuilding[this.editAssetData.buildingId] || []).find(
+      f => f.id === this.editAssetData.floorId
+    );
+    const zoneObj = (this.zoneByFloor[this.editAssetData.floorId] || []).find(
+      z => z.id === this.editAssetData.zoneId
+    );
+
+    // ✅ Build final request body
+    const reqBody = {
+      assetName: this.editAssetData.assetName,
+      uniqueId: this.editAssetData.uniqueId,
+      createdBy: this.editAssetData.createdBy,
+
+      projectId: this.editAssetData.projectId,
+      projectName: projectObj?.projectName || '',
+
+      countryId: this.editAssetData.countryId,
+      countryName: countryObj?.countryName || '',
+
+      areaId: this.editAssetData.areaId,
+      areaName: areaObj?.areaName || '',
+
+      outdoorZoneName: this.editAssetData.outdoorZoneName || '',
+
+      buildingId: this.editAssetData.buildingId,
+      buildingName: buildingObj?.buildingName || '',
+
+      floorId: this.editAssetData.floorId,
+      floorName: floorObj?.floorName || '',
+
+      zoneId: this.editAssetData.zoneId,
+      zoneName: zoneObj?.zoneName || '',
+
+      department: this.editAssetData.department,
+      custodian: this.editAssetData.custodian,
+      mainCategory: this.editAssetData.mainCategory,
+      subCategory: this.editAssetData.subCategory,
+      subSubCategory: this.editAssetData.subSubCategory,
+      brand: this.editAssetData.brand,
+      model: this.editAssetData.model,
+      assetDescription: this.editAssetData.assetDescription,
+      assetStatus: this.editAssetData.assetStatus,
+      mappedDevice: this.editAssetData.mappedDevice,
+      mappedDeviceUniqueId: mappedDeviceUniqueId, // ✅ Add extracted unique ID
+      deliverydate: this.editAssetData.deliverydate,
+      capitalizationDate: this.editAssetData.capitalizationDate,
+      invoiceDate: this.editAssetData.invoiceDate,
+      poDate: this.editAssetData.poDate,
+      expiryDate: this.editAssetData.expiryDate,
+      serviceStartDate: this.editAssetData.serviceStartDate,
+      serviceEndDate: this.editAssetData.serviceEndDate,
+      warrantyEndDate: this.editAssetData.warrantyEndDate
+    };
+
+
+
+    console.log('🧾 Final Update Payload:', reqBody);
+
+    // ✅ UPDATE API call
+    this.assetservice.updateAsset(this.editAssetData.id, reqBody).subscribe({
       next: (res: any) => {
-        this.buildingByArea[areaId] = Array.isArray(res) ? res : [];
-        this.cdr.detectChanges();
+        alert(res.message || '✅ Asset updated successfully!');
+        this.closeEditAssetPopup();
+        this.loadAssets();
       },
-      error: () => console.log("Error loading buildings")
+      error: (err: any) => {
+        console.error('❌ Error updating asset:', err);
+        alert('❌ Error updating asset.');
+      }
     });
-  } else {
-    this.cdr.detectChanges();
-  }
-}
-
-onBuildingChangeEdit(buildingId: string) {
-  console.log('📍 Building changed to:', buildingId);
-  this.editAssetData.buildingId = buildingId;
-  this.editAssetData.floorId = '';
-  this.editAssetData.zoneId = '';
-
-  if (!buildingId) {
-    this.cdr.detectChanges();
-    return;
   }
 
-  if (!this.floorByBuilding[buildingId]) {
-    this.role.getFloor(buildingId).subscribe({
-      next: (res: any) => {
-        this.floorByBuilding[buildingId] = Array.isArray(res) ? res : [];
-        this.cdr.detectChanges();
-      },
-      error: () => console.log("Error loading floors")
-    });
-  } else {
-    this.cdr.detectChanges();
-  }
-}
+  // ✅ Update the event handlers for edit mode
+  onProjectChangeEdit(projectId: string) {
+    console.log('📍 Project changed to:', projectId);
+    this.editAssetData.projectId = projectId;
+    this.selectedProjectId = projectId;
 
-onFloorChangeEdit(floorId: string) {
-  console.log('📍 Floor changed to:', floorId);
-  this.editAssetData.floorId = floorId;
-  this.editAssetData.zoneId = '';
+    this.editAssetData.countryId = '';
+    this.editAssetData.areaId = '';
+    this.editAssetData.buildingId = '';
+    this.editAssetData.floorId = '';
+    this.editAssetData.zoneId = '';
+    this.editAssetData.outdoorZoneName = '';
 
-  if (!floorId) {
-    this.cdr.detectChanges();
-    return;
-  }
-
-  if (!this.zoneByFloor[floorId]) {
-    this.role.getZones(floorId).subscribe({
-      next: (res: any) => {
-        this.zoneByFloor[floorId] = Array.isArray(res) ? res : [];
-        this.cdr.detectChanges();
-      },
-      error: () => console.log("Error loading zones")
-    });
-  } else {
-    this.cdr.detectChanges();
-  }
-}
-
-
-
-
-
-
-
-
-
-// controls delete popup
-openDeleteAsset: boolean = false;
-
-// holds selected asset to delete
-selectedAssetToDelete: any = null;
-
-
-openDeleteAssetPopup(asset: any) {
-  this.selectedAssetToDelete = asset; // store full asset or just id
-  this.openDeleteAsset = true;
-}
-
-
-closeDeleteAssetPopup() {
-  this.openDeleteAsset = false;
-  this.selectedAssetToDelete = null;
-}
-
-
-
-confirmDeleteAsset() {
-  if (!this.selectedAssetToDelete?.id) return;
-
-  this.assetservice.deleteAsset(this.selectedAssetToDelete.id).subscribe({
-    next: () => {
-      alert('Asset deleted successfully ✅');
-
-      this.closeDeleteAssetPopup();
-      this.loadAssets(); // 🔁 reload asset list (important)
-    },
-    error: (err) => {
-      console.error(err);
-      alert('Failed to delete asset ❌');
+    if (!projectId) {
+      this.cdr.detectChanges();
+      return;
     }
-  });
-}
+
+    if (!this.countriesByProject[projectId]) {
+      this.role.countryGetById(projectId).subscribe({
+        next: (res: any) => {
+          this.countriesByProject[projectId] = Array.isArray(res) ? res : [];
+          this.cdr.detectChanges();
+        },
+        error: () => console.log("Error loading countries")
+      });
+    } else {
+      this.cdr.detectChanges();
+    }
+  }
+
+  onCountryChangeEdit(countryId: string) {
+    console.log('📍 Country changed to:', countryId);
+    this.editAssetData.countryId = countryId;
+    this.selectedCountryId = countryId;
+
+    this.editAssetData.areaId = '';
+    this.editAssetData.buildingId = '';
+    this.editAssetData.floorId = '';
+    this.editAssetData.zoneId = '';
+    this.editAssetData.outdoorZoneName = '';
+
+    if (!countryId) {
+      this.cdr.detectChanges();
+      return;
+    }
+
+    if (!this.areaByCountry[countryId]) {
+      this.role.getSummary(countryId).subscribe({
+        next: (res: any) => {
+          this.areaByCountry[countryId] = Array.isArray(res) ? res : [];
+          this.cdr.detectChanges();
+        },
+        error: () => console.log("Error loading areas")
+      });
+    } else {
+      this.cdr.detectChanges();
+    }
+  }
+
+  onAreaChangeEdit(areaId: string) {
+    console.log('📍 Area changed to:', areaId);
+    this.editAssetData.areaId = areaId;
+    this.editAssetData.outdoorZoneName = '';
+    this.editAssetData.buildingId = '';
+    this.editAssetData.floorId = '';
+    this.editAssetData.zoneId = '';
+
+    if (!areaId) {
+      this.cdr.detectChanges();
+      return;
+    }
+
+    if (!this.outdoorZonesByArea[areaId]) {
+      this.loadOutdoorZonesForArea(areaId);
+    }
+
+    if (!this.buildingByArea[areaId]) {
+      this.role.getBuilding(areaId).subscribe({
+        next: (res: any) => {
+          this.buildingByArea[areaId] = Array.isArray(res) ? res : [];
+          this.cdr.detectChanges();
+        },
+        error: () => console.log("Error loading buildings")
+      });
+    } else {
+      this.cdr.detectChanges();
+    }
+  }
+
+  onBuildingChangeEdit(buildingId: string) {
+    console.log('📍 Building changed to:', buildingId);
+    this.editAssetData.buildingId = buildingId;
+    this.editAssetData.floorId = '';
+    this.editAssetData.zoneId = '';
+
+    if (!buildingId) {
+      this.cdr.detectChanges();
+      return;
+    }
+
+    if (!this.floorByBuilding[buildingId]) {
+      this.role.getFloor(buildingId).subscribe({
+        next: (res: any) => {
+          this.floorByBuilding[buildingId] = Array.isArray(res) ? res : [];
+          this.cdr.detectChanges();
+        },
+        error: () => console.log("Error loading floors")
+      });
+    } else {
+      this.cdr.detectChanges();
+    }
+  }
+
+  onFloorChangeEdit(floorId: string) {
+    console.log('📍 Floor changed to:', floorId);
+    this.editAssetData.floorId = floorId;
+    this.editAssetData.zoneId = '';
+
+    if (!floorId) {
+      this.cdr.detectChanges();
+      return;
+    }
+
+    if (!this.zoneByFloor[floorId]) {
+      this.role.getZones(floorId).subscribe({
+        next: (res: any) => {
+          this.zoneByFloor[floorId] = Array.isArray(res) ? res : [];
+          this.cdr.detectChanges();
+        },
+        error: () => console.log("Error loading zones")
+      });
+    } else {
+      this.cdr.detectChanges();
+    }
+  }
+
+
+
+
+
+
+
+
+
+  // controls delete popup
+  openDeleteAsset: boolean = false;
+
+  // holds selected asset to delete
+  selectedAssetToDelete: any = null;
+
+
+  openDeleteAssetPopup(asset: any) {
+    this.selectedAssetToDelete = asset; // store full asset or just id
+    this.openDeleteAsset = true;
+  }
+
+
+  closeDeleteAssetPopup() {
+    this.openDeleteAsset = false;
+    this.selectedAssetToDelete = null;
+  }
+
+
+
+  confirmDeleteAsset() {
+    if (!this.selectedAssetToDelete?.id) return;
+
+    this.assetservice.deleteAsset(this.selectedAssetToDelete.id).subscribe({
+      next: () => {
+        alert('Asset deleted successfully ✅');
+
+        this.closeDeleteAssetPopup();
+        this.loadAssets(); // 🔁 reload asset list (important)
+      },
+      error: (err) => {
+        console.error(err);
+        alert('Failed to delete asset ❌');
+      }
+    });
+  }
 
 
 

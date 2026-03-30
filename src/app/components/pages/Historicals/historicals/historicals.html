@@ -1,3 +1,12 @@
+<div class="breadcrumb-wrapper">
+  <nav class="breadcrumb">
+    <a class="breadcrumb-link">Tracking</a>
+    <span class="breadcrumb-separator">››</span>
+    <a class="breadcrumb-current">Historical</a>
+  </nav>
+</div>
+
+
 <div class="employee-container">
     <div class="header">
         <h3>Employee</h3>
@@ -5,23 +14,21 @@
         <div class="header-actions">
             <input type="text" placeholder="Search historical" [(ngModel)]="searchTerm" (input)="onSearch()" />
             <div class="icons">
-                <img src="assets/refresh.png" alt="Refresh">
-                <img src="assets/filter.png" alt="filter">
-                <img src="assets/columns.png" alt="columns">
+                <img src="assets/refresh.png" alt="Refresh" class="nav-icon upload-icon">
+                <img src="assets/filter.png" alt="filter" class="nav-icon upload-icon">
+                <img src="assets/columns.png" alt="columns" class="nav-icon upload-icon">
             </div>
         </div>
     </div>
-
-    <div class="table-container">
+    <!-- <button (click)="selectOption(emp, 'detailed')" routerLink="/detailed">Detailed</button> -->
+    <!-- <div class="table-container">
         <table>
             <thead>
                 <tr>
-                    <!-- <th>Object Id</th> -->
-                    <!-- <th>Person Code</th> -->
+
                     <th>Employee Name</th>
                     <th>Department</th>
-                    <!-- <th>UID</th> -->
-                     <th>Id Number</th>
+                    <th>Id Number</th>
                     <th>Project</th>
                     <th>Country</th>
                     <th>Location</th>
@@ -32,12 +39,9 @@
 
             <tbody>
                 <tr *ngFor="let emp of filteredEmployees">
-                    <!-- <td>{{ emp.objectId }}</td> -->
-                    <!-- <td>{{ emp.employeeCode }}</td> -->
                     <td>{{ emp.employeeName }}</td>
                     <td>{{ emp.department }}</td>
-                    <!-- <td>{{ emp.uid }}</td> -->
-                     <td>{{emp.uid}}</td>
+                    <td>{{emp.uid}}</td>
                     <td>{{ emp.project || '—' }}</td>
                     <td>{{ emp.country || '—' }}</td>
                     <td>{{ emp.location || '—' }}</td>
@@ -46,18 +50,102 @@
                         <div class="dropdown-container tooltip-container">
                             <button class="history-btn" (click)="toggleDropdown(emp, $event)">
                                 <img src="assets/historical.png" alt="history" />
-                                  <span class="tooltip-text">View History</span>
-                                <!-- <span class="dropdown-icon">▼</span> -->
+                                <span class="tooltip-text">View History</span>
                             </button>
 
                             <div class="dropdown-menu" *ngIf="emp.showDropdown" (click)="$event.stopPropagation()">
                                 <button (click)="selectOption(emp, 'overview')" routerLink="/overview">Overview</button>
-                                <!-- <button (click)="selectOption(emp, 'detailed')" routerLink="/detailed">Detailed</button> -->
+                    
                             </div>
 
                         </div>
                     </td>
 
+                </tr>
+            </tbody>
+        </table>
+    </div> -->
+
+
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+
+                    <th>Asset Name</th>
+                    <th>Project Name</th>
+                    <th>Device Name</th>
+                    <th>Device Type</th>
+                    <th>Model</th>
+                    <th>Technology</th>
+                    <th>Device Status</th>
+                    <th>History</th>
+
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let historical of historicallist">
+                    <td>{{ historical.assetName }}</td>
+                    <td>{{ historical.projectName }}</td>
+                    <td>{{historical.deviceName}}</td>
+                    <td>{{ historical.deviceType}}</td>
+                    <td>{{ historical.model}}</td>
+                    <td>{{ historical.technology}}</td>
+                    <td>{{ historical.deviceStatus}}</td>
+                    <td>
+                        <div class="dropdown-container tooltip-container">
+                            <button class="history-btn" (click)="toggleDropdown(historical, $event)">
+                                <img src="assets/historical.png" alt="history" />
+                                <span class="tooltip-text">View History</span>
+                            </button>
+
+                            <div class="dropdown-menu" *ngIf="historical.showDropdown"
+                                (click)="$event.stopPropagation()">
+                                <button (click)="selectOption(historical, 'overview')"
+                                    routerLink="/overview">Overview</button>
+                            </div>
+
+                        </div>
+                    </td>
+
+                </tr>
+
+                <tr class="pagination-row" style="height: 50px;">
+                    <td colspan="8">
+                        <div class="pagination-container">
+
+                            <label>
+                                Items per page:
+                                <select [(ngModel)]="pageSize" (change)="onPageSizeChange(pageSize)"
+                                    style="margin-left: 5px;">
+
+                                    <option *ngFor="let size of pageSizeOptions" [value]="size">
+                                        {{ size }}
+                                    </option>
+
+                                </select>
+                            </label>
+
+                            <span class="range-info">
+                                {{ pageNumber }} of {{ totalPages }}
+                            </span>
+
+                            <div>
+
+                                <button (click)="previousPage()" [disabled]="pageNumber === 1" class="arrow-btn">
+                                    ⏴
+                                </button>
+
+                                <button (click)="nextPage()" [disabled]="pageNumber === totalPages" class="arrow-btn">
+                                    ⏵
+                                </button>
+
+                            </div>
+
+                        </div>
+                    </td>
                 </tr>
             </tbody>
         </table>

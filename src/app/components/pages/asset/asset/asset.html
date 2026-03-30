@@ -1,3 +1,14 @@
+
+<div class="breadcrumb-wrapper">
+  <nav class="breadcrumb">
+    <a routerLink="/administration" class="breadcrumb-link">Administration</a>
+    <span class="breadcrumb-separator">››</span>
+    <a routerLink="/project" class="breadcrumb-link">Configuration</a>
+    <span class="breadcrumb-separator">››</span>
+    <span class="breadcrumb-current">Asset</span>
+  </nav>
+</div>
+
 <nav class="navbar">
   <h3>Asset</h3>
 
@@ -54,15 +65,16 @@
 <!-- ASSET SUB NAVBAR -->
 <nav class="navbarSub" *ngIf="activeTab==='asset'">
   <h3>Asset</h3>
+   <input type="text" [(ngModel)]="searchText" placeholder="Search..." />
   <div class="navicons">
-    <img src="assets/add.png" alt="Add" (click)="openCreateAssetPopup()">
-    <img src="assets/upload.png" alt="upload">
-    <img src="assets/download.png" alt="download">
-    <img src="assets/refresh.png" alt="Refresh" (click)="loadAssets()">
+    <img src="assets/add.png" alt="Add" (click)="openCreateAssetPopup()" class="nav-icon upload-icon">
+    <img src="assets/upload.png" alt="upload" class="nav-icon upload-icon">
+    <img src="assets/download.png" alt="download" class="nav-icon upload-icon">
+    <img src="assets/refresh.png" alt="Refresh" (click)="loadAssets()" class="nav-icon upload-icon">
   </div>
 </nav>
 
-<div *ngIf="activeTab==='asset'" class="table-container">
+<!-- <div *ngIf="activeTab==='asset'" class="table-container">
   <table>
     <thead>
       <tr>
@@ -71,7 +83,7 @@
         <th>Project</th>
         <th>Country</th>
         <th>Area</th>
-        <th>Outdoor Zone</th>
+
         <th>Building</th>
         <th>Floor</th>
         <th>Zone</th>
@@ -93,7 +105,6 @@
         <td>{{ asset.projectName }}</td>
         <td>{{ asset.countryName }}</td>
         <td>{{ asset.areaName }}</td>
-        <td>{{ asset.outdoorZoneName }}</td>
         <td>{{ asset.buildingName }}</td>
         <td>{{ asset.floorName }}</td>
         <td>{{ asset.zoneName }}</td>
@@ -106,22 +117,27 @@
         <td>{{ asset.mappedDevice }}</td>
         <td>{{ asset.assetStatus ? 'Active' : 'Inactive' }}</td>
         <td>
-          <img src="assets/pencil.png" alt="Edit" class="action-icon edit"  (click)="openEditAssetPopup(asset)"  />
-          <img src="assets/trash.png" alt="Delete" class="action-icon delete"   (click)="openDeleteAssetPopup(asset)" />
+          <div class="action-icons">
+            <img src="assets/pencil.png" alt="Edit" class="action-icon edit" (click)="openEditAssetPopup(asset)" />
+            <img src="assets/trash.png" alt="Delete" class="action-icon delete" (click)="openDeleteAssetPopup(asset)" />
+          </div>
         </td>
       </tr>
     </tbody>
   </table>
+</div> -->
+
+
+
+
+<div *ngIf="activeTab==='asset'">
+  <app-reusabletable
+    [columns]="assetColumns"
+    [data]="assetList"
+    [searchText]="searchText" 
+    (action)="handleAssetAction($event)">
+  </app-reusabletable>
 </div>
-
-
-
-
-
-
-
-
-
 
 
 
@@ -173,7 +189,7 @@
       <!-- Area -->
       <div class="user-data">
         <label>Area</label>
-        <select [(ngModel)]="createAssetData.areaId" (ngModelChange)="onAreaChange($event)" 
+        <select [(ngModel)]="createAssetData.areaId" (ngModelChange)="onAreaChange($event)"
           [disabled]="!selectedCountryId">
           <option value="">-- Select Area --</option>
           <option *ngFor="let area of areaByCountry[selectedCountryId] || []" [value]="area.id">
@@ -278,18 +294,18 @@
 
       <!-- Mapped Device -->
       <!-- Mapped Device -->
-<div class="user-data">
-  <label>Mapped Device</label>
-  <select [(ngModel)]="createAssetData.mappedDevice">
-    <option value="">-- Select Device --</option>
-    <option *ngFor="let device of deviceOptions" [value]="device">
-      {{ device }}
-    </option>
-  </select>
-</div>
+      <div class="user-data">
+        <label>Mapped Device</label>
+        <select [(ngModel)]="createAssetData.mappedDevice">
+          <option value="">-- Select Device --</option>
+          <option *ngFor="let device of deviceOptions" [value]="device">
+            {{ device }}
+          </option>
+        </select>
+      </div>
 
       <!-- ✅ 8 DATE FIELDS START HERE -->
-      
+
       <!-- Delivery Date -->
       <div class="user-data">
         <label>Delivery Date</label>
@@ -430,7 +446,7 @@
       <!-- Area -->
       <div class="user-data">
         <label>Area</label>
-        <select [(ngModel)]="editAssetData.areaId" (ngModelChange)="onAreaChangeEdit($event)" 
+        <select [(ngModel)]="editAssetData.areaId" (ngModelChange)="onAreaChangeEdit($event)"
           [disabled]="!editAssetData.countryId">
           <option value="">-- Select Area --</option>
           <option *ngFor="let area of areaByCountry[editAssetData.countryId] || []" [value]="area.id">
@@ -534,16 +550,16 @@
       </div>
 
       <!-- Mapped Device -->
- <!-- Mapped Device -->
-<div class="user-data">
-  <label>Mapped Device</label>
-  <select [(ngModel)]="editAssetData.mappedDevice">
-    <option value="">-- Select Device --</option>
-    <option *ngFor="let device of deviceOptions" [value]="device">
-      {{ device }}
-    </option>
-  </select>
-</div>
+      <!-- Mapped Device -->
+      <div class="user-data">
+        <label>Mapped Device</label>
+        <select [(ngModel)]="editAssetData.mappedDevice">
+          <option value="">-- Select Device --</option>
+          <option *ngFor="let device of deviceOptions" [value]="device">
+            {{ device }}
+          </option>
+        </select>
+      </div>
       <!-- Delivery Date -->
       <div class="user-data">
         <label>Delivery Date</label>

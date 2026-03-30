@@ -11,7 +11,7 @@
   
 }
 
-/* Image container (left side) */
+
 .main {
   flex: 1;
   display: flex;
@@ -22,57 +22,92 @@
 .main img {
   max-width: 100%;
   height: auto;
-  width: 400px;
+  width: 500px;
   border-radius: 10px;
-  border-radius: 30%;
+  margin-left: 10%;
 }
 
-/* Input container (right side) */
-.three {
+
+/* .three {
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* aligns labels and inputs to the left inside the right side */
+  align-items: flex-start;
   padding: 0 40px;
-  margin-right: 200px;
+  margin-right: 8%;
+  margin-top: 0%;
  
-}
+} */
 
-/* Inputs */
-.two,
+
+
+/* .two,
 .three input[type="password"] {
   width: 100%;
-  max-width: 300px;
+  max-width: 400px;
   padding: 10px;
-  margin: 10px 0;
+  margin: 6px 0;
   border: 1px solid #ccc;
   border-radius: 5px;
+  margin-left: 45%;
+  height: 10px;
+  font-size: 12px;
 
-}
+} */
 
-/* Button styling */
-.three button {
-  margin-top: 10px;
+
+
+/* .three button {
+  margin-top: 20px;
   padding: 10px 20px;
   background-color: #7030a0;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+    margin-left: 45%;
+  max-width: 423px;
+    font-size: 12px;
+} */
+
+.three {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.three button:hover {
-  background-color: #9a55ee;
-  color: black;
+.two,
+.three input[type="password"] {
+  width: 100%;
+  max-width: 320px;
+  padding: 10px;
+  margin: 8px 0;
+  height: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.three button {
+  width: 100%;
+  max-width: 320px;
+  margin-top: 10px;
+    background-color: #7030a0;
+  color: white;
+  border: none;
+    padding: 10px 20px;
+     border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 
 
-
-.three{
+/* .three{
     text-align: right;
     display: block;
-}
+} */
 
 .bg-half {
   position: fixed;
@@ -83,18 +118,36 @@
   background-color: #7030a0;
   z-index: -1;
 }
-.four{
-  margin-right: 130px;
+/* .four{
+  margin-right: 125px;
   color: #7030a0;
 }
 p{
- margin-right: 80px;
+ margin-right: 70px;
 }
 h3{
-  margin-right: 145px;
+  margin-right: 140px;
+} */
+
+.four {
+  color: #7030a0;
+  margin: 0;
 }
+
+.three h3 {
+  margin: 10px 0;
+}
+
+.three p {
+  margin: 5px 0 15px 0;
+  color: #666;
+}
+
 button{
   width: 100%;
   max-width: 322px;
  
 }
+
+
+

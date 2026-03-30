@@ -1,46 +1,105 @@
- <div class="one">
-    <h3 class="events">Events</h3>
+<div class="one">
+  <p class="events">Events</p>
 </div>
 
+<div class="tab-header">
+  <div class="tab" [class.active]="activeTab === 'events'" (click)="switchTab('events')">
+    Events
+  </div>
 
-<div *ngIf="activeTab==='people'" class="table-container">
+  <div class="tab" [class.active]="activeTab === 'alerts'" (click)="switchTab('alerts')">
+    Alerts
+  </div>
+</div>
+
+<div *ngIf="activeTab==='events'" class="table-container">
   <table>
     <thead>
       <tr>
-        <th>ID</th>
         <th>DESCRIPTION</th>
         <th>Time Stamp</th>
+        <th>Time Raised</th>
+        <th>Source</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let row of eventsList">
-        <td>{{ row.id }}</td>
         <td>{{ row.description }}</td>
         <td>{{ row.timestamp | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+        <td>{{row.timestamp | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+        <td>PurpleIQ-Application</td>
       </tr>
+
+
+      <tr class="pagination-row" style="height: 50px;">
+        <td colspan="6">
+          <div class="pagination-container">
+            <label>
+              Items per page:
+              <select [(ngModel)]="pageSize" (change)="onPageSizeChange(pageSize)" style="margin-left: 5px;">
+                <option *ngFor="let size of pageSizes" [value]="size">{{ size }}</option>
+              </select>
+            </label>
+            <span class="range-info">{{ currentPage }} of {{ totalPages }}</span>
+            <div>
+              <button (click)="loadEvents(currentPage - 1)" [disabled]="currentPage === 1" class="arrow-btn">⏴</button>
+              <button (click)="loadEvents(currentPage + 1)" [disabled]="currentPage === totalPages"
+                class="arrow-btn">⏵</button>
+            </div>
+          </div>
+        </td>
+      </tr>
+
+
+
+
     </tbody>
   </table>
-
-  <!-- Bottom Controls Container -->
-  <div class="table-bottom-controls">
-    <!-- Page size selector -->
-    <div class="page-size-selector">
-      <label>Rows per page:</label>
-      <select [(ngModel)]="pageSize" (change)="onPageSizeChange(pageSize)">
-        <option *ngFor="let size of pageSizes" [value]="size">{{ size }}</option>
-      </select>
-    </div>
-
-    <!-- Pagination buttons -->
-    <div class="pagination">
-      <button (click)="loadEvents(1)" [disabled]="currentPage === 1">First</button>
-      <button (click)="loadEvents(currentPage - 1)" [disabled]="currentPage === 1">Prev</button>
-      <span>Page {{ currentPage }} of {{ totalPages }}</span>
-      <button (click)="loadEvents(currentPage + 1)" [disabled]="currentPage === totalPages">Next</button>
-      <button (click)="loadEvents(totalPages)" [disabled]="currentPage === totalPages">Last</button>
-    </div>
-  </div>
 </div>
 
 
+<!-- <div class="table-container" *ngIf="activeTab==='alerts'">
+  <table>
+    <thead>
+      <tr>
+        <th>DeviceId</th>
+        <th>Device Name</th>
+        <th>Status</th>
+        <th>Description</th>
+        <th>Timestamp</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let alert of alertList">
+        <td>{{alert.deviceId}}</td>
+        <td>{{alert.deviceName}}</td>
+        <td>{{alert.status}}</td>
+        <td>{{alert.description}}</td>
+        <td>{{alert.timestamp | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+      </tr>
 
+        <tr class="pagination-row" style="height: 50px;">
+        <td colspan="6">
+          <div class="pagination-container">
+            <label>
+              Items per page:
+              <select [(ngModel)]="alertPageSize" (change)="onAlertPageSizeChange()" style="margin-left: 5px;">
+                <option *ngFor="let size of alertPageSizes" [value]="size">{{ size }}</option>
+              </select>
+            </label>
+            <span class="range-info">{{ alertPageNumber }} of {{ alertTotalCount }}</span>
+            <div>
+              <button (click)="loadAlerts(alertPageNumber - 1)" [disabled]="alertPageNumber === 1" class="arrow-btn">⏴</button>
+              <button (click)="loadAlerts(alertPageNumber + 1)" [disabled]="alertPageNumber === alertTotalPages" class="arrow-btn">⏵</button>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div> -->
+
+<div class="table-container"  *ngIf="activeTab==='alerts'">
+  <app-reusabletable
+  [columns]="alertColoumns" [data]="alertList"></app-reusabletable>
+</div>
