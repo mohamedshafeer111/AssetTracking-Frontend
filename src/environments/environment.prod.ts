@@ -14,6 +14,6 @@
 // };
 export const environment = {
   production: true,
-  apiUrl: 'https://listening-sufficiently-delayed-why.trycloudflare.com/api/',
+  apiUrl: ' https://likewise-attention-jerusalem-desire.trycloudflare.com/api/',
   wsUrl: 'wss://random-name.trycloudflare.com/ws/ZoneCount'
 };
