@@ -14,6 +14,6 @@
 // };
 export const environment = {
   production: true,
-  apiUrl: 'https://barbara-limits-sitemap-attempted.trycloudflare.com/api/',
+  apiUrl: 'https://darwin-where-members-gamecube.trycloudflare.com/api/',
   wsUrl: 'wss://random-name.trycloudflare.com/ws/ZoneCount'
 };
