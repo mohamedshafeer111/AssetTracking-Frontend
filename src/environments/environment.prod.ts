@@ -14,6 +14,6 @@
 // };
 export const environment = {
   production: true,
-  apiUrl: ' https://feof-wires-optimize-push.trycloudflare.com/api/',
+  apiUrl: 'https://movers-lending-youth-cold.trycloudflare.com/api/',
   wsUrl: 'wss://random-name.trycloudflare.com/ws/ZoneCount'
 };
